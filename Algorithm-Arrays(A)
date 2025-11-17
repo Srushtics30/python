@@ -1,0 +1,35 @@
+#A) Implement programs for 1-d arrays, 
+# a. Program to find sum of elements in an array.
+arr = [10, 20, 30, 40]
+
+sum = 0
+for x in arr:
+    sum += x
+
+print("Sum =", sum)
+
+#b. Program to find minimum or maximum element in an array.
+min = arr[0]
+max = arr[0]
+
+for x in arr:
+   if x < min:
+      min = x
+if x > max:
+  max = x
+
+print("Minimum =",min)
+print("Maximum =",max)
+
+#c.  Python3 program to count number of even and odd elements in an array.
+even = 0
+odd = 0
+
+for x in arr:
+if x % 2 ==0:
+   even += 1
+else:
+  odd += 1
+
+print("Even numbers =",even)
+print("Odd numbers =",odd)
