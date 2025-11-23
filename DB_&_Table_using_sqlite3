@@ -1,0 +1,61 @@
+import sqlite3 as sql
+conn = sql.connect('Hospital.db')
+print("Database Created")
+
+cur = conn.cursor()
+cur.execute('create table if not exists patient(pno integer, pname text, pdoc text, pprob text)')
+cur.execute('create table if not exists doctor(docno integer, dname text, dspec text,dpat int)')
+print("patient table created")
+print("doctor table created")
+
+cur.execute('insert into patient values(1,"A","P","heart")')
+cur.execute('insert into patient values(2,"B","Q","kidney")')
+cur.execute('insert into patient values(3,"C","R","liver")')
+cur.execute('insert into patient values(4,"D","S","Eye")')
+cur.execute('insert into patient values(5,"E","T","nose")')
+cur.execute('insert into patient values(6,"F","U","foot")')
+cur.execute('insert into patient values(7,"H","V","ear")')
+cur.execute('insert into patient values(8,"I","W","eye")')
+cur.execute('insert into patient values(9,"J","X","elbow")')
+cur.execute('insert into patient values(10,"K","Y","knee")')
+
+print("Data inserted")
+
+cur.execute('insert into doctor values(111,"P","Heart",1)')
+cur.execute('insert into doctor values(191,"Q","Kidney",2)')
+cur.execute('insert into doctor values(121,"R","Liver",3)')
+cur.execute('insert into doctor values(131,"S","ENT",4)')
+cur.execute('insert into doctor values(151,"T","ENT",5)')
+cur.execute('insert into doctor values(171,"U","Foot",6)')
+cur.execute('insert into doctor values(183,"V","ENT",7)')
+cur.execute('insert into doctor values(082,"W","ENT",8)')
+
+val=[(125,"X","Arm",9),(127,"Y","Leg",10)]
+cur.executemany('insert into doctor values(?,?,?,?)',val)
+
+print("Data inserted")
+
+data = conn.execute('select * from patient')
+print(type(data))
+for record in data:
+    print("Patient NO. :", record[0])
+    print("Patient name :", record[1])
+    print("Doctor assigned to patient :", record[2])
+    print("Patient problem :", record[3])
+    print("~~"*20)
+
+data = conn.execute('select * from doctor')
+for record in data:
+    print("Assigned No. to Doctor :",record[0])
+    print("Doctor Name: ",record[1])
+    print("Doctor's Speciality is in: ",record[2])
+    print("Patient assigned to Doctor: ",record[3])
+    print("--"*20)
+
+conn = connect('Hospital.db')
+conn.execute('update patient set pprob="wrist" where pno=1')
+conn.commit()
+print("Total number of rows updated :",conn.total_changes)
+
+conn.commit()
+conn.close()
