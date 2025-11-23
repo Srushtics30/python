@@ -1,0 +1,146 @@
+from tkinter import *
+from tkinter.ttk import *
+
+win = Tk()
+win.geometry("500x400")
+win.title("Srushti - F119")
+
+lbl = Label(win, text="Hello", font=("Times New Roman",18))
+lbl.grid(column=10, row=10)
+
+def click():
+    lbl.configure(text="Learning Python")
+
+btn = Button(win, text="Click here", bg="brown", font=("Arial",15), command=click)
+btn.grid(column=15, row=15)
+
+lbl = Label(win, text="Enter your Name:")
+lbl.grid()
+lbl1 = Label(win, text="Enter your mobile no. :")
+lbl1.grid()
+lbl2 = Label(win, text="Enter your city :")
+lbl2.grid()
+
+lbl3 = Label(win)
+lbl3.grid()
+lbl4 = Label(win)
+lbl4.grid()
+lbl5 = Label(win)
+lbl5.grid()
+
+txt = Entry(win, width=20)
+txt.grid()
+txt.focus()
+txt1 = Entry(win, width=25)
+txt1.grid()
+txt2 = Entry(win, width=20)
+txt2.grid()
+def click():
+    res = "Welcome " + txt.get()
+    lbl3.configure(text=res)
+    res1 = "Your mobile no. is: " + txt1.get()
+    lbl4.configure(text=res1)
+    res2 = "Your City is " + txt2.get()
+    lbl5.configure(text=res2)
+
+btn = Button(win, text="Display", command = click, font=("Arial",14,"underline"), bd=2, relief="groove")
+btn.grid()
+
+lbl = Label(win,text="Enter your age:")
+lbl.grid()
+
+def age():
+    age = int(ent.get())
+
+    if age < 13:
+        category = "Minor"
+    elif age < 20:
+        category = "Teenager"
+    elif age < 60:
+        category = "Adult"
+    else:
+   category ="Senior Citizen"
+
+    reslbl.configure(text=f"Category :{category}")
+
+ent = Entry(win,width=10)
+ent.focus()
+ent.grid()
+
+btn = Button(win,text="Check age",command=age)
+btn.grid()
+
+reslbl = Label(win,text="")
+reslbl.grid()
+
+lbl = Label(win,text="Select your Name:")
+lbl.grid()
+combo = Combobox(win)
+combo["values"]=("A","B","C","D","E")
+combo.current(2)
+combo.grid()
+
+lbl1 = Label(win,text="Select your Roll No.:")
+lbl1.grid(column=10,row=5)
+combo1 = Combobox(win)
+combo1["values"]=(1,2,3,4,5,6,7)
+combo1.grid(column=10,row=6)
+
+lbl2 = Label(win,text="Select your Class:")
+lbl2.grid(column=15,row=10)
+combo2 = Combobox(win)
+combo2["values"]=("FYCS","FYIT","SYIT","SYCS","TYIT","TYCS")
+combo2.grid(column=15,row=11)
+
+chk = BooleanVar()
+chk.set(True)
+chk1 = BooleanVar()
+chk1.set(False)
+chk2 = BooleanVar()
+chk2.set(False)
+chk3 = BooleanVar()
+chk3.set(False)
+
+lbl3 = Label(win,text="Select your Subjects:")
+lbl3.grid()
+cbtn = Checkbutton(win,text="EVS",var=chk)
+cbtn.grid()
+cbtn = Checkbutton(win,text="English",var=chk1)
+cbtn.grid()
+cbtn = Checkbutton(win,text="Hindi",var=chk2)
+cbtn.grid()
+cbtn = Checkbutton(win,text="Python",var=chk3)
+cbtn.grid()
+
+chk4 = BooleanVar()
+chk4.set(False)
+chk5 = BooleanVar()
+chk5.set(True)
+chk6 = BooleanVar()
+chk6.set(False)
+chk7 = BooleanVar()
+chk7.set(False)
+
+lbl4 = Label(win,text="Select your City:")
+lbl4.grid()
+cbtn1 = Checkbutton(win,text="Pune",var=chk4)
+cbtn1.grid()
+cbtn1 = Checkbutton(win,text="Mumbai",var=chk5)
+cbtn1.grid()
+cbtn1 = Checkbutton(win,text="Delhi",var=chk6)
+cbtn1.grid()
+cbtn1 = Checkbutton(win,text="New York",var=chk7)
+cbtn1.grid()
+
+lbl = Label(win, text="Hello",font=("Times New Roman",15))
+lbl.grid()
+
+txt=StringVar()
+
+def clickrad():
+    lbl.configure(text="Welcome "+ txt.get())
+
+rad = Radiobutton(win,text='Click here',variable=txt, value="",command=clickrad)
+rad.grid()
+
+win.mainloop()
