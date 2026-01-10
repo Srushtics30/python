@@ -1,0 +1,60 @@
+#Q1.Static Method: Decorator Static Method Logic program
+class Shop:
+
+    def __init__(self, cloth):
+        self.cloth = cloth
+
+    @staticmethod
+    def clothtype(cloth):
+        if cloth == "silk":
+            print("Silk cloth price is Rs 1000 /-")
+        else:
+            print("Cotton cloth price is Rs 500 /-")
+
+
+obj = Shop("silk")
+
+Shop.clothtype(obj.cloth)
+
+#Q2. Passing a member from one class to another class member
+class Teacher:
+    def __init__(self, sub):
+        self.sub = sub
+
+class Student:
+    def display(self, marks):
+        print("Marks received: ", marks)
+
+objA = Teacher(15)
+objB = Student()
+
+objB.display(objA.sub)
+
+#Q3. Passing value using composition
+class Engine:
+    def __init__(self, power):
+        self.power = power
+
+class Car:
+    def __init__(self, engine):
+        self.engine = engine
+
+    def show(self):
+         print("Engine Power is ", self.engine.power)
+
+eng = Engine("1200cc")
+car = Car(eng)
+car.show()
+
+# Q4. Inner Class
+class College:
+
+    class Student:
+        def __init__(self, Id):
+            self.Id = Id
+
+        def show(self):
+            print("Student ID is " , self.Id)
+
+stu = College.Student(101)
+stu.show()
