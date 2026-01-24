@@ -69,7 +69,8 @@ t2.join()
 
 print("Final Counter value : ", counter)
 
-# Deadlock in Threads
+# Avoiding Deadlock (using lock order)
+
 import threading
 import time
 
@@ -78,17 +79,23 @@ lock2 = threading.Lock()
 
 def task1():
     with lock1:
-        print("Task 1 acquired lock1")
+        print("Task 1 acquired lock1 \n")
         time.sleep(1)
-        with lock2:
-            print("Task 1 acquired lock2")
+        if lock2.acquire(timeout=2):
+            print("Task 1 acquired lock2 \n")
+            lock2.release()
+        else:
+            print("Task 1 could not acquire lock2  \n")
 
 def task2():
     with lock2:
-        print("Task 2 acquired lock2")
+        print("Task 2 acquired lock2  \n")
         time.sleep(1)
-        with lock1:
-            print("Task 2 acquired lock1")
+        if lock1.acquire(timeout=2):
+            print("Task 2 acquired lock1  \n")
+            lock1.release()
+        else:
+            print("Task 2 could not acquire lock1  \n")
 
 t1 = threading.Thread(target=task1)
 t2 = threading.Thread(target=task2)
@@ -99,24 +106,42 @@ t2.start()
 t1.join()
 t2.join()
 
+print("Execution Completed")
+
 # Avoiding Deadlock (using lock order)
 
 import threading
+import time
 
 lock1 = threading.Lock()
 lock2 = threading.Lock()
 
-def task():
+def task1():
     with lock1:
-        print("Lock1 Acquired")
-        with lock2:
-            print("Lock 2 Acquired")
+        print("Task 1 acquired lock1 \n")
+        time.sleep(1)
+        if lock2.acquire(timeout=2):
+            print("Task 1 acquired lock2 \n")
+            lock2.release()
+        else:
+            print("Task 1 could not acquire lock2  \n")
 
-t1 = threading.Thread(target=task)
-t2 = threading.Thread(target=task)
+def task2():
+    with lock2:
+        print("Task 2 acquired lock2  \n")
+        time.sleep(1)
+        if lock1.acquire(timeout=2):
+            print("Task 2 acquired lock1  \n")
+            lock1.release()
+        else:
+            print("Task 2 could not acquire lock1  \n")
 
+t1 = threading.Thread(target=task1)
 t1.start()
-t2.start()
-
 t1.join()
+
+t2 = threading.Thread(target=task2)
+t2.start()
 t2.join()
+
+print("Execution Completed")
