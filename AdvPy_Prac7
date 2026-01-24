@@ -1,0 +1,122 @@
+# Creating threads in Python - (a) Using Function
+import threading
+
+def greet():
+    print("Hello from thread ")
+
+t = threading.Thread(target=greet)
+t.start()
+t.join()
+
+# Creating threads in Python - (a) Using Class
+
+class Mythread(threading.Thread):
+    def run(self):
+        print("Thread is running ! ")
+
+t1 = Mythread()
+t1.start()
+t1.join()
+
+#Single Tasking and Multitasking - (a) Single Tasking (one task at a time)
+import threading
+
+def task():
+    for i in range(3):
+        print("Task running : ", i)
+
+t = threading.Thread(target=task)
+t.start()
+t.join()
+
+# Single Tasking and Multitasking - (b) Multitasking (using multiple threads)
+def numbers():
+    for i in range(1, 6):
+        print("Number : ", i)
+
+def letters():
+    for ch in ['A', 'B', 'C', 'D', 'E']:
+        print("Letter : ", ch)
+
+t1 = threading.Thread(target=numbers)
+t1.start()
+t1.join()
+
+t2 = threading.Thread(target=letters)
+t2.start()
+t2.join()
+
+# Thread Synchronization (Using Lock)
+import threading
+
+counter = 0
+lock = threading.Lock()
+
+def increment():
+    global counter
+    for _ in range(10000):
+        with lock:
+            counter += 1
+
+t1 = threading.Thread(target=increment)
+t2 = threading.Thread(target=increment)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+print("Final Counter value : ", counter)
+
+# Deadlock in Threads
+import threading
+import time
+
+lock1 = threading.Lock()
+lock2 = threading.Lock()
+
+def task1():
+    with lock1:
+        print("Task 1 acquired lock1")
+        time.sleep(1)
+        with lock2:
+            print("Task 1 acquired lock2")
+
+def task2():
+    with lock2:
+        print("Task 2 acquired lock2")
+        time.sleep(1)
+        with lock1:
+            print("Task 2 acquired lock1")
+
+t1 = threading.Thread(target=task1)
+t2 = threading.Thread(target=task2)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+# Avoiding Deadlock (using lock order)
+
+import threading
+
+lock1 = threading.Lock()
+lock2 = threading.Lock()
+
+def task():
+    with lock1:
+        print("Lock1 Acquired")
+        with lock2:
+            print("Lock 2 Acquired")
+
+t1 = threading.Thread(target=task)
+t2 = threading.Thread(target=task)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
