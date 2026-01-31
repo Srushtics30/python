@@ -1,0 +1,194 @@
+#Python Exceptions
+class NegativeNumberError(Exception):
+    pass
+
+def checkpos(numb):
+    if numb < 0:
+        raise NegativeNumberError("Negative Numbers are not allowed !")
+    return numb
+
+try:
+    number = int(input("Enter a Number :"))
+    checkpos(number)
+    print("Valid Number Entered")
+except NegativeNumberError as e:
+        print("Error: No Negative number ")
+
+try:
+    num = int(input("Enter a Number : "))
+    num1 = int(input("Enter another number :"))
+    res = num / num1
+
+except ZeroDivisionError:
+    print("Error - Cannot divide by zero")
+
+except ValueError:
+    print("Error - Invalid Input, Enter Numbers")
+    
+else:
+     print("The division of " , num, "by", num1," is ",res)
+
+finally:
+    print("Execution Completed")
+
+import logging
+
+logging.basicConfig(
+    filename = "error.log",
+    level = logging.DEBUG,
+    format = "%(asctime)s - %(levelname)s - %(message)s"
+)
+
+try:
+    x = 10/0
+except ZeroDivisionError as e:
+    logging.error("ZeroDivisionError occurred: %s", e)
+    print("An error occurred. Check error.log for details.")
+
+try:
+    num = int("abc")
+except ValueError as e:
+    logging.warning("ValueError occurred: %s", e)
+    print("Warning: Invalid input. Check error.log for details.")
+
+logging.debug("DEBUG message: detailed debugging info")
+logging.info("INFO message: general info")
+logging.warning("WARNING message: something unexpected but program runs")
+logging.error("ERROR message: serious error")
+logging.critical("CRITICAL message: very serious error requiring immediate attention")
+
+print("Logging demo completed. Check error.log file.")
+
+
+try:
+    x = 10 / 0
+except ZeroDivisionError as e:
+    print("ZeroDivisionError:", e)
+
+try:
+    num = int("abc")  
+except ValueError as e:
+    print("ValueError:", e)
+
+try:
+    a = [1, 2, 3]
+    print(a[5])
+except IndexError as e:
+    print("IndexError:", e)
+
+try:
+    print(undeclaredvar)
+except NameError as e:
+    print("NameError:", e)
+
+try:
+    s = "hello"
+    s.push("a") 
+except AttributeError as e:
+    print("AttributeError:", e)
+
+try:
+    import nonexistentmodule
+except ImportError as e:
+    print("ImportError:", e)
+
+try:
+    assert 2 + 2 == 5, "Math is wrong!"
+except AssertionError as e:
+    print("AssertionError:", e)
+
+try:
+    raise RuntimeError("Generic runtime error")
+except RuntimeError as e:
+    print("RuntimeError:", e)
+
+try:
+    raise SystemError("Internal system error")
+except SystemError as e:
+    print("SystemError:", e)
+
+try:
+    a = " " * (10**8)  
+except MemoryError as e:
+    print("MemoryError:", e)
+
+print("\nDemo complete!")
+
+# 1. TypeError
+try:
+    print("TypeError Example:")
+    result = 5 + "a"  
+except TypeError as e:
+    print("TypeError:", e)
+
+# 2. KeyError
+try:
+    print("\nKeyError Example:")
+    d = {"name": "Alice"}
+    print(d["age"])  
+except KeyError as e:
+    print("KeyError:", e)
+
+# 3. FileNotFoundError
+try:
+    print("\nFileNotFoundError Example:")
+    f = open("nonexistent_file.txt", "r")
+except FileNotFoundError as e:
+    print("FileNotFoundError:", e)
+
+# 4. OSError
+try:
+    print("\nOSError Example:")
+    import os
+    os.remove("nonexistent_file.txt")  
+except OSError as e:
+    print("OSError:", e)
+
+# 5. EOFError (interactive)
+try:
+    input("\nEOFError Example: Press Ctrl+D (Linux/Mac) or Ctrl+Z (Windows): ")
+except EOFError as e:
+    print("EOFError:", e)
+
+# 6. KeyboardInterrupt (interactive)
+try:
+    input("\nKeyboardInterrupt Example: Press Ctrl+C: ")
+except KeyboardInterrupt as e:
+    print("KeyboardInterrupt:", e)
+
+# 7. OverflowError
+try:
+    print("\nOverflowError Example:")
+    import math
+    print(math.exp(1000))  
+except OverflowError as e:
+    print("OverflowError:", e)
+
+# 8. RecursionError
+try:
+    print("\nRecursionError Example:")
+    def recursive():
+        return recursive()
+    recursive()
+except RecursionError as e:
+    print("RecursionError:", e)
+
+# 9. StopIteration
+try:
+    print("\nStopIteration Example:")
+    it = iter([1, 2])
+    print(next(it))
+    print(next(it))
+    print(next(it))  
+except StopIteration as e:
+    print("StopIteration", e)
+
+# 10. FloatingPointError
+try:
+    print("\nFloatingPointError Example:")
+    import math
+    x = math.exp(1000) 
+except FloatingPointError as e:
+    print("FloatingPointError:", e)
+
+print("\nDemo of remaining exceptions complete!")
