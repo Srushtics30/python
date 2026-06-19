@@ -1,0 +1,146 @@
+1a. Write a Python code to print your profile. (Format output in a pretty way)
+print("+--------------------------------------+")
+print("|              MY PROFILE              |")
+print("+--------------------------------------+")
+print("| Name    : Srushti Vedak              |")
+print("| Age     : 19                         |")
+print("| Course  : B.Sc Computer Science      |")
+print("| City    : Mumbai                     |")
+print("| Hobbies : Reading, Dancing, Singing  |")
+print("+--------------------------------------+")
+
+1b. Write a Python code to print the addition of two numbers. (Take input of a list of numbers and print their total using the sum() function)
+numbers = list(map(int, input("Enter numbers giving space: ").split()))
+
+total = sum(numbers)
+
+print("\n----- RESULT -----")
+
+print("Total of your Numbers =", total)
+
+1c. Write a Python code to print the square root of number. (Take user input and use a loop to compute square roots for multiple values and use try-except to handle invalid inputs.)
+import math
+
+while True:
+    user_input = input("Enter a number to find its square root (or type 'q' to quit): ")
+
+    if user_input.lower() == 'q':
+        print("Program ended.")
+        break
+
+    try:
+        number = float(user_input)
+
+        if number < 0:
+            print("Square root is not defined for negative numbers (in real numbers).")
+            continue
+
+        result = math.sqrt(number)
+        print(f"Square root of {number} is {result}")
+
+    except ValueError:
+        print("Invalid input! Please enter a valid number.")
+
+1c. Write a Python code to calculate area of Triangle. 
+#Area of triangle=1/2xbxh
+base = float(input("Enter base: "))
+height = float(input("Enter height: "))
+
+area = 0.5 * base * height
+
+print("\n----- RESULT -----")
+print("Area of Triangle =", area)
+
+ 1d. Write a Python code to swap two variables. (Write a function that swaps any two elements in a list using indexing and print the updated list).
+def swap_elements(lst, i, j):
+    lst[i], lst[j] = lst[j], lst[i]
+
+numbers = [10, 20, 30, 40, 50]
+
+print("Original List:", numbers)
+
+swap_elements(numbers, 1, 3)
+
+print("Updated List :", numbers)
+
+1e. Write a Python program that takes a sentence as input and counts the number of words and characters, converts the sentence to lowercase and uppercase, and replaces all spaces with underscores (_).
+sentence = input("Enter a sentence: ")
+
+words = len(sentence.split())
+characters = len(sentence)
+
+print("\n----- RESULT -----")
+print("Words count      :", words)
+print("Characters count :", characters)
+print("Lowercase        :", sentence.lower())
+print("Uppercase        :", sentence.upper())
+print("With underscores :", sentence.replace(" ", "_"))
+print("------------------")
+
+1f. Create a list of 10 numbers. Write a program to find the maximum, minimum, and average, sort the list in ascending and descending order, and add a new number to the list and remove the first item.
+numbers = [12, 45, 7, 89, 23, 56, 34, 78, 90, 11]
+
+print("Original List:", numbers)
+
+print("\n----- RESULT -----")
+print("Maximum:", max(numbers))
+print("Minimum:", min(numbers))
+print("Average:", sum(numbers) / len(numbers))
+
+print("Ascending order :", sorted(numbers))
+print("Descending order:", sorted(numbers, reverse=True))
+
+new_num = int(input("\nEnter a number to add: "))
+numbers.append(new_num)
+
+numbers.pop(0)
+
+print("\nUpdated List:", numbers)
+
+1e. Store the names and marks of 5 students in a dictionary and then print each student’s name and marks, calculate and print the class average, and find the student with the highest marks. 
+students = {
+    "Amit": 85,
+    "Priya": 92,
+    "Rahul": 78,
+    "Neha": 88,
+    "Karan": 95
+}
+
+print("----- STUDENT MARKS -----")
+
+for name, marks in students.items():
+    print(name, ":", marks)
+
+average = sum(students.values()) / len(students)
+topper = max(students, key=students.get)
+
+print("\n----- RESULT -----")
+print("Class Average =", average)
+print("Topper =", topper, "with", students[topper], "marks")
+
+1g. Write a Python program that accepts marks as input and prints the grade as 90+ = A, 75–89 = B, 50–74 = C, below 50 = Fail.
+marks = float(input("Enter your marks out of 100 : "))
+
+if marks >= 90:
+    print("Congratulation !! Your Grade is : A")
+elif marks >= 75:
+    print("Great !! Your Grade is : B")
+elif marks >= 50:
+    print("You can do better !! Your Grade is: C")
+else:
+    print("Oh no !! Your Grade is: Fail")
+
+1h. Write a Python program using a loop that prints the square of numbers from 1 to 10, accepts 5 numbers from the user and prints how many are even. 
+print("Squares from 1 to 10:")
+for i in range(1, 11):
+    print(f"{i} squared is {i * i}")
+
+evencount = 0
+
+print("\nEnter 5 numbers:")
+for i in range(5):
+    num = int(input(f"Enter number {i + 1}: "))
+    if num % 2 == 0:
+        evencount += 1
+
+print("\nNumber of even values entered:", evencount)
