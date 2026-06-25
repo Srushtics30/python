@@ -1,0 +1,259 @@
+#Command-Line
+import os
+import time
+from termcolor import colored,cprint
+
+class Stack:
+    def __init__(self):
+        self.items = []
+    def is_empty(self):
+        return len(self.items) == 0
+    def push(self, item):
+        self.items.append(item)
+        print(colored(f"'{item}' has been pushed onto the stack.", "green"))
+        self.animate_push(item)
+    def pop(self):
+        if self.is_empty():
+            raise IndexError("Pop from an Empty stack")
+        item = self.items.pop()
+        print(colored(f"'{item}' has been popped from stack.", "red"))
+        self.animate_pop(item)
+        return item
+    def peek(self):
+        if self.is_empty():
+            raise IndexError("Peek from an Empty Stack")
+        return self.items[-1]
+    def size(self):
+        return len(self.items)
+    def __str__(self):
+        return " <- ".join(reversed(self.items)) if self.items else "stack is empty"
+    def animate_push(self, item):
+        for i in range(3):
+            print(colored(f"Pushing {item} into stack...", "yellow"))
+            time.sleep(0.4)
+            self.clear_screen()
+    def animate_pop(self, item):
+        for i in range(3):
+            print(colored(f"Popping {item} into stack...", "pink"))
+            time.sleep(0.4)
+            self.clear_screen()
+    @staticmethod
+    def clear_screen():
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+def stack_operations():
+    stack = Stack()
+    cprint("Welcome to my Interactive Stack Operations Program", "cyan", attrs=["bold"])
+    cprint("You can Perform the following operations on the stack : ", "cyan")
+
+    while True:
+        print("\nCurrent Stack : ", colored(str(stack), "blue"))
+        print(colored("1 - Push Element", "yellow"))
+        print(colored("2 - pop Element", "yellow"))
+        print(colored("3 - Peek Element", "yellow"))
+        print(colored("4 - Check is Stack is Empty", "yellow"))
+        print(colored("5 - Size of Stack ", "yellow"))
+        print(colored("6 - Quit Program", "yellow"))
+
+        try :
+            choice = int(input(colored("Choose an Operation (1-6): ", "green")))
+        except ValueError:
+            cprint("Invalid Input, Please enter a number between 1 to 6", "red")
+            continue
+        if choice == 1:
+            item = input(colored("Enter an element to push : ", "green"))
+            stack.push(item)
+        elif choice == 2:
+            try :
+                stack.pop()
+            except IndexError as e:
+                cprint(e, "red")
+        elif choice == 3:
+            try :
+                cprint("Top Element : " + stack.peek(), "blue")
+            except IndexError as e:
+                cprint(e, "red")
+        elif choice == 4:
+            try :
+                cprint("Is the Stack Empty ? " + ("yes" if stack.is_empty() else "No"), "blue")
+            except IndexError as e:
+                cprint(e, "red")
+        elif choice == 5:
+            try :
+                cprint("Size of the Stack : " + str(stack.size()), "blue")
+            except IndexError as e:
+                cprint(e, "red")
+        elif choice == 6:
+            cprint("Exiting the Program", "cyan", attrs=["bold"])
+            break
+        else :
+            cprint("Invalid Choice , Please enter a number from 1 and 6", "red")
+
+if __name__ == "__main__":
+    stack_operations()
+
+# GUI :
+import tkinter as tk
+from tkinter import messagebox
+
+
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def is_empty(self):
+        return len(self.items) == 0
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        if self.is_empty():
+            raise IndexError("Stack is empty")
+        return self.items.pop()
+
+    def peek(self):
+        if self.is_empty():
+            raise IndexError("Stack is empty")
+        return self.items[-1]
+
+    def size(self):
+        return len(self.items)
+
+    def display(self):
+        return list(reversed(self.items)) if self.items else ["STACK IS EMPTY"]
+
+
+class StackGUI:
+    def __init__(self, root):
+        self.stack = Stack()
+        self.root = root
+        self.root.title("F119 : Stack - Data Structure")
+        self.root.configure(bg="#C4DFE5")
+
+        # Title
+        tk.Label(
+            root,
+            text="Stack Operations",
+            font=("Arial", 18, "bold"),
+            bg="#f2f4f7",
+            fg="#222"
+        ).pack(pady=10)
+
+        # Input
+        self.entry = tk.Entry(root, font=("Arial", 12), justify="center")
+        self.entry.pack(pady=5)
+
+        # Buttons
+        btn_frame = tk.Frame(root, bg="#f2f4f7")
+        btn_frame.pack(pady=10)
+
+        tk.Button(btn_frame, text="Push", bg="#7bd389", width=10, command=self.push).grid(row=0, column=0, padx=5, pady=5)
+        tk.Button(btn_frame, text="Pop", bg="#ff6b6b", width=10, command=self.pop).grid(row=0, column=1, padx=5, pady=5)
+        tk.Button(btn_frame, text="Peek", bg="#6fa8dc", width=10, command=self.peek).grid(row=0, column=2, padx=5, pady=5)
+        tk.Button(btn_frame, text="Size", bg="#ffd966", width=10, command=self.size).grid(row=0, column=3, padx=5, pady=5)
+
+        tk.Button(btn_frame, text="Is Empty", bg="#d9a7ff", width=10, command=self.is_empty).grid(row=1, column=0, padx=5, pady=5)
+        tk.Button(btn_frame, text="Clear", bg="#ffa94d", width=10, command=self.clear).grid(row=1, column=1, padx=5, pady=5)
+
+        # Stack display
+        self.display = tk.Label(
+            root,
+            text="STACK IS EMPTY",
+            font=("Courier", 14),
+            bg="white",
+            width=35,
+            height=10,
+            relief="solid"
+        )
+        self.display.pack(pady=10)
+
+        # INFO FRAME (SIDE BY SIDE)
+        info_frame = tk.Frame(root, bg="#f2f4f7")
+        info_frame.pack(pady=10)
+
+        # Definitions
+        self.def_box = tk.Text(info_frame, width=30, height=12, bg="#ffffff")
+        self.def_box.grid(row=0, column=0, padx=5)
+
+        # Advantages
+        self.adv_box = tk.Text(info_frame, width=30, height=12, bg="#eaffea")
+        self.adv_box.grid(row=0, column=1, padx=5)
+
+        # Disadvantages
+        self.dis_box = tk.Text(info_frame, width=30, height=12, bg="#ffecec")
+        self.dis_box.grid(row=0, column=2, padx=5)
+
+        self.load_info()
+        self.update_display()
+
+    # ---------------- OPERATIONS ----------------
+
+    def push(self):
+        item = self.entry.get()
+        if item:
+            self.stack.push(item)
+            self.entry.delete(0, tk.END)
+            self.update_display()
+
+    def pop(self):
+        try:
+            removed = self.stack.pop()
+            messagebox.showinfo("Pop", f"Removed: {removed}")
+            self.update_display()
+        except IndexError as e:
+            messagebox.showerror("Error", str(e))
+
+    def peek(self):
+        try:
+            messagebox.showinfo("Peek", f"Top: {self.stack.peek()}")
+        except IndexError as e:
+            messagebox.showerror("Error", str(e))
+
+    def size(self):
+        messagebox.showinfo("Size", f"{self.stack.size()}")
+
+    def is_empty(self):
+        messagebox.showinfo("Is Empty", str(self.stack.is_empty()))
+
+    def clear(self):
+        self.stack.items.clear()
+        self.update_display()
+
+    # ---------------- DISPLAY ----------------
+
+    def update_display(self):
+        data = self.stack.display()
+        self.display.config(text="\n".join(data))
+
+    # ---------------- INFO ----------------
+
+    def load_info(self):
+        # Definitions
+        self.def_box.insert(tk.END, "DEFINITIONS\n\n")
+        self.def_box.insert(tk.END, "Push: Add element to top\n")
+        self.def_box.insert(tk.END, "Pop: Remove top element\n")
+        self.def_box.insert(tk.END, "Peek: View top element\n")
+        self.def_box.insert(tk.END, "Size: Count elements\n")
+        self.def_box.insert(tk.END, "Is Empty: Check stack status\n")
+        self.def_box.insert(tk.END, "Clear: Remove all elements\n")
+
+        # Advantages
+        self.adv_box.insert(tk.END, "ADVANTAGES\n\n")
+        self.adv_box.insert(tk.END, "- Simple LIFO structure\n")
+        self.adv_box.insert(tk.END, "- Fast operations O(1)\n")
+        self.adv_box.insert(tk.END, "- Used in recursion, undo\n")
+
+        # Disadvantages
+        self.dis_box.insert(tk.END, "DISADVANTAGES\n\n")
+        self.dis_box.insert(tk.END, "- Only top accessible\n")
+        self.dis_box.insert(tk.END, "- No random access\n")
+        self.dis_box.insert(tk.END, "- Not suitable for searching\n")
+
+
+# ---------------- RUN ----------------
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = StackGUI(root)
+    root.mainloop()
