@@ -1,0 +1,209 @@
+2a. Write a python code to create nested tuples. 
+# 1. Create nested tuple with subjects
+subject1 = ("Python for Data Science", 301)
+subject2 = ("Field Project", 302)
+subject3 = ("Theory of Computation", 303)
+nested_tuple = (subject1, subject2, subject3)
+print("Nested Tuple:", nested_tuple)
+
+# 2. Indexing
+print("First subject tuple:", nested_tuple[0])
+print("Name of second subject:", nested_tuple[1][0])
+
+# 3. Negative indexing
+print("Last subject tuple (negative index):", nested_tuple[-1])
+print("Name of last subject:", nested_tuple[-1][0])
+
+# 4. Loop through the nested tuple
+print("\nAll Subjects:")
+for subject in nested_tuple:
+    print(f"Subject Name: {subject[0]}, Code: {subject[1]}")
+
+# 5. Reverse the tuple
+reversed_tuple = nested_tuple[::-1]
+print("\nReversed Tuple:", reversed_tuple)
+
+# 6. Slice the tuple (first two subjects)
+sliced_tuple = nested_tuple[0:2]
+print("Sliced Tuple (first two subjects):", sliced_tuple)
+
+# 7. Concatenate another subject tuple
+subject4 = ("Computer Networks", 304)
+updated_tuple = nested_tuple + (subject4,)
+print("After Concatenation:", updated_tuple)
+
+# 8. Demonstrate immutability
+try:
+    nested_tuple[0][1] = 999 # Trying to change subject code
+except TypeError as e:
+    print("\nTuple Immutability Test: Error occurred ->", e)
+
+2b. Write a python code to sort the nested tuple using sorted() function.
+# Original nested tuple of subjects
+nested_tuple = (
+("Python for Data Science", 301),
+("Field Project", 302),
+("Theory of Computation", 303)
+)
+# Sorting the nested tuple by subject code (index 1)
+sorted_subjects = sorted(nested_tuple, key=lambda x: x[1])
+
+# Display the sorted result
+print("Sorted Subjects (by subject code):", sorted_subjects
+
+2c. Write a python code to copy or clone list. 
+# Original list
+original_list = ["Python", "TOC", "EVS", "CN"]
+
+# Method 1: Using slicing
+copy1 = original_list[:]
+
+# Method 2: Using list() constructor
+copy2 = list(original_list)
+
+# Method 3: Using copy() method
+copy3 = original_list.copy()
+
+# Print all lists
+print("Original List:", original_list)
+print("\nCopy using slicing:", copy1)
+print("\nCopy using list():", copy2)
+print("\nCopy using copy():", copy3)
+
+2d.Write a python code to check immutability property of python tuples.  
+# Create a tuple
+subject = ("Python for Data Science", 101)
+# Try to modify an element in the tuple
+try:
+    subject[1] = 999 # Attempt to change the subject code
+except TypeError as e:
+    print("Tuple is immutable! Error:", e)
+
+Question 1: [Implement the below given questions in a single python file]
+a. Write a Python program to create a tuple with 5 different elements and print it.
+b. Write a program to access the first and last elements of a tuple using indexing.
+c. Write a program to slice a tuple and print the middle 3 elements.
+d. Write a program to concatenate two tuples and print the result.
+e. Write a program to reverse a tuple using slicing.
+f. Write a program to count how many times an element appears in a tuple.
+g. Write a program to find the index of a specific element in a tuple.
+h. Write a program to check if an element exists in a tuple.
+i. Write a program to convert a list to a tuple.
+j. Write a program to sort a tuple of numbers in ascending order.
+k. Write a program to repeat a tuple 3 times using the * operator.
+l. Write a program to check the immutability property of tuples by trying to modify an
+element.
+# a. Create a tuple with 5 different elements and print it
+tuple = (10, 20, 30, 40, 50)
+print("a. Tuple:", tuple)
+
+# b. Access the first and last elements of a tuple using indexing
+print("\nb. First Element:", tuple[0])
+print("Last Element:", tuple[-1])
+
+# c. Slice a tuple and print the middle 3 elements
+print("\nc. Middle 3 Elements:", tuple[1:4])
+
+# d. Concatenate two tuples and print the result
+tuple2 = (60, 70, 80)
+concatenated_tuple = tuple + tuple2
+print("\nd. Concatenated Tuple:", concatenated_tuple)
+
+# e. Reverse a tuple using slicing
+reversed_tuple = tuple[::-1]
+print("\ne. Reversed Tuple:", reversed_tuple)
+
+# f. Count how many times an element appears in a tuple
+count_tuple = (1, 2, 3, 2, 4, 2, 5)
+count = count_tuple.count(2)
+print("\nf. Number of times 2 appears:", count)
+
+# g. Find the index of a specific element in a tuple
+index = count_tuple.index(4)
+print("\ng. Index of element 4:", index)
+
+# h. Check if an element exists in a tuple
+element = 3
+if element in count_tuple:
+    print("\nh. Element", element, "exists in the tuple.")
+else:
+    print("\nh. Element", element, "does not exist in the tuple.")
+
+# i. Convert a list to a tuple
+my_list = [100, 200, 300, 400]
+converted_tuple = tuple(my_list)
+print("\ni. List converted to Tuple:", converted_tuple)
+
+# j. Sort a tuple of numbers in ascending order
+unsorted_tuple = (50, 10, 40, 20, 30)
+sorted_tuple = tuple(sorted(unsorted_tuple))
+print("\nj. Sorted Tuple:", sorted_tuple)
+
+# k. Repeat a tuple 3 times using the * operator
+repeated_tuple = (1, 2, 3) * 3
+print("\nk. Repeated Tuple:", repeated_tuple)
+
+# l. Check the immutability property of tuples
+immutable_tuple = (10, 20, 30)
+
+print("\nl. Checking Tuple Immutability:")
+try:
+    immutable_tuple[0] = 100   # Attempt to modify tuple
+except TypeError as e:
+    print("Error:", e)
+    print("Tuples are immutable and cannot be modified.")
+
+Question 2: [Implement the below given questions in a single python file]
+a. Write a program to find the largest number in a list.
+b. Write a program to remove duplicates from a list.
+c. Write a program to count how many even numbers are in a list.
+d. Write a program to input 5 numbers and store them in a list. Then display the list.
+e. Write a function that returns the average of all numbers in a list.
+f. Convert a string into a list of characters using list().
+g. Join all elements of a list into a single string using join().
+# a. Find the largest number in a list
+numbers = [12, 45, 7, 89, 34, 11]
+largest = max(numbers)
+print("a. Largest number in the list:", largest)
+
+# b. Remove duplicates from a list
+duplicate_list = [1, 2, 3, 2, 4, 1, 5, 3]
+unique_list = list(set(duplicate_list))
+print("\nb. List after removing duplicates:", unique_list)
+
+# c. Count how many even numbers are in a list
+num_list = [10, 15, 20, 25, 30, 35, 40]
+even_count = 0
+
+for num in num_list:
+    if num % 2 == 0:
+        even_count += 1
+
+print("\nc. Number of even numbers in the list:", even_count)
+
+# d. Input 5 numbers and store them in a list, then display it
+user_list = []
+print("\nd. Enter 5 numbers:")
+
+for i in range(5):
+    user_list.append(int(input(f"Enter number {i+1}: ")))
+
+print("List of entered numbers:", user_list)
+
+# e. Function that returns the average of all numbers in a list
+def average_list(lst):
+    return sum(lst) / len(lst)
+
+avg = average_list(numbers)
+print("\ne. Average of the list:", avg)
+
+# f. Convert a string into a list of characters using list()
+text = "Python"
+char_list = list(text)
+print("\nf. String to list of characters:", char_list)
+
+# g. Join all elements of a list into a single string using join()
+words = ["Python", "is", "very", "easy"]
+joined_string = " ".join(words)
+print("\ng. Joined string:", joined_string)
+
