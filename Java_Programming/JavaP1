@@ -1,0 +1,85 @@
+# A:Program to create a class and implement the concept of Constructor Overloading, method overloading and static methods
+class Student {
+    
+    String name;
+    int age;
+    
+    //Default Constructor
+    Student() {
+        name = "Jill";
+        age = 19;
+    }
+    
+    //Parameterized Constructor
+    Student(String n, int a) {
+        name = n;
+        age = a;
+    }
+    
+    //Method Overloading
+    void display() {
+        System.out.println("Name : " + name);
+        System.out.println("Age : " + age);
+    }
+    
+    void display(String course) {
+        System.out.println("Name : " + name);
+        System.out.println("Course: " + course);
+    }
+    
+    //Static Method
+    static void college() {
+        System.out.println("College : ABC College");
+    }
+    
+  }
+
+public class ProgramA {
+    
+    public static void main(String[] args) {
+        
+        System.out.println("Student 1");
+        Student.college();
+        
+        Student s1 = new Student();
+       
+        s1.display();
+        
+        System.out.println();
+        
+         System.out.println("Student 2");
+        Student s2 = new Student("Jack", 20);
+        s2.display("Computer Science");
+    }
+    
+# B: Program to implement the concept of Inheritance and method overriding 
+//Parent class
+class Animal {
+    
+    void sound() {
+        System.out.println("Animal makes a sound");
+    } 
+}
+
+//Child class
+class Dog extends Animal {
+    
+    @Override
+    void sound() {
+        System.out.println("Dog Barks");
+    }
+    
+ }
+
+public class ProgramB {
+    
+    public static void main(String[] args) {
+        
+        Animal a = new Animal();
+        a.sound();
+        
+        Dog d = new Dog();
+        d.sound();
+    }
+    
+}
