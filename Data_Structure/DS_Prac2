@@ -1,0 +1,332 @@
+# Command Line
+import os
+import time
+from termcolor import colored, cprint
+
+class Stack:
+    """A simple Stack implementation with animation and basic operations."""
+    def __init__(self):
+        self.items = []
+
+    def is_empty(self):
+        return len(self.items) == 0
+
+    def insert(self, item, position):
+        if position < 0 or position > len(self.items):
+            raise IndexError("Invalid position")
+        self.items.insert(position, item)
+        print(colored(f"'{item}' has been inserted at position {position}.", "green"))
+        self.animate_insert(item)
+
+    def delete(self, position):
+        if position < 0 or position >= len(self.items):
+            raise IndexError("Invalid position")
+        item = self.items.pop(position)
+        print(colored(f"'{item}' has been deleted from position {position}.", "red"))
+        self.animate_delete(item)
+        return item
+
+    def peek(self):
+        if self.is_empty():
+            raise IndexError("Peek from an empty stack")
+        return self.items[-1]
+
+    def size(self):
+        return len(self.items)
+
+    def traverse(self):
+        if self.is_empty():
+            raise IndexError("Cannot traverse an empty stack")
+        return " <- ".join(self.items)
+
+    def __str__(self):
+        return " <- ".join(reversed(self.items)) if self.items else "Stack is empty"
+
+    def animate_insert(self, item):
+        for _ in range(3):
+            print(colored(f"Inserting {item}...", "yellow"))
+            time.sleep(0.3)
+        self.clear_screen()
+
+    def animate_delete(self, item):
+        for _ in range(3):
+            print(colored(f"Deleting {item}...", "magenta"))
+            time.sleep(0.3)
+        self.clear_screen()
+
+    @staticmethod
+    def clear_screen():
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+
+
+def check_delimiter_matching(expression: str) -> bool:
+    checker = Stack()
+    mapping = {")": "(", "}": "{", "]": "["}
+    
+    for char in expression:
+        if char in mapping.values():
+                        checker.items.append(char)
+        elif char in mapping.keys():
+            if checker.is_empty() or checker.items.pop() != mapping[char]:
+                return False
+    return checker.is_empty()
+
+
+def stack_operations():
+    """Provides an interactive CLI for the Stack class."""
+    stack = Stack()
+    cprint("Welcome to the Interactive Stack Operations Program!", "cyan", attrs=["bold"])
+    
+    while True:
+        print("\nCurrent Stack: ", colored(str(stack), "blue"))
+               options = [
+            "1. Push an item", 
+            "2. Pop an item", 
+            "3. Peek at the top item", 
+            "4. Check if the stack is empty", 
+            "5. Get the size of the stack", 
+            "6. Traverse the stack", 
+            "7. Check Delimiter Matching",
+            "8. Quit"
+        ]
+        for opt in options:
+            print(colored(opt, "yellow"))
+        
+        try:
+            choice = int(input(colored("Choose an operation (1-8): ", "green")))
+        except ValueError:
+            cprint("Invalid input. Please enter a valid number.", "red")
+            continue
+            
+        if choice == 1:
+            item = input(colored("Enter an item to insert: ", "green"))
+            try:
+                pos = int(input(colored(f"Enter the position to insert at (0-{stack.size()}): ", "green")))
+                stack.insert(item, pos)
+            except ValueError:
+                cprint("Invalid input. Position must be an integer.", "red")
+            except IndexError as e:
+                cprint(e, "red")
+                
+        elif choice == '2' or choice == 2:
+            if stack.is_empty():
+                cprint("Stack Underflow! Nothing to delete.", "red")
+            else:
+                try:
+                    pos = int(input(colored(f"Enter the position to delete from (0-{stack.size()-1}): ", "green")))
+                    stack.delete(pos)
+                except ValueError:
+                    cprint("Invalid input. Position must be an integer.", "red")
+                except IndexError as e:
+                    cprint(e, "red")
+                    
+        elif choice == 3:
+            try:
+                cprint("Top item: " + stack.peek(), "blue")
+            except IndexError as e:
+                cprint(e, "red")
+                
+        elif choice == 4:
+            cprint("Is the stack empty? " + ("Yes" if stack.is_empty() else "No"), "blue")
+            
+        elif choice == 5:
+            cprint("Size of the stack: " + str(stack.size()), "blue")
+            
+        elif choice == 6:
+            try:
+                cprint("Stack contents: " + stack.traverse(), "blue")
+            except IndexError as e:
+                cprint(e, "red")
+                
+        elif choice == 7:
+            expr = input(colored("Enter expression to check (e.g., {[()]}): ", "green"))
+            if check_delimiter_matching(expr):
+                cprint("Success! Delimiters are perfectly balanced.", "green", attrs=["bold"])
+            else:
+                cprint(" Error! Delimiters are unbalanced or incorrectly nested.", "red", attrs=["bold"])
+                
+        elif choice == 8:
+            cprint("Exiting the program. Goodbye!", "cyan", attrs=["bold"])
+            break
+        else:
+            cprint("Invalid choice. Please select a number between 1 and 8.", "red")
+
+if __name__ == "__main__":
+    stack_operations()
+
+# GUI
+import tkinter as tk
+from tkinter import messagebox
+
+
+stack = []
+
+
+BG = "#0B1020"
+FRAME = "#17203A"
+PRIMARY = "#7C3AED"
+SECONDARY = "#06B6D4"
+SUCCESS = "#22C55E"
+DANGER = "#EF4444"
+TEXT = "#F8FAFC"
+ENTRY_BG = "#E2E8F0"
+OUTPUT_BG = "#CFFAFE"
+
+def refresh():
+    output.delete("1.0", tk.END)
+
+    if len(stack) == 0:
+        output.insert(tk.END, "STACK IS EMPTY")
+        return
+
+    output.insert(tk.END, "INDEX : VALUE\n")
+    output.insert(tk.END, "----------------\n")
+
+    for i, val in enumerate(stack):
+        output.insert(tk.END, f"{i} : {val}\n")
+
+
+def push():
+    val = entry.get().strip()
+    pos = pos_entry.get().strip()
+
+    if val == "":
+        messagebox.showwarning("Warning", "Enter value")
+        return
+
+    if pos == "":
+        stack.append(val)
+    else:
+        try:
+            index = int(pos)
+
+            if index < 0 or index > len(stack):
+                messagebox.showerror("Error", "Invalid Position")
+                return
+
+            stack.insert(index, val)
+
+        except:
+            messagebox.showerror("Error", "Position must be number")
+            return
+
+    entry.delete(0, tk.END)
+    pos_entry.delete(0, tk.END)
+    refresh()
+
+
+def pop():
+    if len(stack) == 0:
+        messagebox.showinfo("Pop", "Stack is Empty")
+    else:
+        messagebox.showinfo("Pop", f"Popped: {stack.pop()}")
+        refresh()
+
+
+def peek():
+    if len(stack) == 0:
+        messagebox.showinfo("Peek", "Stack is Empty")
+    else:
+        messagebox.showinfo("Peek", f"Top: {stack[-1]}")
+
+
+def size():
+    messagebox.showinfo("Size", f"Size: {len(stack)}")
+
+
+def is_empty():
+    messagebox.showinfo("Is Empty", str(len(stack) == 0))
+
+
+def traverse():
+    if len(stack) == 0:
+        messagebox.showinfo("Traverse", "Stack is Empty")
+        return
+
+    text = "TOP → BOTTOM\n\n"
+    for i in reversed(range(len(stack))):
+        text += f"{stack[i]}\n"
+
+    messagebox.showinfo("Traverse", text)
+
+
+def delimiter():
+    exp = delim_entry.get().strip()
+
+    if exp == "":
+        messagebox.showwarning("Warning", "Enter expression")
+        return
+
+    temp = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+
+    for ch in exp:
+        if ch in "([{":
+            temp.append(ch)
+
+        elif ch in ")]}":
+            if len(temp) == 0 or temp.pop() != pairs[ch]:
+                messagebox.showinfo("Result", "Not Balanced")
+                return
+
+    if len(temp) == 0:
+        messagebox.showinfo("Result", "Balanced")
+    else:
+        messagebox.showinfo("Result", "Not Balanced")
+
+
+root = tk.Tk()
+root.title("STACK GUI")
+root.configure(bg=BG)
+
+tk.Label(
+    root,
+    text="STACK GUI ",
+    bg=BG,
+    fg=SECONDARY,
+    font=("Arial", 18, "bold")
+).pack(pady=10)
+
+top = tk.Frame(root, bg=FRAME)
+top.pack(pady=10)
+
+tk.Label(top, text="Value", bg=FRAME, fg=TEXT).grid(row=0, column=0, padx=5, pady=5)
+
+entry = tk.Entry(top, bg=ENTRY_BG, width=25)
+entry.grid(row=0, column=1, padx=5)
+
+tk.Label(top, text="Position (optional)", bg=FRAME, fg=TEXT).grid(row=0, column=2, padx=5)
+
+pos_entry = tk.Entry(top, bg=ENTRY_BG, width=10)
+pos_entry.grid(row=0, column=3, padx=5)
+
+tk.Label(top, text="Delimiter ", bg=FRAME, fg=TEXT).grid(row=1, column=0, padx=5, pady=5)
+
+delim_entry = tk.Entry(top, bg=ENTRY_BG, width=25)
+delim_entry.grid(row=1, column=1, columnspan=3, padx=5, pady=5, sticky="w")
+
+btn_frame = tk.Frame(root, bg=BG)
+btn_frame.pack(pady=10)
+
+tk.Button(btn_frame, text="Push", command=push, bg=SUCCESS, fg="white", width=14).grid(row=0, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Pop", command=pop, bg=DANGER, fg="white", width=14).grid(row=0, column=1, padx=5, pady=5)
+
+tk.Button(btn_frame, text="Peek", command=peek, bg=PRIMARY, fg="white", width=14).grid(row=1, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Size", command=size, bg=PRIMARY, fg="white", width=14).grid(row=1, column=1, padx=5, pady=5)
+
+tk.Button(btn_frame, text="Is Empty", command=is_empty, bg=SECONDARY, fg="black", width=14).grid(row=2, column=0, padx=5, pady=5)
+tk.Button(btn_frame, text="Traverse", command=traverse, bg=SECONDARY, fg="black", width=14).grid(row=2, column=1, padx=5, pady=5)
+
+tk.Button(btn_frame, text="Delimiter Check", command=delimiter, bg=PRIMARY, fg="white", width=30).grid(row=3, column=0, columnspan=2, pady=5)
+
+out_frame = tk.Frame(root, bg=FRAME)
+out_frame.pack(padx=10, pady=10, fill="both", expand=True)
+
+tk.Label(out_frame, text="STACK DISPLAY", bg=FRAME, fg=TEXT, font=("Arial", 12, "bold")).pack()
+
+output = tk.Text(out_frame, bg=OUTPUT_BG, fg="black", font=("Consolas", 12))
+output.pack(padx=10, pady=10, fill="both", expand=True)
+
+refresh()
+root.mainloop()
