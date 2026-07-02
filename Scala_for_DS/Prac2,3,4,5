@@ -1,0 +1,131 @@
+# 2.Practical Calculate mean, median, and mode of a list of numbers. Implement basic statistical calculations using Scala collections.
+object Practical2 {
+
+ def main(args: Array[String]): Unit = {
+
+   val data = List(
+     50,60,60,70,80,55,65,60,75,85,
+     90,95,100,60,70,80,85,60,55,65,
+     70,75,80,85,90,95,100,60,60,70,
+     65,75,85,95,100,60,55,65,75,85,
+     90,60,70,80,90,100,60,65,75,85,
+     95,60,70,80,90,100,60,60,70,80
+   )
+
+   val mean = data.sum.toDouble / data.size
+
+   val sorted = data.sorted
+   val median =
+     if (data.size % 2 == 0)
+       (sorted(data.size/2 - 1) + sorted(data.size/2)) / 2.0
+     else
+       sorted(data.size/2)
+
+   val mode = data.groupBy(identity)
+     .mapValues(_.size)
+     .maxBy(_._2)
+     ._1
+
+   println(s"Mean=$mean \n Median=$median \n Mode=$mode")
+ }
+}
+
+# 3.Generate a random dataset of 10 numbers and calculate its variance and standard deviation.
+object Prac3 {
+
+ def main(args: Array[String]): Unit = {
+
+   val data = List.fill(10)(scala.util.Random.nextInt(100))
+
+   val mean = data.sum.toDouble / data.size
+
+   val variance =
+     data.map(x => math.pow(x - mean, 2)).sum / data.size
+
+   val sd = math.sqrt(variance)
+
+   println(data)
+   println(s"Mean=$mean \n Variance=$variance\n SD=$sd")
+ }
+}
+
+# 4.Create a dense vector using Breeze and calculate its sum, mean, and dot product with another vector.
+import breeze.linalg._
+
+object DenseVectorBreeze {
+ def main(args: Array[String]): Unit = {
+
+   // Create dense vectors
+   val v1 = DenseVector(15.0, 20.0, 3.0, 41.0, 5.0)
+   val v2 = DenseVector(5.0, 45.0, 31.0, 2.0, 11.0)
+
+   println(s"Vector v1: $v1")
+   println(s"Vector v2: $v2")
+
+   // Sum of elements in v1
+   val sum = breeze.linalg.sum(v1)
+   println(f"Sum of v1: $sum%.2f")
+
+   // Mean of elements in v1
+   val mean = breeze.stats.mean(v1)
+   println(f"Mean of v1: $mean%.2f")
+
+   // Dot product of v1 and v2
+   val dotProduct = v1 dot v2
+   println(f"Dot Product of v1 and v2: $dotProduct%.2f")
+ }
+}
+
+# SBT code - 
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "untitled1",
+   libraryDependencies += "org.scalanlp" %% "breeze" % "2.1.0"
+ )
+
+# 5.Generate a random matrix using Breeze and compute its transpose and determinant. 
+import breeze.linalg._
+import scala.util.Random
+
+object MatrixTranspose {
+ def main(args: Array[String]): Unit = {
+
+   // Matrix size
+   val rows = 3
+   val cols = 3
+
+   // Generate a 3x3 matrix with random integers (1 to 10)
+   val randData = Array.fill(rows * cols)(Random.nextInt(10) + 1)
+
+   val randMatrix = new DenseMatrix(rows, cols, randData)
+
+   println("Random Integer Matrix:")
+   println(randMatrix)
+
+   // Transpose
+   val transposed = randMatrix.t
+
+   println("\nTransposed Matrix:")
+   println(transposed)
+
+   // Convert to Double for determinant calculation
+   val doubleMatrix = randMatrix.map(_.toDouble)
+
+   val determinant = det(doubleMatrix)
+
+   println(f"\nDeterminant: $determinant%.2f")
+ }
+}
+
+# SBT code -
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "matrix-transpose",
+   libraryDependencies ++= Seq(
+     "org.scalanlp" %% "breeze" % "2.1.0"
+   )
+ )
