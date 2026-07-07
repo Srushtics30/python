@@ -1,0 +1,340 @@
+#A: Write a program to implement the concept of Abstract classes and method
+// Abstract class
+abstract class Employee {
+
+    String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+
+    // Abstract method
+    abstract double calculateSalary();
+
+    // Concrete method
+    void display() {
+        System.out.println("Employee Name: " + name);
+        System.out.println("Salary: " + calculateSalary());
+    }
+}
+
+// Full-time Employee
+class FullTimeEmployee extends Employee {
+
+    FullTimeEmployee(String name) {
+        super(name);
+    }
+
+    double calculateSalary() {
+        return 50000;
+    }
+}
+
+// Part-time Employee
+class PartTimeEmployee extends Employee {
+
+    PartTimeEmployee(String name) {
+        super(name);
+    }
+
+    double calculateSalary() {
+        return 20000;
+    }
+}
+
+// Main class
+public class AbstractEmp {
+    public static void main(String[] args) {
+
+        Employee e1 = new FullTimeEmployee("Rahul");
+        Employee e2 = new PartTimeEmployee("Anita");
+
+        e1.display();
+        System.out.println();
+
+        e2.display();
+    }
+}
+
+# GUI -
+import javax.swing.*;
+import java.awt.event.*;
+
+// Abstract class
+abstract class Employee {
+
+    String name;
+
+    Employee(String name) {
+        this.name = name;
+    }
+
+    // Abstract method
+    abstract double calculateSalary();
+
+    // Concrete method
+    String display() {
+        return "Employee Name: " + name +
+               "\nSalary: " + calculateSalary();
+    }
+}
+
+// Full-time Employee
+class FullTimeEmployee extends Employee {
+
+    FullTimeEmployee(String name) {
+        super(name);
+    }
+
+    double calculateSalary() {
+        return 50000;
+    }
+}
+
+// Part-time Employee
+class PartTimeEmployee extends Employee {
+
+    PartTimeEmployee(String name) {
+        super(name);
+    }
+
+    double calculateSalary() {
+        return 20000;
+    }
+}
+
+// GUI Main class
+public class AbstractEmpGUI extends JFrame {
+
+    JTextField nameField;
+    JButton fullTimeBtn, partTimeBtn;
+    JTextArea resultArea;
+
+    AbstractEmpGUI() {
+
+        setTitle("Employee Salary Calculator");
+        setSize(400, 300);
+        setLayout(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JLabel nameLabel = new JLabel("Employee Name:");
+        nameLabel.setBounds(30, 30, 120, 30);
+        add(nameLabel);
+
+        nameField = new JTextField();
+        nameField.setBounds(150, 30, 150, 30);
+        add(nameField);
+
+        fullTimeBtn = new JButton("Full Time Employee");
+        fullTimeBtn.setBounds(30, 80, 160, 30);
+        add(fullTimeBtn);
+
+        partTimeBtn = new JButton("Part Time Employee");
+        partTimeBtn.setBounds(200, 80, 150, 30);
+        add(partTimeBtn);
+
+        resultArea = new JTextArea();
+        resultArea.setBounds(50, 140, 280, 80);
+        add(resultArea);
+
+
+        // Full-time button action
+        fullTimeBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                Employee emp = new FullTimeEmployee(nameField.getText());
+
+                resultArea.setText(emp.display());
+            }
+        });
+
+
+        // Part-time button action
+        partTimeBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                Employee emp = new PartTimeEmployee(nameField.getText());
+
+                resultArea.setText(emp.display());
+            }
+        });
+
+        setVisible(true);
+    }
+
+
+    public static void main(String[] args) {
+
+        new AbstractEmpGUI();
+    }
+}
+
+# B: Write a program to implement the concept of interfaces 
+//Interface
+interface Shape {
+
+double calArea();
+}
+//Circle Class
+class circle implements Shape {
+    
+    double radius;
+    
+    circle(double radius) {
+        this.radius = radius;
+        
+    }
+    
+    public double calArea() {
+        return 3.14 * radius * radius;
+        
+    }
+}
+
+//Rectangle Class 
+class rectangle implements Shape {
+    
+    double length, width;
+    
+    rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+        
+    }
+    public double calArea() {
+    return length * width;
+   }
+}
+
+//Main class
+public class InterfaceShape {
+    public static void main(String[] args) {
+        
+        Shape s1 = new circle(3);
+        Shape s2 = new rectangle(1, 5);
+        
+       System.out.println("Area of Circle = " + s1.calArea());
+       System.out.println("Area of Rectangle = " + s2.calArea());
+        
+    }
+}
+
+# GUI -
+import javax.swing.*;
+import java.awt.event.*;
+
+// Interface
+interface Shape {
+    double calArea();
+}
+
+// Circle Class
+class Circle implements Shape {
+    double radius;
+
+    Circle(double radius) {
+        this.radius = radius;
+    }
+
+    public double calArea() {
+        return 3.14 * radius * radius;
+    }
+}
+
+// Rectangle Class
+class Rectangle implements Shape {
+    double length, width;
+
+    Rectangle(double length, double width) {
+        this.length = length;
+        this.width = width;
+    }
+
+    public double calArea() {
+        return length * width;
+    }
+}
+
+// Main GUI Class
+public class InterfaceShapeGUI {
+
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame("Shape Area Calculator");
+
+        JLabel l1 = new JLabel("Radius:");
+        JTextField radius = new JTextField();
+
+        JLabel l2 = new JLabel("Length:");
+        JTextField length = new JTextField();
+
+        JLabel l3 = new JLabel("Width:");
+        JTextField width = new JTextField();
+
+        JButton circleBtn = new JButton("Circle Area");
+        JButton rectBtn = new JButton("Rectangle Area");
+
+        JLabel result = new JLabel("Result:");
+
+        l1.setBounds(30,30,100,30);
+        radius.setBounds(120,30,100,30);
+
+        l2.setBounds(30,70,100,30);
+        length.setBounds(120,70,100,30);
+
+        l3.setBounds(30,110,100,30);
+        width.setBounds(120,110,100,30);
+
+        circleBtn.setBounds(30,160,120,30);
+        rectBtn.setBounds(160,160,140,30);
+
+        result.setBounds(30,220,250,30);
+
+
+        circleBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                double r = Double.parseDouble(radius.getText());
+
+                Shape s = new Circle(r);
+
+                result.setText("Circle Area = " + s.calArea());
+            }
+        });
+
+
+        rectBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                double l = Double.parseDouble(length.getText());
+                double w = Double.parseDouble(width.getText());
+
+                Shape s = new Rectangle(l,w);
+
+                result.setText("Rectangle Area = " + s.calArea());
+            }
+        });
+
+
+        frame.add(l1);
+        frame.add(radius);
+
+        frame.add(l2);
+        frame.add(length);
+
+        frame.add(l3);
+        frame.add(width);
+
+
+        frame.add(circleBtn);
+        frame.add(rectBtn);
+
+        frame.add(result);
+
+
+        frame.setSize(350,320);
+        frame.setLayout(null);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+}
