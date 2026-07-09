@@ -1,4 +1,4 @@
-# Command Line
+# Command Line : Code - 
 import os
 import time
 from termcolor import colored, cprint
@@ -65,6 +65,48 @@ def check_delimiters(expr):
 
     return stack.is_empty()
 
+def prefix_to_postfix(expr):
+    stack = Stack()
+    operators = "+-*/^"
+
+    tokens = expr.split()
+
+    for token in reversed(tokens):
+        if token not in operators:
+            stack.push(token)
+        else:
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.push(op1 + " " + op2 + " " + token)
+
+    return stack.pop()
+
+
+def evaluate_postfix(expr):
+    stack = Stack()
+    operators = "+-*/^"
+
+    tokens = expr.split()
+
+    for token in tokens:
+        if token not in operators:
+            stack.push(float(token))
+        else:
+            b = stack.pop()
+            a = stack.pop()
+
+            if token == '+':
+                stack.push(a + b)
+            elif token == '-':
+                stack.push(a - b)
+            elif token == '*':
+                stack.push(a * b)
+            elif token == '/':
+                stack.push(a / b)
+            elif token == '^':
+                stack.push(a ** b)
+
+    return stack.pop()
 
 def menu():
     stack = Stack()
@@ -81,7 +123,8 @@ def menu():
         print(colored("5. Size", "yellow"))
         print(colored("6. Traverse", "yellow"))
         print(colored("7. Delimiter Check", "yellow"))
-        print(colored("8. Exit", "yellow"))
+        print(colored("8. Prefix to Postfix & Evaluate", "yellow"))
+        print(colored("9. Exit", "yellow"))
 
         try:
             choice = int(input(colored("Enter choice: ", "green")))
@@ -118,6 +161,15 @@ def menu():
                 cprint("Not Balanced", "red")
 
         elif choice == 8:
+            expr = input("Enter prefix expression (use spaces): ")
+            postfix = prefix_to_postfix(expr)
+            print("Postfix Expression:", postfix)
+            try:
+                print("Evaluation:", evaluate_postfix(postfix))
+            except:
+                    print("Invalid Expression")
+
+        elif choice == 9:
             break
 
         else:
@@ -127,9 +179,10 @@ def menu():
 if __name__ == "__main__":
     menu()
 
-# GUI
+# GUI : Code -
 import tkinter as tk
 from tkinter import messagebox
+
 stack = []
 
 BG = "#0B1020"
@@ -244,9 +297,91 @@ def delimiter():
     else:
         messagebox.showinfo("Result", "Not Balanced")
 
+def prefix_to_postfix(expr):
+    stack = []
+    operators = "+-*/^"
+
+    tokens = expr.split()
+
+    for token in reversed(tokens):
+        if token not in operators:
+            stack.append(token)
+        else:
+            if len(stack) < 2:
+                return "Invalid Prefix Expression"
+
+            op1 = stack.pop()
+            op2 = stack.pop()
+            stack.append(op1 + " " + op2 + " " + token)
+
+    if len(stack) != 1:
+        return "Invalid Prefix Expression"
+
+    return stack.pop()
+
+
+def evaluate_postfix(expr):
+    stack = []
+    operators = "+-*/^"
+
+    tokens = expr.split()
+
+    try:
+        for token in tokens:
+            if token not in operators:
+                stack.append(float(token))
+
+            else:
+                if len(stack) < 2:
+                    return "Invalid Postfix Expression"
+
+                b = stack.pop()
+                a = stack.pop()
+
+                if token == '+':
+                    stack.append(a + b)
+                elif token == '-':
+                    stack.append(a - b)
+                elif token == '*':
+                    stack.append(a * b)
+                elif token == '/':
+                    if b == 0:
+                        return "Division by Zero"
+                    stack.append(a / b)
+                elif token == '^':
+                    stack.append(a ** b)
+
+        if len(stack) != 1:
+            return "Invalid Postfix Expression"
+
+        return stack.pop()
+
+    except:
+        return "Invalid Expression"
+
+
+def prefix_convert():
+    expr = prefix_entry.get().strip()
+
+    if expr == "":
+        messagebox.showwarning("Warning", "Enter Prefix Expression")
+        return
+
+    postfix = prefix_to_postfix(expr)
+
+    if postfix == "Invalid Prefix Expression":
+        messagebox.showerror("Error", postfix)
+        return
+
+    result = evaluate_postfix(postfix)
+
+    messagebox.showinfo(
+        "Prefix Conversion",
+        f"Prefix: {expr}\n\nPostfix: {postfix}\n\nEvaluation: {result}"
+    )
 
 root = tk.Tk()
-root.title("STACK GUI")
+root.title("S116 - STACK GUI")
 root.configure(bg=BG)
 
 tk.Label(
@@ -275,6 +410,11 @@ tk.Label(top, text="Delimiter ", bg=FRAME, fg=TEXT).grid(row=1, column=0, padx=5
 delim_entry = tk.Entry(top, bg=ENTRY_BG, width=25)
 delim_entry.grid(row=1, column=1, columnspan=3, padx=5, pady=5, sticky="w")
 
+tk.Label(top, text="Prefix Expression", bg=FRAME, fg=TEXT).grid(row=2, column=0, padx=5, pady=5)
+
+prefix_entry = tk.Entry(top, bg=ENTRY_BG, width=25)
+prefix_entry.grid(row=2, column=1, columnspan=3, padx=5, pady=5, sticky="w")
+
 btn_frame = tk.Frame(root, bg=BG)
 btn_frame.pack(pady=10)
 
@@ -289,6 +429,15 @@ tk.Button(btn_frame, text="Traverse", command=traverse, bg=SECONDARY, fg="black"
 
 tk.Button(btn_frame, text="Delimiter Check", command=delimiter, bg=PRIMARY, fg="white", width=30).grid(row=3, column=0, columnspan=2, pady=5)
 
+tk.Button(
+    btn_frame,
+    text="Prefix To Postfix & Evaluate",
+    command=prefix_convert,
+    bg=SUCCESS,
+    fg="white",
+    width=30
+).grid(row=4, column=0, columnspan=2, pady=5)
+
 out_frame = tk.Frame(root, bg=FRAME)
 out_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
@@ -297,5 +446,4 @@ tk.Label(out_frame, text="STACK DISPLAY", bg=FRAME, fg=TEXT, font=("Arial", 12, 
 output = tk.Text(out_frame, bg=OUTPUT_BG, fg="black", font=("Consolas", 12))
 output.pack(padx=10, pady=10, fill="both", expand=True)
 
-refresh()
 root.mainloop()
