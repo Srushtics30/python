@@ -1,0 +1,522 @@
+# Write a program to implement doubly linked list with various operations. Command Line Code - 
+import time
+from colorama import init, Fore, Style
+
+init(autoreset=True)
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
+
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+
+        if self.head is None:
+            self.head = new_node
+        else:
+            new_node.next = self.head
+            self.head.prev = new_node
+            self.head = new_node
+
+    def insert_at_end(self, data):
+        new_node = Node(data)
+
+        if self.head is None:
+            self.head = new_node
+            return
+
+        temp = self.head
+
+        while temp.next:
+            temp = temp.next
+
+        temp.next = new_node
+        new_node.prev = temp
+
+    def insert_at_position(self, data, position):
+        if position == 0:
+            self.insert_at_beginning(data)
+            return
+
+        temp = self.head
+
+        for i in range(position):
+            if temp is None:
+                raise IndexError("Position out of bounds.")
+            temp = temp.next
+
+        if temp is None:
+            raise IndexError("Position out of bounds.")
+
+        new_node = Node(data)
+
+        new_node.next = temp
+        new_node.prev = temp.prev
+
+        if temp.prev:
+            temp.prev.next = new_node
+
+        temp.prev = new_node
+
+    def delete_at_beginning(self):
+        if self.head is None:
+            return
+
+        if self.head.next is None:
+            self.head = None
+        else:
+            self.head = self.head.next
+            self.head.prev = None
+
+    def delete_at_end(self):
+        if self.head is None:
+            return
+
+        if self.head.next is None:
+            self.head = None
+            return
+
+        temp = self.head
+
+        while temp.next:
+            temp = temp.next
+
+        temp.prev.next = None
+
+    def delete_at_position(self, position):
+        temp = self.head
+
+        for i in range(position):
+            if temp is None:
+                raise IndexError("Position out of bounds.")
+            temp = temp.next
+
+        if temp is None:
+            raise IndexError("Position out of bounds.")
+
+        if temp.prev:
+            temp.prev.next = temp.next
+
+        if temp.next:
+            temp.next.prev = temp.prev
+
+        if position == 0:
+            self.head = temp.next
+
+    def display(self):
+        if self.head is None:
+            print(Fore.RED + "Doubly Linked List is empty.")
+            return
+
+        temp = self.head
+
+        print(Fore.GREEN + "Doubly Linked List:")
+
+        while temp:
+            print(temp.data, end=" <-> ")
+            temp = temp.next
+
+        print("NULL")
+
+    def search(self, data):
+        temp = self.head
+
+        while temp:
+            if temp.data == data:
+                return True
+            temp = temp.next
+
+        return False
+
+    def length(self):
+        count = 0
+        temp = self.head
+
+        while temp:
+            count += 1
+            temp = temp.next
+
+        return count
+
+def display_menu():
+    print("\n" + "=" * 40)
+    print(Style.BRIGHT + Fore.CYAN + "DOUBLY LINKED LIST OPERATIONS")
+    print(Fore.YELLOW + "1. Insert at Beginning")
+    print(Fore.YELLOW + "2. Insert at End")
+    print(Fore.YELLOW + "3. Insert at Position")
+    print(Fore.YELLOW + "4. Delete at Beginning")
+    print(Fore.YELLOW + "5. Delete at End")
+    print(Fore.YELLOW + "6. Delete at Position")
+    print(Fore.YELLOW + "7. Display List")
+    print(Fore.YELLOW + "8. Search Node")
+    print(Fore.YELLOW + "9. Length of List")
+    print(Fore.RED + "10. Exit")
+    print("=" * 40)
+
+
+def main():
+    linked_list = DoublyLinkedList()
+
+    while True:
+        display_menu()
+
+        try:
+            choice = int(input("Enter your choice: "))
+
+            if choice == 1:
+                data = int(input("Enter data: "))
+                linked_list.insert_at_beginning(data)
+                print(Fore.GREEN + "Node inserted at beginning.")
+
+            elif choice == 2:
+                data = int(input("Enter data: "))
+                linked_list.insert_at_end(data)
+                print(Fore.GREEN + "Node inserted at end.")
+
+            elif choice == 3:
+                data = int(input("Enter data: "))
+                position = int(input("Enter position: "))
+                linked_list.insert_at_position(data, position)
+                print(Fore.GREEN + "Node inserted.")
+
+            elif choice == 4:
+                linked_list.delete_at_beginning()
+                print(Fore.RED + "Node deleted at beginning.")
+
+            elif choice == 5:
+                linked_list.delete_at_end()
+                print(Fore.RED + "Node deleted at end.")
+
+            elif choice == 6:
+                position = int(input("Enter index: "))
+                linked_list.delete_at_position(position)
+                print(Fore.RED + "Node deleted.")
+
+            elif choice == 7:
+                linked_list.display()
+
+            elif choice == 8:
+                data = int(input("Enter data to search: "))
+
+                if linked_list.search(data):
+                    print(Fore.GREEN + "Node found.")
+                else:
+                    print(Fore.RED + "Node not found.")
+
+            elif choice == 9:
+                print(Fore.CYAN + "Length:", linked_list.length())
+
+            elif choice == 10:
+                print("Exiting...")
+                break
+
+            else:
+                print(Fore.YELLOW + "Invalid choice.")
+
+        except ValueError:
+            print(Fore.YELLOW + "Enter valid integer.")
+
+        except IndexError as e:
+            print(Fore.RED + str(e))
+
+        except Exception as e:
+            print(Fore.RED + str(e))
+
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    main()
+
+# GUI Code -
+import tkinter as tk
+from tkinter import messagebox
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
+
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def insert_beginning(self, data):
+        node = Node(data)
+
+        if self.head is None:
+            self.head = node
+        else:
+            node.next = self.head
+            self.head.prev = node
+            self.head = node
+
+    def insert_end(self, data):
+        node = Node(data)
+
+        if self.head is None:
+            self.head = node
+            return
+
+        temp = self.head
+
+        while temp.next:
+            temp = temp.next
+
+        temp.next = node
+        node.prev = temp
+
+    def insert_position(self, data, pos):
+        if pos == 0:
+            self.insert_beginning(data)
+            return
+
+        temp = self.head
+
+        for i in range(pos):
+            if temp is None:
+                raise Exception("Invalid Position")
+            temp = temp.next
+
+        if temp is None:
+            raise Exception("Invalid Position")
+
+        node = Node(data)
+
+        node.next = temp
+        node.prev = temp.prev
+
+        if temp.prev:
+            temp.prev.next = node
+
+        temp.prev = node
+
+    def delete_beginning(self):
+        if self.head is None:
+            return
+
+        self.head = self.head.next
+
+        if self.head:
+            self.head.prev = None
+
+    def delete_end(self):
+        if self.head is None:
+            return
+
+        temp = self.head
+
+        while temp.next:
+            temp = temp.next
+
+        if temp.prev:
+            temp.prev.next = None
+        else:
+            self.head = None
+
+    def delete_position(self, pos):
+        temp = self.head
+
+        for i in range(pos):
+            if temp is None:
+                raise Exception("Invalid Position")
+            temp = temp.next
+
+        if temp is None:
+            raise Exception("Invalid Position")
+
+        if temp.prev:
+            temp.prev.next = temp.next
+        else:
+            self.head = temp.next
+
+        if temp.next:
+            temp.next.prev = temp.prev
+
+    def display(self):
+        result = ""
+        temp = self.head
+
+        while temp:
+            result += str(temp.data) + " <-> "
+            temp = temp.next
+
+        return result + "NULL"
+
+    def search(self, data):
+        temp = self.head
+
+        while temp:
+            if temp.data == data:
+                return True
+            temp = temp.next
+
+        return False
+
+    def length(self):
+        count = 0
+        temp = self.head
+
+        while temp:
+            count += 1
+            temp = temp.next
+
+        return count
+
+
+linked_list = DoublyLinkedList()
+
+
+def get_data():
+    try:
+        return int(data_entry.get())
+    except:
+        messagebox.showerror("Error", "Enter valid number")
+        return None
+
+
+def refresh():
+    output.config(state="normal")
+    output.delete(1.0, tk.END)
+    output.insert(tk.END, linked_list.display())
+    output.config(state="disabled")
+
+
+def insert_begin():
+    data = get_data()
+    if data is not None:
+        linked_list.insert_beginning(data)
+        refresh()
+
+
+def insert_end():
+    data = get_data()
+    if data is not None:
+        linked_list.insert_end(data)
+        refresh()
+
+
+def insert_position():
+    try:
+        data = get_data()
+        pos = int(position_entry.get())
+
+        linked_list.insert_position(data, pos)
+        refresh()
+
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+
+def delete_begin():
+    linked_list.delete_beginning()
+    refresh()
+
+def delete_end():
+    linked_list.delete_end()
+    refresh()
+
+def delete_position():
+    try:
+        pos = int(position_entry.get())
+        linked_list.delete_position(pos)
+        refresh()
+
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+
+def search():
+    data = get_data()
+
+    if linked_list.search(data):
+        messagebox.showinfo("Search", "Node Found")
+    else:
+        messagebox.showwarning("Search", "Node Not Found")
+
+def length():
+    messagebox.showinfo(
+        "Length",
+        "Length of List: " + str(linked_list.length())
+    )
+
+window = tk.Tk()
+window.title("S116 - Doubly Linked List")
+window.geometry("600x650")
+window.config(bg="#e8f5e9")
+
+tk.Label(
+    window,
+    text="DOUBLY LINKED LIST",
+    font=("Arial",18,"bold"),
+    bg="#2e7d32",
+    fg="white"
+).pack(fill="x", pady=10)
+
+frame = tk.Frame(window,bg="#e8f5e9")
+frame.pack(pady=10)
+
+tk.Label(
+    frame,
+    text="Data:",
+    bg="#e8f5e9"
+).grid(row=0,column=0)
+
+data_entry = tk.Entry(frame)
+data_entry.grid(row=0,column=1)
+
+tk.Label(
+    frame,
+    text="Position:",
+    bg="#e8f5e9"
+).grid(row=1,column=0)
+
+position_entry = tk.Entry(frame)
+position_entry.grid(row=1,column=1)
+
+buttons = [
+("Insert Beginning",insert_begin,"#4caf50"),
+("Insert End",insert_end,"#2196f3"),
+("Insert Position",insert_position,"#9c27b0"),
+("Delete Beginning",delete_begin,"#f44336"),
+("Delete End",delete_end,"#ff5722"),
+("Delete Position",delete_position,"#ff9800"),
+("Search Node",search,"#009688"),
+("Length",length,"#795548")
+]
+
+for text,command,color in buttons:
+    tk.Button(
+        window,
+        text=text,
+        command=command,
+        width=25,
+        bg=color,
+        fg="white",
+        font=("Arial",10,"bold")
+    ).pack(pady=3)
+
+tk.Label(
+    window,
+    text="Doubly Linked List:",
+    bg="#e8f5e9",
+    font=("Arial",12,"bold")
+).pack(pady=10)
+
+output = tk.Text(
+    window,
+    height=5,
+    width=50,
+    font=("Arial",12)
+)
+
+output.pack()
+
+output.config(state="disabled")
+
+window.mainloop()
