@@ -1,0 +1,186 @@
+# 3a. Write a python code for creating a variable and storing the text that we want to search
+#Step 1: Ask the user to enter the text
+text_to_search = input("Enter the text: ")
+
+#Step 2: Ask the user to enter the word they want to search for
+search_word = input("Enter the word to search for: ")
+
+#Step 3: Search for the word in the text
+if search_word in text_to_search:
+    print(f"The word '{search_word}' was found in the text.")
+else:
+    print(f"The word '{search_word}' was NOT found in the text.")
+
+# 3b. Write a python code to retrieve data from HTML file.
+pip install beautifulsoup4
+
+# htmlfile.html
+<html>
+<head>
+<title>SYCS</title>
+</head>
+<body>
+<h1>Python for Data Science</h1>
+<p>Srushti - S116</p>
+</body>
+</html>
+
+# PyDS3b.py
+from bs4 import BeautifulSoup
+
+#Step 1: Open and read the HTML file
+with open('htmlfile.html', 'r', encoding='utf-8') as file:
+    html_content = file.read()
+
+#Step 2: Parse the HTML using BeautifulSoup
+soup = BeautifulSoup(html_content, 'html.parser')
+
+#Step 3: Extract and print all the text from the HTML
+text = soup.get_text()
+print("Extracted data:")
+print(text)
+
+# 3c. Write a python code to print current date in different format.
+from datetime import datetime
+
+#Get current date and time
+now = datetime.now()
+print("Different date formats:")
+print("1. YYYY-MM-DD :", now.strftime("%Y-%m-%d"))
+print("2. DD-MM-YYYY :", now.strftime("%d-%m-%Y"))
+print("3. Month Day, Year :", now.strftime("%B %d, %Y"))
+print("4. Day Month, Year :", now.strftime("%d %B, %Y"))
+print("5. MM/DD/YYYY :", now.strftime("%m/%d/%Y"))
+print("6. Weekday, Month Day, Year:", now.strftime("%A, %B %d, %Y"))
+
+# 3d. Write a python code to convert time stamp to date stamp.
+from datetime import datetime
+
+#Step 1: Ask the user to enter a timestamp
+timestamp = float(input("Enter a timestamp (e.g., 1690915200): "))
+
+#Step 2: Convert timestamp to datetime object
+date = datetime.fromtimestamp(timestamp)
+
+#Step 3: Print the date in readable format
+print("Converted date:", date.strftime("%Y-%m-%d %H:%M:%S"))
+
+# 3e. Write a python code to develop calendar module.
+import calendar
+
+def show_full_year_calendar(year):
+    print(f"\nFull Calendar for {year}:\n")
+    print(calendar.calendar(year))
+
+def show_month_calendar(year, month):
+    print(f"\nCalendar for {calendar.month_name[month]} {year}:\n")
+    print(calendar.month(year, month))
+
+def is_leap_year(year):
+    if calendar.isleap(year):
+        print(f"\n{year} is a leap year.")
+    else:
+        print(f"\n{year} is not a leap year.")
+
+print("Calendar Module")
+
+#Ask user for year
+year = int(input("Enter the year: "))
+
+#Display full year calendar
+show_full_year_calendar(year)
+
+#Ask for a specific month
+month = int(input("\nEnter the month number (1-12) to view that month's calendar: "))
+show_month_calendar(year, month)
+
+# Check if the year is a leap year
+is_leap_year(year)
+
+# 3f. Write a python code to compare two dates.
+from datetime import datetime
+
+#Step 1: Take two dates as input from the user
+date_str1 = input("Enter the first date (YYYY-MM-DD): ")
+date_str2 = input("Enter the second date (YYYY-MM-DD): ")
+
+#Step 2: Convert strings to datetime objects
+date1 = datetime.strptime(date_str1, "%Y-%m-%d")
+date2 = datetime.strptime(date_str2, "%Y-%m-%d")
+
+#Step 3: Compare the two dates
+if date1 < date2:
+    print(f"{date_str1} is earlier than {date_str2}.")
+elif date1 > date2:
+        print(f"{date_str1} is later than {date_str2}.")
+else:
+    print("Both dates are the same.")
+#1. Write a Python program that reads a block of text from a file and searches for a specific word entered by the user. Display whether the word is found or not.
+# Read text from a file
+file = open("htmlfile.html", "r")
+text = file.read()
+file.close()
+
+word = input("Enter the word to search: ")
+
+if word.lower() in text.lower():
+    print("Word found")
+else:
+    print("Word not found")
+
+# 2. Write a Python program that:
+#a. Reads an HTML file named example.html
+#b. Extracts all visible text using BeautifulSoup (ignoring HTML tags)
+#c. Asks the user to enter a word to search
+#d. Checks if the entered word exists in the extracted text
+# e. Displays whether the word was found or not
+from bs4 import BeautifulSoup
+
+file = open("htmlfile.html", "r")
+html = file.read()
+file.close()
+
+soup = BeautifulSoup(html, "html.parser")
+text = soup.get_text()
+
+word = input("\n Enter the word to search: ")
+
+if word.lower() in text.lower():
+    print("Word found")
+else:
+    print("Word not found \n")
+
+# 3. Write a Python program to display the current date in the following formats:
+# a. YYYY-MM-DD
+# b. DD-MM-YYYY
+# c. Month Day, Year
+# d. Weekday, Month Day, Year
+from datetime import datetime
+
+today = datetime.now()
+
+print("\n YYYY-MM-DD :", today.strftime("%Y-%m-%d"))
+print("DD-MM-YYYY :", today.strftime("%d-%m-%Y"))
+print("Month Day, Year :", today.strftime("%B %d, %Y"))
+print("Weekday, Month Day, Year :", today.strftime("%A, %B %d, %Y"))
+
+# 4. Write a Python program to print the current date.
+from datetime import date
+
+today = date.today()
+print("\n Current Date:", today)
+
+# 5. Write a Python program to show the current month number and name.
+from datetime import datetime
+
+today = datetime.now()
+
+print("\n Month Number:", today.month)
+print("\n Month Name:", today.strftime("%B"))
+
+# 6. Write a Python program to display the current time in HH:MM:SS format.
+from datetime import datetime
+
+now = datetime.now()
+
+print("\n Current Time:", now.strftime("%H:%M:%S"))
