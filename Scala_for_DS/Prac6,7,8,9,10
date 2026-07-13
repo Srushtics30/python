@@ -1,0 +1,272 @@
+# 6. Slice a Breeze matrix to extract a sub-matrix and calculate its row and column sums.
+import breeze.linalg._
+
+object SubMatrixSum {
+ def main(args: Array[String]): Unit = {
+
+   // Create a 4x4 matrix
+   val matrix = DenseMatrix(
+     (1, 2, 3, 4),
+     (5, 5, 7, 9),
+     (9, 10, 11, 12),
+     (1, 2, 3, 4)
+   )
+
+   println(s"Original Matrix:\n$matrix")
+
+   // Slice a sub-matrix: rows 1 to 2, columns 1 to 3 (0-based indexing)
+   val subMatrix = matrix(1 to 2, 1 to 3)
+
+   println(s"\nSub-Matrix (rows 1-2, cols 1-3):\n$subMatrix")
+
+   // Row sums
+   val rowSums = sum(subMatrix(*, ::))
+   println(s"\nRow Sums: $rowSums")
+
+   // Column sums
+   val colSums = sum(subMatrix(::, *))
+   println(s"Column Sums: $colSums")
+ }
+}
+# SBT Code -
+name := "BreezeExample"
+
+version := "0.1.0"
+
+scalaVersion := "3.3.3"
+
+libraryDependencies += "org.scalanlp" %% "breeze" % "2.1.0"
+
+# 7. Write a program to perform element-wise addition, subtraction, multiplication, and division of two Breeze matrices. 
+import breeze.linalg._
+object Prac7 {
+ def main(args: Array[String]): Unit = {
+   // Create two matrices of same size
+   val mat1 = DenseMatrix((3.0, 2.0), (1.0, 5.0))
+   val mat2 = DenseMatrix((7.0, 1.0), (8.0, 9.0))
+   // Element-wise operations
+   val addition = mat1 + mat2
+   val subtraction = mat1 - mat2
+   val multiplication = mat1 *:* mat2 // Element-wise multiplication
+   val division = mat1 /:/ mat2 // Element-wise division
+   // Print results
+   println("Matrix 1:")
+   println(mat1)
+   println("\nMatrix 2:")
+   println(mat2)
+   println("\nAddition:")
+   println(addition)
+   println("\nSubtraction:")
+   println(subtraction)
+   println("\nElement-wise Multiplication:")
+   println(multiplication)
+   println("\nElement-wise Division:")
+   println(division)
+ }
+}
+# SBT Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "matrix-operations",
+   libraryDependencies += "org.scalanlp" %% "breeze" % "2.1.0"
+ )
+
+# 8. Read a CSV file and calculate basic statistics for each numeric column. Use the scala-csv library or similar tools.
+import com.github.tototoshi.csv._
+import java.io.File
+import scala.util.Try
+import scala.math._
+object Prac8 {
+ def main(args: Array[String]): Unit = {
+   val reader = CSVReader.open(new File("google_playstore_2026.csv"))
+   val allRows = reader.allWithHeaders()
+   reader.close()
+   val numericCols = allRows.head.keys.filter { col =>
+     Try(allRows.head(col).toDouble).isSuccess
+   }.toList
+   println(f"Numeric Columns: ${numericCols.mkString(", ")}\n")
+   for (col <- numericCols) {
+     val values = allRows.flatMap(row =>
+       Try(row(col).toDouble).toOption)
+     val count = values.size
+     val mean = values.sum / count
+     val minVal = values.min
+     val maxVal = values.max
+     val stdDev = sqrt(values.map(x => pow(x - mean, 2)).sum / count)
+     println(s"Column: $col")
+     println(f" Count : $count")
+     println(f" Mean : $mean%.2f")
+     println(f" Min : $minVal%.2f")
+     println(f" Max : $maxVal%.2f")
+     println(f" Std Dev : $stdDev%.2f\n")
+   }
+ }
+}
+# SBT Code - 
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "FileCSVCodes",
+   version := "0.1.0",
+
+   libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+ )
+
+# 9. Handle missing values in a dataset. Replace missing values with the column mean.
+import com.github.tototoshi.csv._
+import java.io.File
+import scala.util.Try
+object Prac9 {
+ def main(args: Array[String]): Unit = {
+   val inputFile = new File("synthetic_dataset.csv")
+   val reader = CSVReader.open(inputFile)
+   val allRows = reader.allWithHeaders()
+   reader.close()
+   val numericColumns = Seq("Price", "Discount")
+  
+   // Step 1: Compute means and missing counts
+   val stats: Map[String, (Double, Int)] = numericColumns.map { col =>
+     val values = allRows.map(row => row.getOrElse(col, "").trim)
+     val validNumbers = values.flatMap(v => Try(v.toDouble).toOption)
+     val missingCount = values.count(v => Try(v.toDouble).isFailure)
+     val mean = if (validNumbers.nonEmpty) validNumbers.sum / validNumbers.size
+     else 0.0
+     (col, (mean, missingCount))
+   }.toMap
+
+   // Step 2: Print stats for each column
+   println("\n--- Missing Data Report ---")
+   stats.foreach { case (col, (mean, missingCount)) =>
+     println(f"Column: $col, Missing values: $missingCount, Replaced with mean: $mean%.2f")
+   }
+   // Step 3: Replace missing values
+   val cleanedRows = allRows.map { row =>
+     numericColumns.foldLeft(row) { (accRow, col) =>
+       val value = accRow.getOrElse(col, "").trim
+       val replaced = Try(value.toDouble).toOption match {
+         case Some(_) => value // valid number
+         case None => f"${stats(col)._1}%.2f" // replace with mean
+       }
+       accRow.updated(col, replaced)
+     }
+   }
+   // Step 4: Save cleaned CSV
+   val outputFile = new File("synthetic_dataset_cleaned.csv")
+   val writer = CSVWriter.open(outputFile)
+   val headers = cleanedRows.head.keys.toSeq
+   writer.writeRow(headers)
+   cleanedRows.foreach(row => writer.writeRow(headers.map(row)))
+   writer.close()
+   println("\n Missing values replaced and saved to synthetic_dataset_cleaned.csv")
+ }
+}
+# SBT Code -
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "FileCSVCodes",
+   version := "0.1.0",
+
+   libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+ )
+
+# 10. Filter rows in a dataset where a specific column value exceeds a threshold. 
+import com.github.tototoshi.csv._
+import java.io.File
+
+object FilterRowThreshold {
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("google_playstore_2026.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+   val threshold = 3.0
+
+   // Rating > 3.0
+   val greaterRows = data.filter { row =>
+     row.get("Rating").exists(value => value.toDoubleOption.exists(_ > threshold))
+   }
+
+   // Rating < 3.0
+   val smallerRows = data.filter { row =>
+     row.get("Rating").exists(value => value.toDoubleOption.exists(_ < threshold))
+   }
+
+   // Rating == 3.0
+   val equalRows = data.filter { row =>
+     row.get("Rating").exists(value => value.toDoubleOption.exists(_ == threshold))
+   }
+
+   println(s"Rating > $threshold : ${greaterRows.length}")
+   println(s"Rating < $threshold : ${smallerRows.length}")
+   println(s"Rating == $threshold : ${equalRows.length}")
+ }
+} 
+# With Filtered Rows : 
+import com.github.tototoshi.csv._
+import java.io.File
+
+object FilterRowThreshold {
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("google_playstore_2026.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+   // See available columns
+   println(data.head.keys.mkString(", "))
+
+   val threshold = 3.0
+
+   // 1. Filter rows where Rating > threshold
+   val greaterRows = data.filter { row =>
+     row.get("Rating")
+       .exists(value => value.toDoubleOption.exists(_ > threshold))
+   }
+
+   println(s"\nTotal Rows with Rating > $threshold: ${greaterRows.length}\n")
+
+   greaterRows.foreach { row =>
+     println(row.values.mkString(", "))
+   }
+
+   // 2. Filter rows where Rating < threshold
+   val smallerRows = data.filter { row =>
+     row.get("Rating")
+       .exists(value => value.toDoubleOption.exists(_ < threshold))
+   }
+
+   println(s"\nTotal Rows with Rating < $threshold: ${smallerRows.length}\n")
+
+   smallerRows.foreach { row =>
+     println(row.values.mkString(", "))
+   }
+
+   // 3. Filter rows where Rating == threshold
+   val equalRows = data.filter { row =>
+     row.get("Rating")
+       .exists(value => value.toDoubleOption.exists(_ == threshold))
+   }
+
+   println(s"\nTotal Rows with Rating == $threshold: ${equalRows.length}\n")
+
+   equalRows.foreach { row =>
+     println(row.values.mkString(", "))
+   }
+ }
+}
+# SBT Code -
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "FileCSVCodes",
+   version := "0.1.0",
+
+   libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+ )
