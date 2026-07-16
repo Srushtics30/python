@@ -1,0 +1,109 @@
+# Aim :  Process Communication using Shared Memory 
+# Understand shared memory concepts in inter-process communication. 
+# Implement producer-consumer synchronization using shared memory and semaphores. 
+# Explore issues of race conditions and how to avoid them.
+from multiprocessing import Process, Queue
+import time
+import random
+
+#Create the Producer function
+def producer(queue):
+    """
+    The producer generates data and puts it into the queue.
+    queue.put(item) is a message-passing method to send data to the consumer.
+    """
+    for i in range(5):
+        item = random.randint(1, 100)  #Create a random item
+        print(f"Producer produced: {item}")
+        queue.put(item) #Send (enqueue) item to consumer
+        time.sleep(random.random())  #Simulate delay
+        
+#Create the Consumer function
+def consumer(queue):
+    """
+    The consumer takes data from the queue and processes it.
+    queue.get() blocks until it gets an item.
+    """
+    for i in range(5):
+        item = queue.get()  #Receive item from producer
+        print(f"Consumer consumed: {item}")
+        time.sleep(random.random())  #Simulate processing
+
+#Create queue and start processes
+if __name__ == "__main__":
+    print("~"*10)
+    print("Srushti Vedak")
+    print("Roll No. - S116")
+    print("~"*10)
+
+    q = Queue()  #Queue() is a FIFO structure for inter-process communication
+
+    #Create separate processes for producer and consumer
+    p1 = Process(target=producer, args=(q,))
+    p2 = Process(target=consumer, args=(q,))
+
+    #Start both processes
+    p1.start()
+    p2.start()
+
+    #Wait for both to finish using join()
+    p1.join()
+    p2.join()
+    print("Producer and Consumer have finished.")
+
+# Question: Add a size limit to the queue (Queue(maxsize=3)) and observe the blocking behavior.
+# • Producer will wait (block) when the queue is full (i.e., has 3 items) — it can’t add more until the consumer removes at least one.
+# • Consumer will wait (block) if the queue is empty — it can’t consume until producer adds something.
+from multiprocessing import Process, Queue
+import time
+import random
+
+# Producer function
+def producer(queue):
+    """
+    Producer adds items to the queue.
+    If the queue is full (3 items), queue.put() blocks until
+    the consumer removes an item.
+    """
+    for i in range(5):
+        item = random.randint(1, 100)
+        print(f"Producer wants to produce: {item}")
+        queue.put(item)      # Blocks if queue is full
+        print(f"Producer produced: {item}")
+        time.sleep(0.5)
+
+# Consumer function
+def consumer(queue):
+    """
+    Consumer removes items from the queue.
+    If the queue is empty, queue.get() blocks until
+    the producer adds an item.
+    """
+    for i in range(5):
+        print("Consumer is waiting for an item...")
+        item = queue.get()   # Blocks if queue is empty
+        print(f"Consumer consumed: {item}")
+        time.sleep(2)        # Slow consumer to make queue fill up
+
+# Main program
+if __name__ == "__main__":
+    print("~"*10)
+    print("Srushti Vedak")
+    print("Roll No. - S116")
+    print("~"*10)
+    
+    q = Queue(maxsize=3)   # Queue can hold only 3 items
+
+    # Create processes
+    p1 = Process(target=producer, args=(q,))
+    p2 = Process(target=consumer, args=(q,))
+
+    # Start processes
+    p1.start()
+    p2.start()
+
+    # Wait for both to finish
+    p1.join()
+    p2.join()
+
+    print("Producer and Consumer have finished.")
