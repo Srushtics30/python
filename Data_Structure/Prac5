@@ -1,0 +1,251 @@
+# Queue : CL
+import time
+from colorama import Fore, Style, init
+
+init(autoreset=True)
+
+
+class Queue:
+    def __init__(self, max_size):
+        self.queue = []
+        self.max_size = max_size
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) == self.max_size
+
+    def enqueue(self, item):
+        if self.is_full():
+            print(Fore.RED + "Queue is full. Cannot enqueue.")
+        else:
+            self.queue.append(item)
+            print(Fore.GREEN + f"Enqueued: {item}")
+        time.sleep(0.5)
+
+    def dequeue(self):
+        if self.is_empty():
+            print(Fore.RED + "Queue is empty. Cannot dequeue.")
+        else:
+            item = self.queue.pop(0)
+            print(Fore.YELLOW + f"Dequeued: {item}")
+        time.sleep(0.5)
+
+    def peek(self):
+        if self.is_empty():
+            print(Fore.RED + "Queue is empty.")
+        else:
+            print(Fore.BLUE + f"Front of the queue: {self.queue[0]}")
+        time.sleep(0.5)
+
+    def traverse(self):
+        if self.is_empty():
+            print(Fore.RED + "Queue is empty.")
+        else:
+            print(Fore.CYAN + "Queue contains:", end=" ")
+            for item in self.queue:
+                print(Fore.WHITE + str(item), end=" ")
+            print()
+        time.sleep(0.5)
+
+    def display_list(self):
+        if self.is_empty():
+            print(Fore.RED + "Queue is empty.")
+        else:
+            print(Fore.MAGENTA + "Current Queue List:")
+            for index, item in enumerate(self.queue):
+                print(Fore.WHITE + f"{index + 1}. {item}")
+        time.sleep(0.5)
+
+if __name__ == "__main__":
+    max_size = int(input(Fore.YELLOW + "Enter the maximum size of the queue: "))
+    q = Queue(max_size)
+
+    while True:
+
+        print(Fore.CYAN + Style.BRIGHT + "Queue Operations Menu")
+        print(Fore.GREEN + "1. Enqueue")
+        print(Fore.YELLOW + "2. Dequeue")
+        print(Fore.BLUE + "3. Peek")
+        print(Fore.CYAN + "4. Traverse")
+        print(Fore.MAGENTA + "5. Display List")
+        print(Fore.WHITE + "6. Check if Queue is Empty")
+        print(Fore.WHITE + "7. Check if Queue is Full")
+        print(Fore.RED + "8. Exit")
+
+        choice = input(Fore.YELLOW + "Enter your choice: ")
+
+        if choice == "1":
+            item = input(Fore.YELLOW + "Enter the item to enqueue: ")
+            q.enqueue(item)
+
+        elif choice == "2":
+            q.dequeue()
+
+        elif choice == "3":
+            q.peek()
+
+        elif choice == "4":
+            q.traverse()
+
+        elif choice == "5":
+            q.display_list()
+
+        elif choice == "6":
+            if q.is_empty():
+                print(Fore.RED + "Queue is empty.")
+            else:
+                print(Fore.GREEN + "Queue is not empty.")
+
+        elif choice == "7":
+            if q.is_full():
+                print(Fore.RED + "Queue is full.")
+            else:
+                print(Fore.GREEN + "Queue is not full.")
+
+        elif choice == "8":
+            break
+
+        else:
+            print(Fore.RED + "Invalid choice. Please try again.")
+
+        input(Fore.GREEN + "Press Enter to continue... ")
+        print()
+
+    print(Fore.MAGENTA + "Exiting the program. Goodbye!")
+
+# GUI
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
+# Queue Class
+class Queue:
+    def __init__(self, size):
+        self.queue = []
+        self.size = size
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) == self.size
+
+# Queue Size
+size = simpledialog.askinteger("Queue", "Enter Maximum Queue Size:")
+q = Queue(size)
+
+# Window
+root = tk.Tk()
+root.title("S116 - Queue Visualizer")
+root.geometry("500x600")
+root.config(bg="#121212")  # Softer black background
+
+# Title
+title = tk.Label(root, text="QUEUE VISUALIZER", font=("Arial", 22, "bold"),
+                 bg="#FFD700", fg="#3E2723", pady=10)  # Gold background, Deep Brown text
+title.pack(fill="x")
+
+# Input Frame
+frame = tk.Frame(root, bg="#121212")
+frame.pack(pady=15)
+
+label = tk.Label(frame, text="Enter Item :", bg="#121212", fg="#FFEB3B")  # Soft gold text
+label.pack()
+
+entry = tk.Entry(frame, font=("Arial", 14), width=20,
+                 bg="#3E2723", fg="#FFD700")  # Deep Brown background, Gold text
+entry.pack(padx=10)
+
+# Queue Display
+listbox = tk.Listbox(root, width=30, height=10, font=("Arial", 14),
+                     bg="#121212", fg="#FFD700",  # Black background, Gold text
+                     selectbackground="#5D4037", selectforeground="#FFD700")  # Deep Brown highlight, Gold text
+listbox.pack(pady=10)
+
+status = tk.Label(root, text="Welcome!", font=("Arial", 12, "bold"),
+                  bg="#FFD700", fg="#121212")  # Gold background, Black text
+status.pack()
+
+# Update Queue Display
+def update():
+    listbox.delete(0, tk.END)
+    for item in q.queue:
+        listbox.insert(tk.END, item)
+
+# Functions
+def enqueue():
+    item = entry.get()
+    if item == "":
+        messagebox.showwarning("Warning", "Please enter an item.")
+        return
+    if q.is_full():
+        messagebox.showerror("Queue", "Queue is Full!")
+    else:
+        q.queue.append(item)
+        update()
+        status.config(text=f"Enqueued: {item}", fg="#121212")  # Green for success
+        entry.delete(0, tk.END)
+
+def dequeue():
+    if q.is_empty():
+        messagebox.showerror("Queue", "Queue is Empty!")
+    else:
+        item = q.queue.pop(0)
+        update()
+        status.config(text=f"Dequeued: {item}", fg="#121212")  # Blue for dequeue
+
+def peek():
+    if q.is_empty():
+        messagebox.showinfo("Peek", "Queue is Empty!")
+    else:
+        messagebox.showinfo("Front Item", q.queue[0])
+
+def traverse():
+    if q.is_empty():
+        messagebox.showinfo("Queue", "Queue is Empty!")
+    else:
+        messagebox.showinfo("Queue", " → ".join(q.queue))
+
+def empty():
+    if q.is_empty():
+        status.config(text="Queue is Empty", fg="red")
+    else:
+        status.config(text="Queue is Not Empty", fg="#121212")
+
+def full():
+    if q.is_full():
+        status.config(text="Queue is Full", fg="red")
+    else:
+        status.config(text="Queue is Not Full", fg="#121212")
+
+# Buttons Frame
+btn = tk.Frame(root, bg="#121212")
+btn.pack(pady=20)
+
+buttons = [
+    ("Enqueue", enqueue),
+    ("Dequeue", dequeue),
+    ("Peek", peek),
+    ("Traverse", traverse),
+    ("Check Empty", empty),
+    ("Check Full", full),
+]
+
+r = 0
+c = 0
+for text, cmd in buttons:
+    tk.Button(btn, text=text, width=15, height=2,
+              bg="#3E2723", fg="#FFD700", font=("Arial", 11, "bold"),  # Deep Brown background, Gold text
+              command=cmd).grid(row=r, column=c, padx=8, pady=8)
+    c += 1
+    if c == 2:
+        c = 0
+        r += 1
+
+# Exit Button
+tk.Button(root, text="Exit", width=20, height=2,
+          bg="#121212", fg="#FFD700", font=("Arial", 12, "bold"),  # Black background, Gold text
+          command=root.destroy).pack(pady=15)
+
+root.mainloop()
