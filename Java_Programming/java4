@@ -1,0 +1,222 @@
+Aim : Write a program to demonstrate: a. List interface, b. Set interface, c. Map interface 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Map;
+import java.util.Iterator;
+
+public class Collection {
+    public static void main(String[] args) {
+
+        // a. List Interface
+        System.out.println("----- List Interface -----");
+
+        List<String> fruits = new ArrayList<>();
+
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Orange");
+        fruits.add("Apple"); 
+        System.out.println("List: " + fruits);
+
+        fruits.add(1, "Mango");
+        System.out.println("After adding Mango: " + fruits);
+
+        System.out.println("First Element: " + fruits.get(0));
+
+        fruits.set(2, "Grapes");
+        System.out.println("After updating: " + fruits);
+
+        fruits.remove("Apple"); 
+        System.out.println("After removing Apple: " + fruits);
+
+        fruits.remove(fruits.size() - 1); 
+        System.out.println("After removing last element: " + fruits);
+
+        System.out.println("Index of Grapes: " + fruits.indexOf("Grapes"));
+        System.out.println("Contains Banana? " + fruits.contains("Banana"));
+        System.out.println("Size: " + fruits.size());
+
+        fruits.clear();
+        System.out.println("After clearing: " + fruits);
+
+        // b. Set Interface
+        System.out.println("\n----- Set Interface -----");
+
+        Set<String> colors = new HashSet<>();
+
+        colors.add("Red");
+        colors.add("Blue");
+        colors.add("Green");
+        colors.add("Red"); 
+
+        System.out.println("Set: " + colors);
+
+        colors.remove("Green");
+        System.out.println("After removing Green: " + colors);
+
+        System.out.println("Contains Blue? " + colors.contains("Blue"));
+        System.out.println("Size: " + colors.size());
+        System.out.println("Is Set Empty? " + colors.isEmpty());
+
+        System.out.print("Elements: ");
+        Iterator<String> it = colors.iterator();
+        while (it.hasNext()) {
+            System.out.print(it.next() + " ");
+        }
+        System.out.println();
+
+        Set<String> moreColors = new HashSet<>();
+        moreColors.add("Yellow");
+        moreColors.add("Black");
+
+        colors.addAll(moreColors);
+        System.out.println("After addAll(): " + colors);
+
+        // c. Map Interface
+        System.out.println("\n----- Map Interface -----");
+
+        Map<Integer, String> students = new HashMap<>();
+
+        students.put(101, "Alice");
+        students.put(102, "Bob");
+        students.put(103, "Charlie");
+        students.put(102, "David"); 
+
+        System.out.println("Map: " + students);
+
+        System.out.println("Student with ID 101: " + students.get(101));
+
+        students.remove(103);
+        System.out.println("After removing ID 103: " + students);
+
+        System.out.println("Contains Key 102? " + students.containsKey(102));
+        System.out.println("Contains Value Alice? " + students.containsValue("Alice"));
+
+        System.out.println("Keys: " + students.keySet());
+        System.out.println("Values: " + students.values());
+        System.out.println("Entries: " + students.entrySet());
+
+        System.out.println("Size: " + students.size());
+
+        students.clear();
+        System.out.println("After clearing: " + students);
+    }
+}
+
+# List Set and Map Interface
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Map;
+import java.util.Scanner;
+
+public class shopping {
+
+    public static void main(String[] args) {
+
+        Scanner input = new Scanner(System.in);
+
+        // a. List Interface (Shopping Items)
+        System.out.println("----- List Interface (Shopping Items) -----");
+
+        List<String> shoppingItems = new ArrayList<>();
+
+        System.out.println("Enter 5 shopping items:");
+
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Enter item " + (i + 1) + ": ");
+            shoppingItems.add(input.next());
+        }
+
+        System.out.println("Shopping List: " + shoppingItems);
+
+        System.out.println("First Item: " + shoppingItems.get(0));
+
+        System.out.print("Enter item to remove: ");
+        String removeItem = input.next();
+
+        if (shoppingItems.remove(removeItem)) {
+            System.out.println("Updated List: " + shoppingItems);
+        } else {
+            System.out.println("Item not found.");
+        }
+
+        System.out.println("Contains Mobile? " + shoppingItems.contains("Mobile"));
+        System.out.println("Total Items: " + shoppingItems.size());
+
+        // b. Set Interface (Product Brands)
+        System.out.println("\n----- Set Interface (Product Brands) -----");
+
+        Set<String> brands = new HashSet<>();
+
+        System.out.println("Enter 5 product brands:");
+
+        for (int i = 0; i < 5; i++) {
+            System.out.print("Enter brand " + (i + 1) + ": ");
+            brands.add(input.next());
+        }
+
+        System.out.println("Available Brands: " + brands);
+
+        System.out.print("Enter brand to remove: ");
+        String removeBrand = input.next();
+
+        if (brands.remove(removeBrand)) {
+            System.out.println("Updated Brands: " + brands);
+        } else {
+            System.out.println("Brand not found.");
+        }
+
+        System.out.println("Contains Apple? " + brands.contains("Apple"));
+        System.out.println("Number of Brands: " + brands.size());
+        System.out.println("Is Set Empty? " + brands.isEmpty());
+
+        // c. Map Interface (Product and Price)
+        System.out.println("\n----- Map Interface (Product Prices) -----");
+
+        Map<String, Integer> productPrice = new HashMap<>();
+
+        System.out.println("Enter details of 3 products:");
+
+        for (int i = 0; i < 3; i++) {
+
+            System.out.print("Enter product name: ");
+            String product = input.next();
+
+            System.out.print("Enter product price: ");
+            int price = input.nextInt();
+
+            productPrice.put(product, price);
+        }
+
+        System.out.println("Product Price List: " + productPrice);
+
+        System.out.print("Enter product name to search price: ");
+        String searchProduct = input.next();
+
+        if (productPrice.containsKey(searchProduct)) {
+            System.out.println("Price: " + productPrice.get(searchProduct));
+        } else {
+            System.out.println("Product not found.");
+        }
+
+        System.out.print("Enter product name to remove: ");
+        String removeProduct = input.next();
+
+        productPrice.remove(removeProduct);
+
+        System.out.println("Final Product List: " + productPrice);
+
+        System.out.println("Products: " + productPrice.keySet());
+        System.out.println("Prices: " + productPrice.values());
+        System.out.println("Entries: " + productPrice.entrySet());
+        System.out.println("Total Products: " + productPrice.size());
+
+        input.close();
+    }
+}
