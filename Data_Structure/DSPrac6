@@ -1,0 +1,315 @@
+# Priority Queue
+# Command Line:
+from colorama import init, Fore
+import time
+
+init(autoreset=True)
+
+class PriorityQueue:
+
+    def __init__(self, capacity):
+        self.queue = []
+        self.capacity = capacity
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) >= self.capacity
+
+    def enqueue(self, item, priority):
+
+        if self.is_full():
+            print(Fore.RED + "Priority Queue is full.")
+            return
+
+        self.queue.append((item, priority))
+        self.queue.sort(key=lambda x: x[1])
+
+        print(Fore.GREEN + f"Added {item} with priority {priority}")
+        self.loading()
+
+    def dequeue(self):
+
+        if self.is_empty():
+            print(Fore.RED + "Priority Queue is empty.")
+            return
+
+        item = self.queue.pop(0)
+
+        print(Fore.GREEN + f"Removed {item[0]}")
+        self.loading()
+
+    def traverse(self):
+
+        if self.is_empty():
+            print(Fore.YELLOW + "Queue is empty.")
+
+        else:
+            print(Fore.CYAN + "Queue elements:")
+
+            for item, priority in self.queue:
+                print(f"{item} - Priority: {priority}")
+
+    def ascending(self):
+        for item, priority in sorted(self.queue):
+            print(item, priority)
+
+
+    def descending(self):
+
+        for item, priority in sorted(self.queue, reverse=True):
+            print(item, priority)
+
+    def loading(self):
+        print(Fore.BLUE + "Loading...")
+        time.sleep(0.5)
+
+        print()
+
+def Main():
+
+    size = int(input(Fore.CYAN + "Enter Queue Size: "))
+    pq = PriorityQueue(size)
+
+    while True:
+        print(Fore.RED  + "\nPriority Queue Menu")
+        print(Fore.YELLOW  + "1. Enqueue")
+        print(Fore.YELLOW  + "2. Dequeue")
+        print(Fore.YELLOW  + "3. Traverse")
+        print(Fore.YELLOW  + "4. Check Empty")
+        print(Fore.YELLOW  + "5. Check Full")
+        print(Fore.YELLOW  + "6. Ascending Order")
+        print(Fore.YELLOW  + "7. Descending Order")
+        print(Fore.YELLOW  + "8. Exit")
+
+        choice = int(input(Fore.MAGENTA + "Enter choice: "))
+
+        if choice == 1:
+            item = input(Fore.CYAN  + "Enter item: ")
+            priority = int(input(Fore.MAGENTA  + "Enter priority: "))
+
+            pq.enqueue(item, priority)
+
+        elif choice == 2:
+            pq.dequeue()
+
+        elif choice == 3:
+            pq.traverse()
+
+        elif choice == 4:
+            print(Fore.CYAN  + "Empty" if pq.is_empty() else "Not Empty")
+
+        elif choice == 5:
+            print(Fore.CYAN  + "Full" if pq.is_full() else "Not Full")
+
+        elif choice == 6:
+            pq.ascending()
+
+        elif choice == 7:
+            pq.descending()
+
+        elif choice == 8:
+            print(Fore.GREEN  + "Exiting...")
+            break
+
+        else:
+            print(Fore.RED  + "Invalid choice")
+
+if __name__ == "__main__":
+    Main()
+
+# GUI Code -
+import tkinter as tk
+
+class PriorityQueue:
+
+    def __init__(self, size):
+        self.queue = []
+        self.size = size
+
+    def is_empty(self):
+        return len(self.queue) == 0
+
+    def is_full(self):
+        return len(self.queue) >= self.size
+
+    def enqueue(self, item, priority):
+
+        if self.is_full():
+            return "Queue is Full"
+
+        self.queue.append((item, priority))
+        self.queue.sort(key=lambda x: x[1])
+
+        return "Added Successfully"
+
+    def dequeue(self):
+
+        if self.is_empty():
+            return "Queue is Empty"
+
+        return "Removed: " + self.queue.pop(0)[0]
+
+    def display(self):
+
+        if self.is_empty():
+            return "Queue is Empty"
+
+        result = ""
+
+        for item, priority in self.queue:
+            result += item + "  Priority: " + str(priority) + "\n"
+
+        return result
+
+    def ascending(self):
+
+        result = "Ascending Order\n\n"
+
+        for item, priority in sorted(self.queue, key=lambda x:x[1]):
+            result += item + "  " + str(priority) + "\n"
+
+        return result
+
+    def descending(self):
+
+        result = "Descending Order\n\n"
+
+        for item, priority in sorted(self.queue,
+                                     key=lambda x:x[1],
+                                     reverse=True):
+            result += item + "  " + str(priority) + "\n"
+
+        return result
+
+pq = PriorityQueue(5)
+
+# GUI
+root = tk.Tk()
+root.title("S116 - Priority Queue ")
+root.geometry("500x560")
+root.config(bg="#1b1b2f")
+
+# Title
+tk.Label(root,
+         text="S116  - Priority Queue ",
+         font=("Times New Roman",20,"bold"),
+         bg="#1b1b2f",
+         fg="#00ffff").pack(pady=15)
+
+# Input
+tk.Label(root,
+         text="Task Name",
+         bg="#1b1b2f",
+         fg="white").pack()
+
+task = tk.Entry(root,
+                width=30,
+                font=("Arial",12))
+
+task.pack(pady=5)
+
+tk.Label(root,
+         text="Priority",
+         bg="#1b1b2f",
+         fg="white").pack()
+
+priority = tk.Entry(root,
+                    width=30,
+                    font=("Arial",12))
+
+priority.pack(pady=5)
+
+# Output Box
+output = tk.Text(root,
+                 height=8,
+                 width=40,
+                 bg="#000000",
+                 fg="#00ff00",
+                 font=("Consolas",11))
+
+output.pack(pady=15)
+
+def show(text):
+
+    output.delete("1.0",tk.END)
+    output.insert(tk.END,text)
+
+def enqueue():
+    show(pq.enqueue(task.get(),
+                    int(priority.get())))
+
+def dequeue():
+    show(pq.dequeue())
+
+def display():
+    show(pq.display())
+
+def empty():
+    show("Queue is Empty" if pq.is_empty()
+         else "Queue is Not Empty")
+
+def full():
+    show("Queue is Full" if pq.is_full()
+         else "Queue is Not Full")
+
+def ascending():
+    show(pq.ascending())
+
+def descending():
+    show(pq.descending())
+
+# Button Frame
+button_frame = tk.Frame(root, bg="#1b1b2f")
+button_frame.pack(pady=5)
+
+button = {
+    "width":12,
+    "font":("Arial",10,"bold"),
+    "fg":"white"
+}
+
+tk.Button(button_frame,
+          text="Enqueue",
+          bg="#00a86b",
+          command=enqueue,
+          **button).grid(row=0, column=0, padx=5, pady=5)
+
+tk.Button(button_frame,
+          text="Dequeue",
+          bg="#e74c3c",
+          command=dequeue,
+          **button).grid(row=0, column=1, padx=5, pady=5)
+
+tk.Button(button_frame,
+          text="Display",
+          bg="#3498db",
+          command=display,
+          **button).grid(row=1, column=0, padx=5, pady=5)
+
+tk.Button(button_frame,
+          text="Empty",
+          bg="#9b59b6",
+          command=empty,
+          **button).grid(row=1, column=1, padx=5, pady=5)
+
+tk.Button(button_frame,
+          text="Full",
+          bg="#f39c12",
+          command=full,
+          **button).grid(row=2, column=0, padx=5, pady=5)
+
+tk.Button(button_frame,
+          text="Ascending",
+          bg="#16a085",
+          command=ascending,
+          **button).grid(row=2, column=1, padx=5, pady=5)
+
+tk.Button(button_frame,
+          text="Descending",
+          bg="#8e44ad",
+          command=descending,
+          **button).grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+
+root.mainloop()
