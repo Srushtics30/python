@@ -1,0 +1,278 @@
+# Write a program using various swing components design Java application to accept a student's resume. (Design form) 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class StudentResumeForm extends JFrame implements ActionListener {
+
+    JTextField tName, tEmail, tPhone;
+
+    JTextArea tAddress, tSummary, tAchievement;
+
+    JRadioButton male, female, other;
+
+    JComboBox<String> education;
+
+    JCheckBox java, python, cpp;
+    JCheckBox reading, coding, sports, music;
+
+    JButton submit, clear;
+
+    StudentResumeForm() {
+
+        setTitle("S116 - Student Resume Form");
+        setSize(550,750);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(new Color(224,255,255)); 
+
+        JLabel heading = new JLabel("STUDENT RESUME");
+        heading.setFont(new Font("Times New Roman",Font.BOLD,24));
+        heading.setForeground(new Color(0,102,153));
+        heading.setBounds(150,15,300,30);
+        panel.add(heading);
+
+        JLabel l1 = new JLabel("Full Name");
+        l1.setBounds(40,70,100,25);
+        panel.add(l1);
+
+        tName = new JTextField();
+        tName.setBounds(180,70,250,25);
+        panel.add(tName);
+
+        JLabel l2 = new JLabel("Gender");
+        l2.setBounds(40,110,100,25);
+        panel.add(l2);
+
+        male = new JRadioButton("Male");
+        female = new JRadioButton("Female");
+        other = new JRadioButton("Other");
+
+        male.setBackground(panel.getBackground());
+        female.setBackground(panel.getBackground());
+        other.setBackground(panel.getBackground());
+
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(male);
+        bg.add(female);
+        bg.add(other);
+
+        male.setBounds(180,110,70,25);
+        female.setBounds(260,110,80,25);
+        other.setBounds(350,110,70,25);
+
+        panel.add(male);
+        panel.add(female);
+        panel.add(other);
+
+        JLabel l3 = new JLabel("Email");
+        l3.setBounds(40,150,100,25);
+        panel.add(l3);
+
+        tEmail = new JTextField();
+        tEmail.setBounds(180,150,250,25);
+        panel.add(tEmail);
+
+        JLabel l4 = new JLabel("Phone");
+        l4.setBounds(40,190,100,25);
+        panel.add(l4);
+
+        tPhone = new JTextField();
+        tPhone.setBounds(180,190,250,25);
+        panel.add(tPhone);
+
+        JLabel l5 = new JLabel("Address");
+        l5.setBounds(40,230,100,25);
+        panel.add(l5);
+
+        tAddress = new JTextArea();
+        JScrollPane sp1 = new JScrollPane(tAddress);
+        sp1.setBounds(180,230,250,60);
+        panel.add(sp1);
+
+        JLabel l6 = new JLabel("Education");
+        l6.setBounds(40,310,100,25);
+        panel.add(l6);
+
+        String edu[]={"High School","Diploma","BCA","B.Sc","B.Tech","MCA","M.Tech"};
+        education = new JComboBox<>(edu);
+        education.setBounds(180,310,180,25);
+        panel.add(education);
+
+        JLabel l7 = new JLabel("Skills");
+        l7.setBounds(40,350,100,25);
+        panel.add(l7);
+
+        java = new JCheckBox("Java");
+        python = new JCheckBox("Python");
+        cpp = new JCheckBox("C++");
+
+        java.setBackground(panel.getBackground());
+        python.setBackground(panel.getBackground());
+        cpp.setBackground(panel.getBackground());
+
+        java.setBounds(180,350,70,25);
+        python.setBounds(260,350,80,25);
+        cpp.setBounds(350,350,70,25);
+
+        panel.add(java);
+        panel.add(python);
+        panel.add(cpp);
+        
+        JLabel lAch = new JLabel("Achievements");
+        lAch.setBounds(40,390,120,25);
+        panel.add(lAch);
+        
+        tAchievement = new JTextArea();
+
+        JScrollPane sp3 = new JScrollPane(tAchievement);
+        sp3.setBounds(180,390,250,60);
+        panel.add(sp3);
+
+        JLabel l8 = new JLabel("Career Objective");
+        l8.setBounds(40,520,120,25);
+        panel.add(l8);
+
+        tSummary = new JTextArea();
+        JScrollPane sp2 = new JScrollPane(tSummary);
+        sp2.setBounds(180,520,250,80);
+        panel.add(sp2);
+        
+        JLabel lHobby = new JLabel("Hobbies");
+        lHobby.setBounds(40,460,100,25);
+        panel.add(lHobby);
+
+        reading = new JCheckBox("Reading");
+        coding = new JCheckBox("Coding");
+        sports = new JCheckBox("Sports");
+        music = new JCheckBox("Music");
+
+        reading.setBackground(panel.getBackground());
+        coding.setBackground(panel.getBackground());
+        sports.setBackground(panel.getBackground());
+        music.setBackground(panel.getBackground());
+        
+        reading.setBounds(180,460,80,25);
+        coding.setBounds(260,460,80,25);
+        sports.setBounds(340,460,80,25);
+        music.setBounds(420,460,80,25);
+
+       panel.add(reading);
+       panel.add(coding);
+       panel.add(sports);
+       panel.add(music);
+
+        submit = new JButton("Submit");
+        submit.setBounds(120,630,120,40);
+        submit.setBackground(new Color(46,204,113));
+        submit.setForeground(Color.WHITE);
+        submit.setFont(new Font("Times New Roman",Font.BOLD,14));
+
+        clear = new JButton("Clear");
+        clear.setBounds(280,630,120,40);
+        clear.setBackground(new Color(231,76,60));
+        clear.setForeground(Color.WHITE);
+        clear.setFont(new Font("Times New Roman",Font.BOLD,14));
+
+        submit.addActionListener(this);
+        clear.addActionListener(this);
+
+        panel.add(submit);
+        panel.add(clear);
+
+        add(panel);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+
+        if(e.getSource()==submit)
+        {
+            String gender="";
+
+            if(male.isSelected())
+                gender="Male";
+            else if(female.isSelected())
+                gender="Female";
+            else if(other.isSelected())
+                gender="Other";
+
+            String skills="";
+
+            if(java.isSelected())
+                skills+="Java ";
+
+            if(python.isSelected())
+                skills+="Python ";
+
+            if(cpp.isSelected())
+                skills+="C++ ";
+            
+            String hobbies="";
+
+            if(reading.isSelected())
+                hobbies+="Reading ";
+            
+            if(coding.isSelected())
+                hobbies+="Coding ";
+            
+            if(sports.isSelected())
+                hobbies+="Sports ";
+            
+            if(music.isSelected())
+                hobbies+="Music ";
+
+            String data =
+                    "Resume Submitted Successfully!\n\n"+
+                    "Name : "+tName.getText()+
+                    "\nGender : "+gender+
+                    "\nEmail : "+tEmail.getText()+
+                    "\nPhone : "+tPhone.getText()+
+                    "\nAddress : "+tAddress.getText()+
+                    "\nEducation : "+education.getSelectedItem()+
+                    "\nSkills : "+skills+
+                    "\nAchievements : "+tAchievement.getText()+
+                    "\nHobbies : "+hobbies+
+                    "\nCareer Objective : "+tSummary.getText();
+
+            JOptionPane.showMessageDialog(this,data,
+                    "Resume",JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        if(e.getSource()==clear)
+        {
+            tName.setText("");
+            tEmail.setText("");
+            tPhone.setText("");
+            tAddress.setText("");
+            tSummary.setText("");
+
+            male.setSelected(false);
+            female.setSelected(false);
+            other.setSelected(false);
+
+            java.setSelected(false);
+            python.setSelected(false);
+            cpp.setSelected(false);
+            
+            tAchievement.setText("");
+            
+            reading.setSelected(false);
+            coding.setSelected(false);
+            sports.setSelected(false);
+            music.setSelected(false);
+
+            education.setSelectedIndex(0);
+            
+        }
+
+    }
+
+    public static void main(String args[])
+    {
+        new StudentResumeForm();
+    }
+}
