@@ -1,0 +1,97 @@
+#  Multi-threading and Fibonacci Generation 
+# Implement multi-threading to generate and print Fibonacci sequences. 
+# Explore thread safety, synchronization when accessing shared variables. 
+# Introduce concepts of thread pooling and task delegation.
+import threading
+
+print("S116 - Srushti Vedak")
+# function to generate Fibonacci sequence
+def generate_fibonacci(n):
+    a, b = 0, 1
+    sequence = []
+
+    for _ in range(n):
+        sequence.append(a)
+        a, b = b, a + b
+
+    return sequence
+
+# function to run in each thread
+def task(n):
+    result = generate_fibonacci(n)
+    print(f"Fibonacci({n}) = {result}\n")
+
+if __name__ == "__main__":
+
+    print("Multi-threaded Fibonacci Sequence Generator\n")
+
+    # number of terms to calculate in each thread
+    values = [4, 5, 6]
+
+    threads = []
+
+    # create and start threads
+    for n in values:
+        t = threading.Thread(target=task, args=(n,))
+        threads.append(t)
+        t.start()
+
+    # wait for all threads to complete
+    for t in threads:
+        t.join()
+
+    print("\nAll threads completed.")
+
+# Question:
+# 1. Write a multi-threaded Python program where each thread calculates the factorial of a different number. Display the factorial result from each thread separately.
+import threading
+
+print("S116 - Srushti Vedak \n")
+def factorial(n):
+    fact = 1
+    for i in range(1, n + 1):
+        fact = fact * i
+    print("Factorial of", n, "=", fact)
+
+numbers = [5, 6, 7]
+
+for n in numbers:
+    t = threading.Thread(target=factorial, args=(n,))
+    t.start()
+    t.join()
+
+print("All threads completed")
+
+# 2. Write a program to print even-odd numbers and reverse a string using the concept of multithreading.
+import threading
+
+print("S116 - Srushti Vedak")
+# Function to print even numbers
+def even():
+    for i in range(2, 11, 3):
+        print("Even:", i)
+
+# Function to print odd numbers
+def odd():
+    for i in range(8, 11, 7):
+        print("Odd:", i)
+
+# Function to reverse string
+def reverse():
+    s = input("Enter string: ")
+    print("Reverse:", s[::-1])
+
+# Create and run threads
+t1 = threading.Thread(target=even)
+t1.start()
+t1.join()
+
+t2 = threading.Thread(target=odd)
+t2.start()
+t2.join()
+
+t3 = threading.Thread(target=reverse)
+t3.start()
+t3.join()
+
+print("All threads completed")
