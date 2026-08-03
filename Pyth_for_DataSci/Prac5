@@ -1,0 +1,55 @@
+# 5a. Write a python code to demonstrate importing pandas libraries and create data frame object. 
+import pandas as pd
+
+print("S116 - Srushti Vedak ")
+# Read CSV file
+df = pd.read_csv("stresslevel.csv")
+
+# Display first 10 rows with headers
+print(df.head(10))
+
+# 5b. Write a python code to show statistical information on given data set. 
+import pandas as pd
+
+print("S116 - Srushti Vedak ")
+df = pd.read_csv("stresslevel.csv")
+
+# Display statistical information
+print("Statistical Information:")
+print(df.describe())
+
+# 5c. Write a python code to create pandas series from dictionaries. 
+import pandas as pd
+
+print("S116 - Srushti Vedak")
+# Create dictionary
+data = {
+    "Apple": 14,
+    "Orange": 11,
+    "Mango": 20,
+    "Kiwi": 1
+}
+
+# Create Pandas Series
+series = pd.Series(data)
+
+# Display Series
+print(series)
+
+# 5d. Write a python code to demonstrate filter pandas series with Boolean arrays.    
+import pandas as pd
+
+print("S116 - Srushti Vedak")
+# Create Pandas Series
+marks = pd.Series([55, 72, 90, 45, 88, 60, 35])
+
+# Display original Series
+print("Original Series:")
+print(marks)
+
+# Boolean filtering (marks greater than 60)
+filtered_marks = marks[marks > 60]
+
+# Display filtered Series
+print("\nFiltered Series (Marks > 60):")
+print(filtered_marks)
