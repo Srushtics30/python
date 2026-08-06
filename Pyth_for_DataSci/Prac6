@@ -1,0 +1,390 @@
+# Aim : Write a Python Program to demonstrate Matplotlib
+# 1. Line Plot Basics
+# o Plot the following data using a line chart:
+# x = [1, 2, 3, 4, 5]
+# y = [2, 4, 6, 8, 10]
+# o Add a title "Simple Line Plot".
+# o Label the X-axis as "Numbers" and Y-axis as "Doubles".
+import matplotlib.pyplot as plt
+import numpy as np
+
+print("S116 - Srushti Vedak")
+# Data
+xpoints = np.array([1, 2, 3, 4, 5])
+ypoints = np.array([2, 4, 6, 8, 10])
+
+# Plot the line chart
+plt.plot(xpoints, ypoints)
+
+# Add title and labels
+plt.title("Simple Line Plot")
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Display the plot
+plt.show()
+
+# 2. Customize a Line Plot
+# o Use the same data above.
+# o Change the line color to "red", linestyle to "--", and add markers "o".
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+xpoints = np.array([1, 2, 3, 4, 5])
+ypoints = np.array([2, 4, 6, 8, 10])
+
+# Customized line plot
+plt.plot(xpoints, ypoints, color='red', linestyle='--', marker='o')
+
+# Title and labels
+plt.title("Simple Line Plot")
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Display the plot
+plt.show()
+
+# 3. Bar Chart
+# o Create a bar chart for the following:
+# categories = ["Data Structures", "Scala for DS", "Operating System", "Python for DS"]
+# scores = [65, 70, 74, 60]
+# o Add axis labels and a title "Student Scores".
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+categories = np.array(["Data Structures", "Scala for DS", "Operating System", "Python for DS"])
+scores = np.array([65, 70, 74, 60])
+
+# Create bar chart
+plt.bar(categories, scores)
+
+# Add title and labels
+plt.title("Student Scores")
+plt.xlabel("Subjects")
+plt.ylabel("Scores")
+
+# Display the chart
+plt.show()
+
+# 4. Horizontal Bar Chart
+# o Modify the above chart into a horizontal bar chart.
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+categories = np.array(["Data Structures", "Scala for DS", "Operating System", "Python for DS"])
+scores = np.array([65, 70, 74, 60])
+
+# Create horizontal bar chart
+plt.barh(categories, scores)
+
+# Add title and labels
+plt.title("Student Scores")
+plt.xlabel("Scores")
+plt.ylabel("Subjects")
+
+plt.show()
+
+# 5. Pie Chart
+# o Using the same scores data, make a pie chart.
+# o Add percentage labels (autopct).
+# o Highlight "Python for DS" by exploding its slice.
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+scores = np.array([65, 70, 74, 60])
+labels = np.array(["Data Structures", "Scala for DS", "Operating System", "Python for DS"])
+
+# Explode the "Python for DS" slice
+explode = [0, 0, 0, 0.2]
+
+# Create pie chart
+plt.pie(scores, labels=labels, autopct='%1.1f%%', explode=explode)
+
+# Add title
+plt.title("Student Scores")
+
+# Display the chart
+plt.show()
+
+# 6. Scatter Plot
+# o Plot the points:
+# x = [5, 7, 8, 7, 6, 9, 5]
+# y = [99, 86, 87, 88, 100, 86, 103]
+# o Change the dot color to "green" and size to 100.
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+x = np.array([5, 7, 8, 7, 6, 9, 5])
+y = np.array([99, 86, 87, 88, 100, 86, 103])
+
+# Create scatter plot
+plt.scatter(x, y, color='green', s=100)
+
+# Add title and labels
+plt.title("Scatter Plot")
+plt.xlabel("X Values")
+plt.ylabel("Y Values")
+
+# Display the plot
+plt.show()
+
+# 7. Histogram
+# o Generate 100 random numbers (Normal distribution).
+# o Plot a histogram with 20 bins.
+# o Add a grid to the plot.
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate 100 random numbers from normal distribution
+x = np.random.normal(170, 10, 100)
+
+# Create histogram with 20 bins
+plt.hist(x, bins=20)
+
+# Add grid
+plt.grid(True)
+
+# Add title and labels
+plt.title("Histogram of Normal Distribution")
+plt.xlabel("Values")
+plt.ylabel("Frequency")
+
+# Display the plot
+plt.show()
+
+# 8. Two Plots in One Figure
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])
+
+# First plot (Line plot)
+plt.subplot(1, 2, 1)
+plt.plot(x, y)
+plt.title("Line Plot")
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Second plot (Scatter plot)
+plt.subplot(1, 2, 2)
+plt.scatter(x, y, color="green")
+plt.title("Scatter Plot")
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Adjust layout
+plt.tight_layout()
+
+# Display the figure
+plt.show()
+
+# 9. 4 Subplots (2x2 Grid)
+# o Top-left: Line plot
+# o Top-right: Bar chart
+# o Bottom-left: Scatter plot
+# o Bottom-right: Histogram
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+x = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])
+
+# Create figure with 2x2 grid
+# Top-left: Line plot
+plt.subplot(2, 2, 1)
+plt.plot(x, y)
+plt.title("Line Plot")
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Top-right: Bar chart
+plt.subplot(2, 2, 2)
+plt.bar(x, y)
+plt.title("Bar Chart")
+plt.xlabel("Numbers")
+plt.ylabel("Values")
+
+# Bottom-left: Scatter plot
+plt.subplot(2, 2, 3)
+plt.scatter(x, y, color="green")
+plt.title("Scatter Plot")
+plt.xlabel("Numbers")
+plt.ylabel("Values")
+
+# Bottom-right: Histogram
+plt.subplot(2, 2, 4)
+data = np.random.normal(170, 10, 100)
+plt.hist(data, bins=20)
+plt.title("Histogram")
+plt.xlabel("Values")
+plt.ylabel("Frequency")
+
+# Adjust spacing
+plt.tight_layout()
+
+# Display all plots
+plt.show()
+
+# 10. Write a Python program using Matplotlib to visualize sales data:
+# o You are given the data:
+# months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+# sales_2023 = [150, 200, 250, 300, 280, 350]
+# sales_2024 = [180, 220, 270, 320, 300, 400]
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+months = np.array(["Jan", "Feb", "Mar", "Apr", "May", "Jun"])
+sales_2023 = np.array([150, 200, 250, 300, 280, 350])
+sales_2024 = np.array([180, 220, 270, 320, 300, 400])
+
+# Plot sales data
+plt.plot(months, sales_2023, marker='o', label="Sales 2023")
+plt.plot(months, sales_2024, marker='o', label="Sales 2024")
+
+# Add title and labels
+plt.title("Monthly Sales Comparison")
+plt.xlabel("Months")
+plt.ylabel("Sales")
+
+# Add legend and grid
+plt.legend()
+plt.grid(True)
+
+# Display the chart
+plt.show()
+
+# Tasks:
+# 1. Plot two line charts on the same graph:
+# - One for sales_2023 (blue, dashed line with circle markers).
+# - One for sales_2024 (green, solid line with square markers).
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+months = np.array(["Jan", "Feb", "Mar", "Apr", "May", "Jun"])
+sales_2023 = np.array([150, 200, 250, 300, 280, 350])
+sales_2024 = np.array([180, 220, 270, 320, 300, 400])
+
+# Plot sales data
+plt.plot(months, sales_2023, color="blue", linestyle="--", marker="o", label="Sales 2023")
+plt.plot(months, sales_2024, color="green", linestyle="-", marker="s", label="Sales 2024")
+
+# Add title and labels
+plt.title("Sales Comparison 2023 vs 2024")
+plt.xlabel("Months")
+plt.ylabel("Sales")
+
+# Add legend and grid
+plt.legend()
+plt.grid(True)
+
+# Display the graph
+plt.show()
+
+# 2. Add:
+# - A title -> "Monthly Sales Comparison (2023 vs 2024)"
+# - X-axis label -> "Months"
+# - Y-axis label -> "Sales"
+# - A legend to distinguish 2023 and 2024.
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+months = np.array(["Jan", "Feb", "Mar", "Apr", "May", "Jun"])
+sales_2023 = np.array([150, 200, 250, 300, 280, 350])
+sales_2024 = np.array([180, 220, 270, 320, 300, 400])
+
+# Plot two line charts
+plt.plot(months, sales_2023, color="red", linestyle="--", marker="o", label="Sales 2023")
+plt.plot(months, sales_2024, color="orange", linestyle="-", marker="s", label="Sales 2024")
+
+# Add title and axis labels
+plt.title("Monthly Sales Comparison (2023 vs 2024)")
+plt.xlabel("Months")
+plt.ylabel("Sales")
+
+# Add legend
+plt.legend()
+
+# Display graph
+plt.show()
+
+# 3. Highlight the highest sales month of 2024 by adding an annotation on the graph.
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+months = np.array(["Jan", "Feb", "Mar", "Apr", "May", "Jun"])
+sales_2023 = np.array([150, 200, 250, 300, 280, 350])
+sales_2024 = np.array([180, 220, 270, 320, 300, 400])
+
+# Plot two line charts
+plt.plot(months, sales_2023, color="brown", linestyle="--", marker="o", label="Sales 2023")
+plt.plot(months, sales_2024, color="orange", linestyle="-", marker="s", label="Sales 2024")
+
+# Add annotation for highest sales month in 2024
+plt.annotate(
+    "Highest Sales: 400",
+    xy=("Jun", 400),
+    xytext=("Apr", 380),
+    arrowprops=dict(facecolor="black", arrowstyle="->")
+)
+
+# Add title and labels
+plt.title("Monthly Sales Comparison (2023 vs 2024)")
+plt.xlabel("Months")
+plt.ylabel("Sales")
+
+# Add legend and grid
+plt.legend()
+plt.grid(True)
+
+# Display graph
+plt.show()
+
+# 4. Save the plot as "sales_comparison.png".
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.figure("Sales Comparison")
+# Data
+months = np.array(["Jan", "Feb", "Mar", "Apr", "May", "Jun"])
+sales_2023 = np.array([150, 200, 250, 300, 280, 350])
+sales_2024 = np.array([180, 220, 270, 320, 300, 400])
+
+# Plot two line charts
+plt.plot(months, sales_2023, color="purple", linestyle="--", marker="o", label="Sales 2023")
+plt.plot(months, sales_2024, color="brown", linestyle="-", marker="s", label="Sales 2024")
+
+# Add annotation for highest sales month
+plt.annotate(
+    "Highest Sales: 400",
+    xy=("Jun", 400),
+    xytext=("Apr", 380),
+    arrowprops=dict(facecolor="black", arrowstyle="->")
+)
+
+# Add title and labels
+plt.title("Monthly Sales Comparison (2023 vs 2024)")
+plt.xlabel("Months")
+plt.ylabel("Sales")
+
+# Add legend and grid
+plt.legend()
+plt.grid(True)
+
+# Save the plot
+plt.savefig("sales_comparison.png")
+
+# Display the plot
+plt.show()
