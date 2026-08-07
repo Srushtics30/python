@@ -1,0 +1,350 @@
+# Command Line Code - 
+import heapq
+from collections import Counter
+from colorama import Fore, init
+
+init(autoreset=True)
+
+# Node class
+class Node:
+    def __init__(self, char=None, freq=None):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+
+    # Compare nodes based on frequency
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+# Build Huffman Tree
+def build_huffman_tree(frequencies):
+    heap = [Node(char, freq) for char, freq in frequencies.items()]
+    heapq.heapify(heap)
+
+    while len(heap) > 1:
+        left = heapq.heappop(heap)
+        right = heapq.heappop(heap)
+
+        merged = Node(freq=left.freq + right.freq)
+        merged.left = left
+        merged.right = right
+
+        heapq.heappush(heap, merged)
+
+        print(Fore.YELLOW + f"Merging: {left.char} ({left.freq}) + {right.char} ({right.freq})")
+
+    return heap[0]
+
+# Generate Huffman Codes
+def generate_codes(node, code="", codebook=None):
+    if codebook is None:
+        codebook = {}
+
+    if node is not None:
+        if node.char is not None:
+            codebook[node.char] = code
+            print(Fore.GREEN + f"{node.char} -> {code}")
+
+        generate_codes(node.left, code + "0", codebook)
+        generate_codes(node.right, code + "1", codebook)
+
+    return codebook
+
+# Encoding
+def huffman_encoding(text):
+    frequencies = Counter(text)
+
+    print(Fore.CYAN + "\nCharacter Frequencies:")
+    print(dict(frequencies))
+
+    root = build_huffman_tree(frequencies)
+
+    print(Fore.CYAN + "\nHuffman Codes:")
+    codebook = generate_codes(root)
+
+    encoded_data = ""
+    for char in text:
+        encoded_data += codebook[char]
+
+    return encoded_data, codebook
+
+# Decoding
+def huffman_decoding(encoded_data, codebook):
+    reverse_codebook = {}
+
+    for char, code in codebook.items():
+        reverse_codebook[code] = char
+
+    decoded_data = ""
+    current_code = ""
+
+    print(Fore.MAGENTA + "\nDecoding Steps:")
+
+    for bit in encoded_data:
+        current_code += bit
+
+        if current_code in reverse_codebook:
+            print(current_code, "->", reverse_codebook[current_code])
+            decoded_data += reverse_codebook[current_code]
+            current_code = ""
+
+    return decoded_data
+
+# Main Program
+print(Fore.YELLOW + "===== Huffman Coding =====")
+
+text = input(Fore.YELLOW + "Enter text: ")
+
+encoded_data, codebook = huffman_encoding(text)
+
+print(Fore.CYAN + "\nCodebook:")
+print(codebook)
+
+print(Fore.MAGENTA + "\nEncoded Data:")
+print(encoded_data)
+
+decoded_data = huffman_decoding(encoded_data, codebook)
+
+print(Fore.MAGENTA + "\nDecoded Data:")
+print(decoded_data)
+
+if text == decoded_data:
+    print(Fore.GREEN + "\nSuccess! Original and Decoded data are the same.")
+else:
+    print(Fore.RED + "\nError! Data does not match.")
+    
+# GUI Code -
+import heapq
+from collections import Counter
+import tkinter as tk
+from tkinter import scrolledtext
+
+#Huffman Node
+class Node:
+    def __init__(self, char=None, freq=None):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+# Build Huffman Tree 
+def build_huffman_tree(frequencies):
+    heap = [Node(char, freq) for char, freq in frequencies.items()]
+    heapq.heapify(heap)
+
+    while len(heap) > 1:
+        left = heapq.heappop(heap)
+        right = heapq.heappop(heap)
+
+        merged = Node(freq=left.freq + right.freq)
+
+        merged.left = left
+        merged.right = right
+
+        heapq.heappush(heap, merged)
+
+    return heap[0]
+
+#Generate Codes
+def generate_codes(node, code="", codebook=None):
+
+    if codebook is None:
+        codebook = {}
+
+    if node:
+
+        if node.char is not None:
+            codebook[node.char] = code
+
+        generate_codes(node.left, code + "0", codebook)
+        generate_codes(node.right, code + "1", codebook)
+
+    return codebook
+
+#Encoding
+def huffman_encoding(text):
+
+    frequencies = Counter(text)
+
+    root = build_huffman_tree(frequencies)
+
+    codebook = generate_codes(root)
+
+    encoded = ""
+
+    for char in text:
+        encoded += codebook[char]
+
+    return encoded, codebook, frequencies
+
+#Decoding
+def huffman_decoding(encoded, codebook):
+
+    reverse = {}
+
+    for char, code in codebook.items():
+        reverse[code] = char
+
+
+    decoded = ""
+    current = ""
+
+    for bit in encoded:
+
+        current += bit
+
+        if current in reverse:
+            decoded += reverse[current]
+            current = ""
+
+    return decoded
+
+#GUI Functions
+
+encoded_data = ""
+codebook = {}
+
+def encode_text():
+
+    global encoded_data, codebook
+
+    text = input_box.get("1.0", tk.END).strip()
+
+    if text == "":
+        output_box.insert(tk.END, "Enter some text first!\n")
+        return
+
+    encoded_data, codebook, freq = huffman_encoding(text)
+
+    output_box.delete("1.0", tk.END)
+
+    output_box.insert(tk.END, "CHARACTER FREQUENCIES\n")
+    output_box.insert(tk.END, str(dict(freq)))
+
+    output_box.insert(tk.END, "\n\nHUFFMAN CODES\n")
+
+    for key,value in codebook.items():
+        output_box.insert(tk.END, f"{key} : {value}\n")
+
+
+    output_box.insert(tk.END,"\nENCODED DATA\n")
+    output_box.insert(tk.END, encoded_data)
+
+def decode_text():
+
+    text = input_box.get("1.0", tk.END).strip()
+
+    decoded = huffman_decoding(encoded_data, codebook)
+
+
+    output_box.insert(tk.END,"\n\nDECODED DATA\n")
+    output_box.insert(tk.END, decoded)
+
+
+    if text == decoded:
+        status_label.config(
+            text="Success! Data Matched",
+            fg="green"
+        )
+    else:
+        status_label.config(
+            text="Error! Data Not Matched",
+            fg="red"
+        )
+
+#GUI Window
+window = tk.Tk()
+
+window.title("Huffman Coding Application")
+window.geometry("750x600")
+window.config(bg="#202124")
+
+title = tk.Label(
+    window,
+    text="S116 Huffman Coding GUI",
+    font=("Times New Roman",20,"bold"),
+    bg="#202124",
+    fg="cyan"
+)
+
+title.pack(pady=10)
+
+input_label = tk.Label(
+    window,
+    text="Enter Text:",
+    bg="#202124",
+    fg="white",
+    font=("Times New Roman",12)
+)
+
+input_label.pack()
+
+input_box = scrolledtext.ScrolledText(
+    window,
+    width=70,
+    height=5,
+    font=("Times New Roman",12)
+)
+
+input_box.pack(pady=5)
+
+button_frame = tk.Frame(window,bg="#202124")
+
+button_frame.pack(pady=10)
+
+encode_button = tk.Button(
+    button_frame,
+    text="Encode",
+    width=15,
+    bg="green",
+    fg="white",
+    command=encode_text
+)
+
+encode_button.grid(row=0,column=0,padx=10)
+
+decode_button = tk.Button(
+    button_frame,
+    text="Decode",
+    width=15,
+    bg="blue",
+    fg="white",
+    command=decode_text
+)
+
+decode_button.grid(row=0,column=1,padx=10)
+
+output_label = tk.Label(
+    window,
+    text="Output:",
+    bg="#202124",
+    fg="white",
+    font=("Times New Roman",12)
+)
+
+output_label.pack()
+
+output_box = scrolledtext.ScrolledText(
+    window,
+    width=70,
+    height=17,
+    font=("Times New Roman",11)
+)
+
+output_box.pack(pady=5)
+
+status_label = tk.Label(
+    window,
+    text="Ready",
+    bg="#202124",
+    fg="yellow",
+    font=("Times New Roman",14,"bold")
+)
+
+status_label.pack(pady=10)
+
+window.mainloop()
