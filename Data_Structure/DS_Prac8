@@ -1,0 +1,637 @@
+# Command Line Code -
+import heapq
+from colorama import Fore, Style, init
+
+init()
+
+# AVL Tree
+class Node:
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+        self.height = 1
+
+class AVLTree:
+
+    def height(self, node):
+        if node:
+            return node.height
+        return 0
+
+    def balance(self, node):
+        if node:
+            return self.height(node.left) - self.height(node.right)
+        return 0
+
+    def rightRotate(self, y):
+        x = y.left
+        t = x.right
+
+        x.right = y
+        y.left = t
+
+        y.height = 1 + max(self.height(y.left), self.height(y.right))
+        x.height = 1 + max(self.height(x.left), self.height(x.right))
+
+        print(Fore.RED + "Right Rotation on", y.key, Style.RESET_ALL)
+        return x
+
+    def leftRotate(self, x):
+        y = x.right
+        t = y.left
+
+        y.left = x
+        x.right = t
+
+        x.height = 1 + max(self.height(x.left), self.height(x.right))
+        y.height = 1 + max(self.height(y.left), self.height(y.right))
+
+        print(Fore.RED + "Left Rotation on", x.key, Style.RESET_ALL)
+        return y
+
+    def insert(self, root, key):
+
+        if root is None:
+            return Node(key)
+
+        if key < root.key:
+            root.left = self.insert(root.left, key)
+        else:
+            root.right = self.insert(root.right, key)
+
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
+
+        b = self.balance(root)
+
+        # Left Left
+        if b > 1 and key < root.left.key:
+            return self.rightRotate(root)
+
+        # Right Right
+        if b < -1 and key > root.right.key:
+            return self.leftRotate(root)
+
+        # Left Right
+        if b > 1 and key > root.left.key:
+            root.left = self.leftRotate(root.left)
+            return self.rightRotate(root)
+
+        # Right Left
+        if b < -1 and key < root.right.key:
+            root.right = self.rightRotate(root.right)
+            return self.leftRotate(root)
+
+        return root
+
+    def preorder(self, root):
+        if root:
+            print(Fore.CYAN + str(root.key) + Style.RESET_ALL, end=" ")
+            self.preorder(root.left)
+            self.preorder(root.right)
+
+# Min Heap
+def minHeap(data):
+    heapq.heapify(data)
+    print(Fore.GREEN + "Min Heap:" + Style.RESET_ALL, data)
+
+# Max Heap
+def maxHeap(data):
+    heap = []
+
+    for i in data:
+        heap.append(-i)
+
+    heapq.heapify(heap)
+
+    result = []
+    for i in heap:
+        result.append(-i)
+
+    print(Fore.YELLOW + "Max Heap:" + Style.RESET_ALL, result)
+
+# Priority Queue
+class TaskManager:
+
+    def __init__(self):
+        self.tasks = []
+
+    def addTask(self, priority, task):
+        heapq.heappush(self.tasks, (priority, task))
+
+    def runTasks(self):
+        print(Fore.MAGENTA + "\nTasks in Priority Order:" + Style.RESET_ALL)
+
+        while self.tasks:
+            p, t = heapq.heappop(self.tasks)
+            print(Fore.BLUE + "Priority", p, ":", t, Style.RESET_ALL)
+
+# Main Program
+avl = AVLTree()
+root = None
+
+values = [30, 20, 10, 25, 40, 50, 5]
+
+print(Fore.YELLOW + "AVL Tree:" + Style.RESET_ALL)
+
+for i in values:
+    print("Insert", i)
+    root = avl.insert(root, i)
+
+print(Fore.YELLOW + "\nPreorder Traversal:" + Style.RESET_ALL)
+avl.preorder(root)
+
+print("\n")
+
+data = [15, 3, 8, 1, 10, 6]
+
+minHeap(data.copy())
+maxHeap(data.copy())
+
+manager = TaskManager()
+manager.addTask(1, "Critical Server Failure")
+manager.addTask(2, "Update Software")
+manager.addTask(3, "Generate Report")
+
+manager.runTasks()
+
+# GUI Code -
+import tkinter as tk
+from tkinter import messagebox
+import heapq
+
+#  AVL TREE
+class Node:
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+        self.height = 1
+
+class AVLTree:
+
+    def height(self, node):
+        return node.height if node else 0
+
+    def balance(self, node):
+        return self.height(node.left) - self.height(node.right) if node else 0
+
+    def rightRotate(self, y):
+        x = y.left
+        t = x.right
+
+        x.right = y
+        y.left = t
+
+        y.height = 1 + max(
+            self.height(y.left),
+            self.height(y.right)
+        )
+
+        x.height = 1 + max(
+            self.height(x.left),
+            self.height(x.right)
+        )
+
+        return x
+
+    def leftRotate(self, x):
+        y = x.right
+        t = y.left
+
+        y.left = x
+        x.right = t
+
+        x.height = 1 + max(
+            self.height(x.left),
+            self.height(x.right)
+        )
+
+        y.height = 1 + max(
+            self.height(y.left),
+            self.height(y.right)
+        )
+
+        return y
+
+    def insert(self, root, key):
+
+        if root is None:
+            return Node(key)
+
+        if key < root.key:
+            root.left = self.insert(root.left, key)
+
+        else:
+            root.right = self.insert(root.right, key)
+
+        root.height = 1 + max(
+            self.height(root.left),
+            self.height(root.right)
+        )
+
+        b = self.balance(root)
+
+        # Left Left
+        if b > 1 and key < root.left.key:
+            return self.rightRotate(root)
+
+        # Right Right
+        if b < -1 and key > root.right.key:
+            return self.leftRotate(root)
+
+        # Left Right
+        if b > 1 and key > root.left.key:
+            root.left = self.leftRotate(root.left)
+            return self.rightRotate(root)
+
+        # Right Left
+        if b < -1 and key < root.right.key:
+            root.right = self.rightRotate(root.right)
+            return self.leftRotate(root)
+
+        return root
+
+    def preorder(self, root):
+
+        if root:
+            return (
+                str(root.key)
+                + " "
+                + self.preorder(root.left)
+                + self.preorder(root.right)
+            )
+
+        return ""
+
+# GUI 
+class App:
+
+    def __init__(self, root):
+
+        self.root = root
+
+        self.root.title(
+            "Balanced Trees & Priority Queue Simulator"
+        )
+
+        self.root.geometry(
+            "900x650"
+        )
+
+        self.root.configure(
+            bg="#202124"
+        )
+
+        self.avl = AVLTree()
+        self.tree_root = None
+
+        self.heap_data = []
+
+        self.tasks = []
+
+ # TITLE
+        title = tk.Label(
+            root,
+            text="S116 Balanced Trees & Priority Queues",
+            font=("Arial",22,"bold"),
+            bg="#202124",
+            fg="#00ffff"
+        )
+
+        title.pack(pady=15)
+
+ # MAIN FRAME
+        main = tk.Frame(
+            root,
+            bg="#202124"
+        )
+
+        main.pack()
+
+ # AVL 
+        avl_box = tk.LabelFrame(
+            main,
+            text="AVL Tree",
+            font=("Arial",12,"bold"),
+            fg="white",
+            bg="#303134",
+            padx=15,
+            pady=15
+        )
+
+        avl_box.grid(
+            row=0,
+            column=0,
+            padx=15,
+            pady=10
+        )
+
+        tk.Label(
+            avl_box,
+            text="Value:",
+            bg="#303134",
+            fg="white"
+        ).grid(row=0,column=0)
+
+        self.avl_entry = tk.Entry(
+            avl_box,
+            width=10
+        )
+
+        self.avl_entry.grid(
+            row=0,
+            column=1,
+            padx=5
+        )
+
+        tk.Button(
+            avl_box,
+            text="Insert",
+            width=12,
+            bg="#4caf50",
+            command=self.insert_avl
+        ).grid(
+            row=1,
+            column=0,
+            pady=10
+        )
+
+        tk.Button(
+            avl_box,
+            text="Traversal",
+            width=12,
+            command=self.show_tree
+        ).grid(
+            row=1,
+            column=1
+        )
+
+ # HEAP
+        heap_box = tk.LabelFrame(
+            main,
+            text="Heap",
+            font=("Arial",12,"bold"),
+            fg="white",
+            bg="#303134",
+            padx=15,
+            pady=15
+        )
+
+        heap_box.grid(
+            row=0,
+            column=1,
+            padx=15,
+            pady=10
+        )
+
+        tk.Label(
+            heap_box,
+            text="Number:",
+            bg="#303134",
+            fg="white"
+        ).grid(row=0,column=0)
+
+        self.heap_entry = tk.Entry(
+            heap_box,
+            width=10
+        )
+
+        self.heap_entry.grid(
+            row=0,
+            column=1
+        )
+
+        tk.Button(
+            heap_box,
+            text="Add",
+            width=12,
+            command=self.add_heap
+        ).grid(
+            row=1,
+            column=0,
+            pady=10
+        )
+
+        tk.Button(
+            heap_box,
+            text="Show Heap",
+            width=12,
+            command=self.show_heap
+        ).grid(
+            row=1,
+            column=1
+        )
+
+
+# PRIORITY QUEUE
+        task_box = tk.LabelFrame(
+            main,
+            text="Priority Queue / Task Manager",
+            font=("Arial",12,"bold"),
+            fg="white",
+            bg="#303134",
+            padx=15,
+            pady=15
+        )
+
+        task_box.grid(
+            row=1,
+            column=0,
+            columnspan=2,
+            pady=15
+        )
+
+        tk.Label(
+            task_box,
+            text="Task:",
+            bg="#303134",
+            fg="white"
+        ).grid(row=0,column=0)
+
+        self.task_entry = tk.Entry(
+            task_box,
+            width=30
+        )
+
+        self.task_entry.grid(
+            row=0,
+            column=1
+        )
+
+        tk.Label(
+            task_box,
+            text="Priority:",
+            bg="#303134",
+            fg="white"
+        ).grid(row=0,column=2)
+
+
+        self.priority_entry = tk.Entry(
+            task_box,
+            width=5
+        )
+
+        self.priority_entry.grid(
+            row=0,
+            column=3
+        )
+
+        tk.Button(
+            task_box,
+            text="Add Task",
+            bg="#ff9800",
+            width=12,
+            command=self.add_task
+        ).grid(
+            row=1,
+            column=1,
+            pady=10
+        )
+
+        tk.Button(
+            task_box,
+            text="Run Task",
+            bg="#e91e63",
+            width=12,
+            command=self.run_task
+        ).grid(
+            row=1,
+            column=2
+        )
+
+# OUTPUT
+        output_box = tk.LabelFrame(
+            root,
+            text="Output",
+            fg="white",
+            bg="#202124",
+            font=("Arial",12,"bold")
+        )
+
+        output_box.pack(
+            pady=10
+        )
+
+        self.output = tk.Text(
+            output_box,
+            height=15,
+            width=95,
+            bg="black",
+            fg="lime",
+            font=("Consolas",11)
+        )
+
+        self.output.pack(
+            padx=10,
+            pady=10
+        )
+
+        self.output.insert(
+            tk.END,
+            "System Ready...\n"
+        )
+
+# FUNCTIONS
+    def insert_avl(self):
+
+        value = int(self.avl_entry.get())
+
+        self.tree_root = self.avl.insert(
+            self.tree_root,
+            value
+        )
+
+        self.output.insert(
+            tk.END,
+            f"Inserted {value} into AVL\n"
+        )
+
+    def show_tree(self):
+
+        result = self.avl.preorder(
+            self.tree_root
+        )
+
+        self.output.insert(
+            tk.END,
+            "\nAVL Preorder: "
+            + result
+            + "\n"
+        )
+
+    def add_heap(self):
+
+        value = int(self.heap_entry.get())
+
+        self.heap_data.append(value)
+
+        self.output.insert(
+            tk.END,
+            f"Added {value} to Heap\n"
+        )
+
+    def show_heap(self):
+
+        mini = self.heap_data.copy()
+
+        heapq.heapify(mini)
+
+        maxi = [-x for x in self.heap_data]
+
+        heapq.heapify(maxi)
+
+        maxi = [-x for x in maxi]
+
+        self.output.insert(
+            tk.END,
+            f"\nMin Heap: {mini}\n"
+        )
+
+        self.output.insert(
+            tk.END,
+            f"Max Heap: {maxi}\n"
+        )
+
+    def add_task(self):
+
+        task = self.task_entry.get()
+
+        priority = int(
+            self.priority_entry.get()
+        )
+
+        heapq.heappush(
+            self.tasks,
+            (priority, task)
+        )
+
+        self.output.insert(
+            tk.END,
+            f"Task Added: {task}\n"
+        )
+
+    def run_task(self):
+
+        if self.tasks:
+
+            p,t = heapq.heappop(
+                self.tasks
+            )
+
+            self.output.insert(
+                tk.END,
+                f"Running Priority {p}: {t}\n"
+            )
+
+        else:
+
+            messagebox.showinfo(
+                "Empty",
+                "No tasks available"
+            )
+
+window = tk.Tk()
+app = App(window)
+
+window.mainloop()
