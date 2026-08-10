@@ -1,0 +1,272 @@
+# 3. Write a program to compute frequency distribution and cumulative frequency of a dataset.
+import scala.io.Source
+
+object Prac3 {
+
+ def main(args: Array[String]): Unit = {
+
+   val lines = Source.fromFile("study.csv").getLines().drop(1)
+
+   val marks = lines.map(_.split(",")(2).toInt).toList
+
+   val freq = marks.groupBy(identity).view.mapValues(_.size).toSeq.sortBy(_._1)
+
+   println("Marks\tFrequency\tCumulative")
+
+   var cumulative = 0
+
+   freq.foreach {
+     case (mark, count) =>
+       cumulative += count
+       println(s"$mark\t$count\t\t$cumulative")
+   }
+ }
+}
+
+# Built SBT Code -
+name := "PearsonCorrelation"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
+
+
+# 4. Sort a dataset by a specific column and extract the top 5 rows.
+import scala.io.Source
+
+object Prac4 {
+
+ case class Student(id:Int,hours:Int,marks:Int,pass:Int)
+
+ def main(args:Array[String]):Unit={
+
+   val students = Source.fromFile("study.csv").getLines().drop(1).map{line=>val c=line.split(",")
+
+       Student(
+         c(0).toInt,
+         c(1).toInt,
+         c(2).toInt,
+         c(3).toInt
+       )
+     }.toList
+
+   val top5=students.sortBy(- _.marks).take(5)
+
+   println("Top 5 Students")
+
+   top5.foreach(println)
+ }
+}
+
+# Built SBT Code -
+name := "PearsonCorrelation"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
+
+
+# 5. Implement linear regression using Breeze. Fit a model to a small dataset and predict a value.
+import breeze.linalg._
+import scala.io.Source
+
+object prac5 {
+
+ def main(args: Array[String]): Unit = {
+
+   // Read CSV file
+   val data =
+     Source.fromFile("study.csv").getLines()
+       .drop(1)
+       .map(_.split(",").map(_.toDouble))
+       .toArray
+
+   val samples = data.length
+
+   // Read x and y from CSV
+   val x = DenseVector(data.map(row => row(0)))
+   val y = DenseVector(data.map(row => row(1)))
+
+   println("Linear Regression using Breeze")
+
+   // Calculate means
+   val xMean = x.toArray.sum / samples
+   val yMean = y.toArray.sum / samples
+
+   var numerator = 0.0
+   var denominator = 0.0
+
+   // Calculate slope
+   for (i <- 0 until samples) {
+     numerator +=
+       (x(i) - xMean) * (y(i) - yMean)
+
+     denominator +=
+       (x(i) - xMean) * (x(i) - xMean)
+   }
+
+   val slope = numerator / denominator
+
+   // Calculate intercept
+   val intercept =
+     yMean - slope * xMean
+
+   println("\nModel Results")
+   println(f"Slope:     $slope%.4f")
+   println(f"Intercept: $intercept%.4f")
+
+   println("\nRegression Equation")
+   println(f"Y = $intercept%.4f + $slope%.4f * X")
+
+   // Prediction
+   val newX = 6.0
+
+   val predictedY =
+     intercept + slope * newX
+
+   println("\nPrediction")
+   println(f"X value:       $newX%.2f")
+   println(f"Predicted Y:   $predictedY%.2f")
+ }
+}
+
+# Built SBT Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "BreezeLinearRegression",
+   version := "1.0",
+   libraryDependencies +=
+     "org.scalanlp" %% "breeze" % "2.1.0"
+ )
+
+
+# 6. Perform logistic regression using Breeze. Classify a dataset with binary labels. 
+import breeze.linalg._
+import breeze.numerics.sigmoid
+import scala.io.Source
+
+object prac6 {
+
+ def main(args: Array[String]): Unit = {
+
+   // Read CSV
+   val data =
+     Source.fromFile("study.csv").getLines()
+       .drop(1)
+       .map(_.split(",").map(_.trim.toDouble))
+       .toArray
+
+   val samples = data.length
+
+   println("Logistic Regression using Breeze")
+
+   println("\nDataset Loaded")
+   println(s"Samples: $samples")
+   println("Features: 2")
+
+   // Initial weights
+   // w0 = intercept, w1 = StudyHours, w2 = Marks
+   var weights =
+     DenseVector(0.0, 0.0, 0.0)
+
+   val learningRate = 0.0001
+   val iterations = 1000
+
+   // Training
+   println("\nTraining the model...")
+
+   for (iteration <- 0 until iterations) {
+
+     var gradient0 = 0.0
+     var gradient1 = 0.0
+     var gradient2 = 0.0
+
+     for (i <- 0 until samples) {
+
+       val studyHours = data(i)(1)
+       val marks = data(i)(2)
+       val actual = data(i)(3)
+
+       val z = weights(0) + weights(1) * studyHours + weights(2) * marks
+
+       val probability = sigmoid(z)
+
+       val error = probability - actual
+
+       gradient0 += error
+       gradient1 += error * studyHours
+       gradient2 += error * marks
+     }
+
+     weights(0) = weights(0) - learningRate * gradient0 / samples
+
+     weights(1) = weights(1) - learningRate * gradient1 / samples
+
+     weights(2) = weights(2) - learningRate * gradient2 / samples
+   }
+
+   // Model Results
+   println("\nModel Results")
+   println(f"Intercept : ${weights(0)}%.4f")
+   println(f"StudyHours: ${weights(1)}%.4f")
+   println(f"Marks     : ${weights(2)}%.4f")
+
+   // Classification Results
+   println("\nClassification Results")
+   println("ARG\tActual\tProbability\tPredicted")
+
+   for (i <- 0 until samples) {
+
+     val arg = data(i)(1)
+     val marks = data(i)(2)
+     val actual = data(i)(3).toInt
+
+     val z = weights(0) + weights(1) * arg + weights(2) * marks
+
+     val probability = sigmoid(z)
+
+     val predicted =
+       if (probability >= 0.5) 1
+       else 0
+
+     println(
+       f"$arg%.2f\t$actual%d\t$probability%.4f\t\t$predicted%d"
+     )
+   }
+
+   // New prediction
+   val newArg = 7.0
+   val newMarks = 55.0
+
+   val newZ =
+     weights(0) +
+       weights(1) * newArg +
+       weights(2) * newMarks
+
+   val newProbability =
+     sigmoid(newZ)
+
+   val newPredicted =
+     if (newProbability >= 0.5) 1
+     else 0
+
+   println("\nPrediction")
+   println(f"ARG         : $newArg%.2f")
+   println(f"Marks       : $newMarks%.2f")
+   println(f"Probability : $newProbability%.4f")
+   println(s"Predicted   : $newPredicted")
+ }
+}
+
+# Built SBT Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "BreezeLinearRegression",
+   version := "1.0",
+   libraryDependencies +=
+     "org.scalanlp" %% "breeze" % "2.1.0"
+ )
