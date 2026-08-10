@@ -1,0 +1,250 @@
+# 7. Compute the Euclidean distance between two Breeze vectors. Use it for nearest neighbor classification.
+import breeze.linalg.{DenseVector, euclideanDistance}
+import scala.io.Source
+
+object prac7 {
+
+ case class Food(
+                  id: Int,
+                  features: DenseVector[Double]
+                )
+
+ def main(args: Array[String]): Unit = {
+
+   val filePath = "food.csv"
+
+   val source = Source.fromFile(filePath)
+   val lines = source.getLines().toSeq
+   source.close()
+
+   // Skip header
+   val data = lines.tail.map { line =>
+
+     val values = line.split(",").map(_.trim)
+
+     val id = values(0).toInt
+
+     val features = DenseVector(
+       values(1).toDouble,
+       values(2).toDouble,
+       values(3).toDouble,
+       values(4).toDouble
+     )
+
+     Food(id, features)
+   }
+
+   println("Food Dataset:")
+
+   data.foreach { food =>
+     println(
+       s"ID: ${food.id}, Features: ${food.features}"
+     )
+   }
+
+   val newPoint = DenseVector(
+     300.0,
+     10.0,
+     25.0,
+     5.0
+   )
+
+   println(s"\nNew data point: $newPoint")
+
+   // Find nearest neighbor
+   var minDistance = Double.MaxValue
+   var nearestFood: Food = null
+
+   for (food <- data) {
+
+     val distance =
+       euclideanDistance(newPoint, food.features)
+
+     println(
+       f"Distance to ID ${food.id}: $distance%.4f"
+     )
+
+     if (distance < minDistance) {
+       minDistance = distance
+       nearestFood = food
+     }
+   }
+
+   println("\nNearest Neighbor:")
+   println(s"ID: ${nearestFood.id}")
+   println(s"Features: ${nearestFood.features}")
+   println(f"Euclidean Distance: $minDistance%.4f")
+ }
+}
+
+Built SBT Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "BreezeKNN",
+   version := "1.0",
+   libraryDependencies +=
+     "org.scalanlp" %% "breeze" % "2.1.0"
+ )
+
+# 8. Cluster a dataset into two groups using k-means clustering in Breeze. 
+import breeze.linalg._
+import breeze.stats.distributions.Rand
+import scala.io.Source
+
+object prac8 {
+
+ // Euclidean distance
+ def euclideanDistance(
+                        v1: DenseVector[Double],
+                        v2: DenseVector[Double]
+                      ): Double = { norm(v1 - v2) }
+
+ def main(args: Array[String]): Unit = {
+
+   val k = 2
+   val maxIterations = 100
+
+   println("Reading dataset...")
+
+   // Read the dataset
+   val lines = Source.fromFile("food.csv").getLines().toList
+
+   // Skip header
+   val dataLines = lines.tail
+
+   val data = DenseMatrix.zeros[Double](
+     dataLines.length, 4
+   )
+
+   for (i <- dataLines.indices) {
+
+     val values = dataLines(i).split("[,\\t]+")
+
+     data(i, 0) = values(1).toDouble
+     data(i, 1) = values(2).toDouble
+     data(i, 2) = values(3).toDouble
+     data(i, 3) = values(4).toDouble
+   }
+
+   println(
+     s"Generated dataset with ${data.rows} samples and ${data.cols} features."
+   )
+
+   // 1. Initialize centroids by randomly selecting k data points
+   var centroids =
+     DenseMatrix.zeros[Double](k, data.cols)
+
+   val randomIndices =
+     (0 until data.rows)
+       .sortBy(_ => Rand.uniform.get)
+       .take(k)
+
+   for (i <- 0 until k) {
+     centroids(i, ::) := data(randomIndices(i), ::)
+   }
+
+   println(s"\nInitial centroids:\n$centroids")
+
+   var assignments =
+     DenseVector.zeros[Int](data.rows)
+
+   var previousAssignments =
+     DenseVector.fill[Int](data.rows)(-1)
+
+   var iteration = 0
+   var converged = false
+
+   // Main k-means loop
+   while (iteration < maxIterations && !converged) {
+
+     println(s"\n--- Iteration ${iteration + 1} ---")
+
+     // 2. Assignment Step - Assign each data point to the nearest centroid
+     for (i <- 0 until data.rows) {
+
+       val point = data(i, ::).t
+
+       var minDistance = Double.MaxValue
+       var closestCentroidIndex = -1
+
+       for (j <- 0 until k) {
+
+         val centroid = centroids(j, ::).t
+
+         val dist =
+           euclideanDistance(point, centroid)
+
+         if (dist < minDistance) {
+           minDistance = dist
+           closestCentroidIndex = j
+         }
+       }
+
+       assignments(i) = closestCentroidIndex
+     }
+
+     // Check for convergence
+     if (assignments == previousAssignments) {
+       converged = true
+     } else {
+       previousAssignments = assignments.copy
+     }
+
+     // 3. Update Step - Recalculate centroids
+     val newCentroids =
+       DenseMatrix.zeros[Double](k, data.cols)
+
+     val clusterCounts =
+       DenseVector.zeros[Int](k)
+
+     for (i <- 0 until data.rows) {
+
+       val clusterId = assignments(i)
+
+       newCentroids(clusterId, ::) :=
+         newCentroids(clusterId, ::) + data(i, ::)
+
+       clusterCounts(clusterId) += 1
+     }
+
+     for (i <- 0 until k) {
+
+       if (clusterCounts(i) > 0) {
+
+         newCentroids(i, ::) :=
+           newCentroids(i, ::) /
+             clusterCounts(i).toDouble
+       }
+     }
+
+     centroids = newCentroids
+
+     println(s"Updated centroids:\n$centroids")
+
+     iteration += 1
+   }
+
+   println("\n--- Final Results ---")
+
+   println(
+     s"K-means algorithm converged in $iteration iterations."
+   )
+
+   println(s"Final centroids:\n$centroids")
+
+   println(s"Final cluster assignments:\n$assignments")
+ }
+}
+
+# Built Sbt Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "BreezeKNN",
+   version := "1.0",
+   libraryDependencies +=
+     "org.scalanlp" %% "breeze" % "2.1.0"
+ )
