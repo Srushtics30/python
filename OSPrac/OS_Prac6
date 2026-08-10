@@ -1,0 +1,268 @@
+# Aim :   CPU Scheduling Algorithms (Part 2) – Round Robin 
+# Implement Round Robin scheduling with configurable time quantum. 
+# Compare with FCFS: fairness, turnaround, response time. 
+# Track context switches and improve queue management.    
+# Code 1 -
+print("S116 - Srushti Vedak")
+print("`" * 30)
+
+# CPU SCHEDULING - ROUND ROBIN AND FCFS
+p = ["P1", "P2", "P3"]
+at = [0, 4, 5]
+bt = [5, 2, 4]
+
+q = 2
+
+#  ROUND ROBIN 
+rem = bt.copy()
+ct = [0, 0, 0]
+rt = [-1, -1, -1]
+
+queue = []
+gantt = []
+
+time = 0
+
+while sum(rem) > 0:
+
+    # Add arrived processes
+    for i in range(3):
+        if at[i] <= time and rem[i] > 0 and i not in queue:
+            queue.append(i)
+
+    # CPU idle
+    if not queue:
+        time += 1
+        continue
+
+    i = queue.pop(0)
+
+    # Response Time
+    if rt[i] == -1:
+        rt[i] = time - at[i]
+
+    start = time
+
+    # Run for Time Quantum
+    run = min(q, rem[i])
+    time = time + run
+    rem[i] = rem[i] - run
+
+    # Store Gantt chart
+    gantt.append([p[i], start, time])
+
+    # Process not completed
+    if rem[i] > 0:
+        queue.append(i)
+
+    # Process completed
+    else:
+        ct[i] = time
+
+#RR GANTT CHART
+
+print("\nROUND ROBIN")
+print("\nGantt Chart:")
+
+print(" ", end="")
+for x in gantt:
+    print("---------", end="")
+print()
+
+print("|", end="")
+for x in gantt:
+    print("   " + x[0] + "   |", end="")
+print()
+
+print(" ", end="")
+for x in gantt:
+    print("---------", end="")
+print()
+
+print(gantt[0][1], end="")
+for x in gantt:
+    print("       ", x[2], end="")
+
+print()
+
+# RR CALCULATIONS 
+tat = []
+wt = []
+
+for i in range(3):
+    tat.append(ct[i] - at[i])
+    wt.append(tat[i] - bt[i])
+
+print("\nProcess\tAT\tBT\tCT\tTAT\tWT\tRT")
+
+for i in range(3):
+    print(p[i], "\t", at[i], "\t", bt[i], "\t",
+          ct[i], "\t", tat[i], "\t", wt[i], "\t", rt[i])
+
+print("\nAverage TAT =", sum(tat) / 3, "ms")
+print("Average WT  =", sum(wt) / 3, "ms")
+print("Average RT  =", sum(rt) / 3, "ms")
+
+# Context switches
+print("Context Switches =", len(gantt) - 1)
+
+#  FCFS 
+
+time = 0
+ct = []
+rt = []
+gantt = []
+
+for i in range(3):
+
+    # CPU waits if process has not arrived
+    if time < at[i]:
+        time = at[i]
+
+    start = time
+
+    # Response Time
+    rt.append(start - at[i])
+
+    time = time + bt[i]
+
+    ct.append(time)
+
+    gantt.append([p[i], start, time])
+
+#  FCFS GANTT CHART
+
+print("\n\nFCFS")
+
+print("\nGantt Chart:")
+
+print(" ", end="")
+for x in gantt:
+    print("---------", end="")
+print()
+
+print("|", end="")
+for x in gantt:
+    print("   " + x[0] + "   |", end="")
+print()
+
+print(" ", end="")
+for x in gantt:
+    print("---------", end="")
+print()
+
+print(gantt[0][1], end="")
+for x in gantt:
+    print("       ", x[2], end="")
+
+print()
+
+#FCFS CALCULATIONS
+tat = []
+wt = []
+
+for i in range(3):
+    tat.append(ct[i] - at[i])
+    wt.append(tat[i] - bt[i])
+
+print("\nProcess\tAT\tBT\tCT\tTAT\tWT\tRT")
+
+for i in range(3):
+    print(p[i], "\t", at[i], "\t", bt[i], "\t",
+          ct[i], "\t", tat[i], "\t", wt[i], "\t", rt[i])
+
+
+print("\nAverage TAT =", sum(tat) / 3, "ms")
+print("Average WT  =", sum(wt) / 3, "ms")
+print("Average RT  =", sum(rt) / 3, "ms")
+
+# Context switches
+print("Context Switches =", len(gantt) - 1)
+
+# Code -
+print("S116 - Srushti Vedak")
+print("`" * 30)
+
+# Time Quantum = 2 ms
+p = ["P1", "P2", "P3"]
+at = [0, 1, 2]
+bt = [5, 3, 6]
+
+q = 2
+rem = bt.copy()
+
+time = 0
+queue = []
+ct = [0, 0, 0]
+gantt = []
+
+while sum(rem) > 0:
+
+    # Add arrived processes
+    for i in range(3):
+        if at[i] <= time and rem[i] > 0 and i not in queue:
+            queue.append(i)
+
+    if not queue:
+        time += 1
+        continue
+
+    i = queue.pop(0)
+
+    start = time
+    run = min(q, rem[i])
+
+    time = time + run
+    rem[i] = rem[i] - run
+
+    # Store Gantt chart
+    gantt.append([p[i], start, time])
+
+    if rem[i] > 0:
+        queue.append(i)
+    else:
+        ct[i] = time
+
+
+# GANTT CHART 
+print("\nGantt Chart:")
+
+print(" ", end="")
+for x in gantt:
+    print("---------", end="")
+print()
+
+print("|", end="")
+for x in gantt:
+    print("   " + x[0] + "   |", end="")
+print()
+
+print(" ", end="")
+for x in gantt:
+    print("---------", end="")
+print()
+
+print(gantt[0][1], end="")
+for x in gantt:
+    print("       ", x[2], end="")
+
+print()
+
+tat = []
+wt = []
+
+for i in range(3):
+    tat.append(ct[i] - at[i])
+    wt.append(tat[i] - bt[i])
+
+print("\nProcess\tAT\tBT\tCT\tTAT\tWT")
+
+for i in range(3):
+    print(p[i], "\t", at[i], "\t", bt[i], "\t",
+          ct[i], "\t", tat[i], "\t", wt[i])
+
+
+print("\nAverage Turnaround Time =", sum(tat) / 3, "ms")
+print("Average Waiting Time =", sum(wt) / 3, "ms")
+
+
