@@ -1,0 +1,714 @@
+# Aim : Linear probing (hash) , Breadth First Tree and Depth First Tree using Graph
+# 9(A) Linear Probing (Hash)
+def linear_probing_insert(hash_size, data):
+    hash_table = [None] * hash_size
+
+    for value in data:
+        hash_index = value % hash_size
+        original_index = hash_index
+
+        while hash_table[hash_index] is not None:
+            hash_index = (hash_index + 1) % hash_size
+
+            if hash_index == original_index:
+                print("Hash table is full!")
+                return hash_table
+
+        hash_table[hash_index] = value
+
+    return hash_table
+
+hash_size = int(input("Enter size of hash table: "))
+data_input = input("Enter data (space-separated numbers): ")
+data = list(map(int, data_input.split()))
+
+final_table = linear_probing_insert(hash_size, data)
+
+print("\nFinal Hash Table:")
+for i, v in enumerate(final_table):
+    print(f"Index {i}: {v}")
+
+# GUI Code -
+import tkinter as tk
+from tkinter import messagebox
+
+def linear_probing():
+
+    try:
+        size = int(size_box.get())
+        data = list(map(int, data_box.get().split()))
+
+        table = [None] * size
+
+        for value in data:
+            index = value % size
+
+            while table[index] is not None:
+                index = (index + 1) % size
+
+            table[index] = value
+
+        result.delete("1.0", tk.END)
+
+        for i in range(size):
+            result.insert(
+                tk.END,
+                f"Index {i}   →   {table[i]}\n"
+            )
+
+    except:
+        messagebox.showerror(
+            "Error",
+            "Please enter valid numbers!"
+        )
+
+def clear():
+    size_box.delete(0, tk.END)
+    data_box.delete(0, tk.END)
+    result.delete("1.0", tk.END)
+
+root = tk.Tk()
+root.title("S116 - Linear Probing")
+root.geometry("600x500")
+root.configure(bg="#D6EAF8")
+
+tk.Label(
+    root,
+    text=" LINEAR PROBING (HASH)",
+    font=("Arial", 24, "bold"),
+    bg="#D6EAF8",
+    fg="#154360"
+).pack(pady=20)
+
+tk.Label(
+    root,
+    text="Hash Table Size",
+    font=("Arial", 12),
+    bg="#D6EAF8"
+).pack()
+
+size_box = tk.Entry(root, font=("Arial", 12))
+size_box.pack(pady=5)
+
+tk.Label(
+    root,
+    text="Enter Numbers",
+    font=("Arial", 12),
+    bg="#D6EAF8"
+).pack(pady=5)
+
+data_box = tk.Entry(root, width=40, font=("Arial", 12))
+data_box.pack()
+
+tk.Label(
+    root,
+    text="Example: 10 20 15 25 30",
+    fg="gray",
+    bg="#D6EAF8"
+).pack(pady=5)
+
+tk.Button(
+    root,
+    text="▶ INSERT",
+    command=linear_probing,
+    bg="#3498DB",
+    fg="white",
+    font=("Arial", 12, "bold"),
+    width=15
+).pack(pady=10)
+
+tk.Button(
+    root,
+    text="CLEAR",
+    command=clear,
+    bg="#E74C3C",
+    fg="white",
+    font=("Arial", 11, "bold"),
+    width=15
+).pack(pady=5)
+
+result = tk.Text(
+    root,
+    width=35,
+    height=10,
+    font=("Consolas", 12)
+)
+result.pack(pady=15)
+
+root.mainloop()
+
+# 9. B. Write a python program to implement Breadth First Tree using Graph
+import matplotlib.pyplot as plt
+import networkx as nx
+from collections import deque, defaultdict
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def bfs_tree(self, start):
+        visited = set()
+        bfs_tree = defaultdict(list)
+        queue = deque([start])
+        visited.add(start)
+
+        while queue:
+            current = queue.popleft()
+
+            for neighbor in self.graph[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    bfs_tree[current].append(neighbor)
+                    queue.append(neighbor)
+
+        return bfs_tree
+
+    def display(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+    def visualize(self, bfs_tree=None):
+        G = nx.Graph(self.graph)
+
+        pos = nx.spring_layout(G)
+
+        plt.figure(figsize=(12, 6))
+
+        plt.subplot(121)
+        nx.draw(
+            G, pos,
+            with_labels=True,
+            node_color='lightblue',
+            edge_color='gray',
+            node_size=1000,
+            font_size=15,
+            font_weight='bold'
+        )
+        plt.title("Graph")
+
+        # Draw BFS Tree
+        if bfs_tree:
+            T = nx.DiGraph(bfs_tree)
+            pos_tree = nx.spring_layout(T)
+
+            plt.subplot(122)
+            nx.draw(
+                T, pos_tree,
+                with_labels=True,
+                node_color='lightgreen',
+                edge_color='blue',
+                node_size=1000,
+                font_size=15,
+                font_weight='bold',
+                arrows=True
+            )
+            plt.title("BFS Tree")
+
+        plt.show()
+
+def print_bfs_tree(bfs_tree, start):
+    print(f"Breadth-First Tree starting from {start}:")
+
+    for vertex in bfs_tree:
+        print(f"{vertex}: {bfs_tree[vertex]}")
+
+if __name__ == "__main__":
+    g = Graph()
+
+    # Add vertices
+    for v in [1, 2, 3, 4, 5, 6]:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge(1, 2)
+    g.add_edge(1, 3)
+    g.add_edge(2, 4)
+    g.add_edge(2, 5)
+    g.add_edge(3, 6)
+
+    print("Graph:")
+    g.display()
+
+    # Perform BFS
+    start_vertex = 1
+    bfs_tree = g.bfs_tree(start_vertex)
+
+    print_bfs_tree(bfs_tree, start_vertex)
+
+    # Visualize graph and BFS tree
+    g.visualize(bfs_tree)
+
+# GUI Code -
+import tkinter as tk
+from tkinter import messagebox
+import networkx as nx
+import matplotlib.pyplot as plt
+from collections import deque
+
+def bfs():
+
+    try:
+        vertices = vertex_box.get().split()
+        edges = edge_box.get().split(",")
+        start = start_box.get()
+
+        graph = {v: [] for v in vertices}
+
+        for edge in edges:
+            a, b = edge.strip().split()
+            graph[a].append(b)
+            graph[b].append(a)
+
+        visited = {start}
+        queue = deque([start])
+        tree = []
+
+        while queue:
+
+            current = queue.popleft()
+
+            for neighbor in graph[current]:
+
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append(neighbor)
+                    tree.append((current, neighbor))
+
+        result.delete("1.0", tk.END)
+
+        result.insert(tk.END, " BFS TREE\n\n")
+
+        for a, b in tree:
+            result.insert(
+                tk.END,
+                f"{a} → {b}\n"
+            )
+
+        # Graph
+        G = nx.Graph()
+
+        for edge in edges:
+            a, b = edge.strip().split()
+            G.add_edge(a, b)
+
+        # BFS Tree
+        T = nx.DiGraph()
+        T.add_edges_from(tree)
+
+        plt.figure(figsize=(9, 4))
+
+        plt.subplot(1, 2, 1)
+        nx.draw(
+            G,
+            with_labels=True,
+            node_color="skyblue",
+            node_size=1200,
+            font_size=14
+        )
+        plt.title("Graph")
+
+        plt.subplot(1, 2, 2)
+        nx.draw(
+            T,
+            with_labels=True,
+            node_color="lightgreen",
+            node_size=1200,
+            font_size=14,
+            arrows=True
+        )
+        plt.title("BFS Tree")
+
+        plt.show()
+
+    except:
+        messagebox.showerror(
+            "Error",
+            "Enter the graph correctly!"
+        )
+
+def clear():
+
+    vertex_box.delete(0, tk.END)
+    edge_box.delete(0, tk.END)
+    start_box.delete(0, tk.END)
+    result.delete("1.0", tk.END)
+
+root = tk.Tk()
+root.title("S116 - Breadth First Tree")
+root.geometry("650x600")
+root.configure(bg="#D5F5E3")
+
+tk.Label(
+    root,
+    text=" BREADTH FIRST TREE",
+    font=("Arial", 24, "bold"),
+    bg="#D5F5E3",
+    fg="#117A65"
+).pack(pady=20)
+
+tk.Label(
+    root,
+    text="Vertices",
+    bg="#D5F5E3",
+    font=("Arial", 12)
+).pack()
+
+vertex_box = tk.Entry(
+    root,
+    width=45,
+    font=("Arial", 12)
+)
+vertex_box.pack(pady=5)
+
+tk.Label(
+    root,
+    text="Edges",
+    bg="#D5F5E3",
+    font=("Arial", 12)
+).pack()
+
+edge_box = tk.Entry(
+    root,
+    width=45,
+    font=("Arial", 12)
+)
+edge_box.pack()
+
+tk.Label(
+    root,
+    text="Example: 1 2, 1 3, 2 4, 2 5, 3 6",
+    bg="#D5F5E3",
+    fg="gray"
+).pack(pady=5)
+
+tk.Label(
+    root,
+    text="Starting Vertex",
+    bg="#D5F5E3",
+    font=("Arial", 12)
+).pack(pady=5)
+
+start_box = tk.Entry(
+    root,
+    width=10,
+    font=("Arial", 12),
+    justify="center"
+)
+start_box.pack()
+
+tk.Button(
+    root,
+    text=" RUN BFS",
+    command=bfs,
+    bg="#27AE60",
+    fg="white",
+    font=("Arial", 12, "bold"),
+    width=15
+).pack(pady=15)
+
+tk.Button(
+    root,
+    text="CLEAR",
+    command=clear,
+    bg="#E74C3C",
+    fg="white",
+    font=("Arial", 11, "bold"),
+    width=15
+).pack()
+
+result = tk.Text(
+    root,
+    width=35,
+    height=9,
+    font=("Consolas", 12)
+)
+result.pack(pady=15)
+
+root.mainloop()
+
+# 9. C. Write a python program to implement Depth First Tree using Graph 
+import matplotlib.pyplot as plt
+import networkx as nx
+from collections import defaultdict
+
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def add_edge(self, vertex1, vertex2):
+        if vertex1 in self.graph and vertex2 in self.graph:
+            self.graph[vertex1].append(vertex2)
+            self.graph[vertex2].append(vertex1)
+
+    def dfs_tree(self, start):
+        visited = set()
+        dfs_tree = defaultdict(list)
+
+        def dfs(v):
+            visited.add(v)
+            for neighbor in self.graph[v]:
+                if neighbor not in visited:
+                    dfs_tree[v].append(neighbor)
+                    dfs(neighbor)
+
+        dfs(start)
+        return dfs_tree
+
+    def display(self):
+        for vertex, edges in self.graph.items():
+            print(f"{vertex}: {edges}")
+
+    def visualize(self, dfs_tree=None):
+        G = nx.Graph(self.graph)
+
+        pos = nx.spring_layout(G)
+
+        plt.figure(figsize=(12, 6))
+
+        # Draw the original graph
+        plt.subplot(121)
+        nx.draw(G, pos, with_labels=True, node_color='lightblue',
+                edge_color='gray', node_size=1000, font_size=15,
+                font_weight='bold')
+        plt.title("Graph")
+
+        # Draw the DFS Tree
+        if dfs_tree:
+            # Create a graph from the DFS Tree
+            T = nx.DiGraph(dfs_tree)
+            pos_tree = nx.spring_layout(T)
+
+            plt.subplot(122)
+            nx.draw(T, pos_tree, with_labels=True,
+                    node_color='lightgreen', edge_color='blue',
+                    node_size=1000, font_size=15,
+                    font_weight='bold', arrows=True)
+            plt.title("DFS Tree")
+
+        plt.show()
+
+if __name__ == "__main__":
+    g = Graph()
+
+    # Add vertices
+    for v in ['A', 'B', 'C', 'D', 'E', 'F']:
+        g.add_vertex(v)
+
+    # Add edges
+    g.add_edge('A', 'B')
+    g.add_edge('A', 'C')
+    g.add_edge('B', 'D')
+    g.add_edge('B', 'E')
+    g.add_edge('C', 'F')
+
+    print("Graph:")
+    g.display()
+
+    # Perform DFS and get the Depth-First Tree
+    start_vertex = 'A'
+    dfs_tree = g.dfs_tree(start_vertex)
+
+    # Visualize the graph and the DFS tree
+    g.visualize(dfs_tree)
+
+# GUI Code -
+import tkinter as tk
+from tkinter import messagebox
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def dfs():
+
+    try:
+        vertices = vertex_box.get().split()
+        edges = edge_box.get().split(",")
+        start = start_box.get()
+
+        graph = {v: [] for v in vertices}
+
+        for edge in edges:
+            a, b = edge.strip().split()
+            graph[a].append(b)
+            graph[b].append(a)
+
+        visited = set()
+        tree = []
+
+        def visit(v):
+
+            visited.add(v)
+
+            for neighbor in graph[v]:
+
+                if neighbor not in visited:
+                    tree.append((v, neighbor))
+                    visit(neighbor)
+
+        visit(start)
+
+        result.delete("1.0", tk.END)
+
+        result.insert(tk.END, "🌲 DFS TREE\n\n")
+
+        for a, b in tree:
+            result.insert(
+                tk.END,
+                f"{a} → {b}\n"
+            )
+
+        # Graph
+        G = nx.Graph()
+
+        for edge in edges:
+            a, b = edge.strip().split()
+            G.add_edge(a, b)
+
+        # DFS Tree
+        T = nx.DiGraph()
+        T.add_edges_from(tree)
+
+        plt.figure(figsize=(9, 4))
+
+        plt.subplot(1, 2, 1)
+        nx.draw(
+            G,
+            with_labels=True,
+            node_color="skyblue",
+            node_size=1200,
+            font_size=14
+        )
+        plt.title("Graph")
+
+        plt.subplot(1, 2, 2)
+        nx.draw(
+            T,
+            with_labels=True,
+            node_color="orange",
+            node_size=1200,
+            font_size=14,
+            arrows=True
+        )
+        plt.title("DFS Tree")
+
+        plt.show()
+
+    except:
+        messagebox.showerror(
+            "Error",
+            "Enter the graph correctly!"
+        )
+
+def clear():
+
+    vertex_box.delete(0, tk.END)
+    edge_box.delete(0, tk.END)
+    start_box.delete(0, tk.END)
+    result.delete("1.0", tk.END)
+
+root = tk.Tk()
+root.title("S116 - Depth First Tree")
+root.geometry("650x600")
+root.configure(bg="#FCF3CF")
+
+tk.Label(
+    root,
+    text="DEPTH FIRST TREE",
+    font=("Arial", 24, "bold"),
+    bg="#FCF3CF",
+    fg="#9A7D0A"
+).pack(pady=20)
+
+tk.Label(
+    root,
+    text="Vertices",
+    bg="#FCF3CF",
+    font=("Arial", 12)
+).pack()
+
+vertex_box = tk.Entry(
+    root,
+    width=45,
+    font=("Arial", 12)
+)
+vertex_box.pack(pady=5)
+
+tk.Label(
+    root,
+    text="Edges",
+    bg="#FCF3CF",
+    font=("Arial", 12)
+).pack()
+
+edge_box = tk.Entry(
+    root,
+    width=45,
+    font=("Arial", 12)
+)
+edge_box.pack()
+
+tk.Label(
+    root,
+    text="Example: 1 2, 1 3, 2 4, 2 5, 3 6",
+    bg="#FCF3CF",
+    fg="gray"
+).pack(pady=5)
+
+tk.Label(
+    root,
+    text="Starting Vertex",
+    bg="#FCF3CF",
+    font=("Arial", 12)
+).pack(pady=5)
+
+start_box = tk.Entry(
+    root,
+    width=10,
+    font=("Arial", 12),
+    justify="center"
+)
+start_box.pack()
+
+tk.Button(
+    root,
+    text=" RUN DFS",
+    command=dfs,
+    bg="#D4AC0D",
+    fg="white",
+    font=("Arial", 12, "bold"),
+    width=15
+).pack(pady=15)
+
+tk.Button(
+    root,
+    text="CLEAR",
+    command=clear,
+    bg="#E74C3C",
+    fg="white",
+    font=("Arial", 11, "bold"),
+    width=15
+).pack()
+
+result = tk.Text(
+    root,
+    width=35,
+    height=9,
+    font=("Consolas", 12)
+)
+result.pack(pady=15)
+
+root.mainloop()
+
+
