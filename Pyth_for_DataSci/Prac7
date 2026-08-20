@@ -1,0 +1,101 @@
+# Aim: Write a program to implement a simple Web Crawler using bs4
+# Code : Cmd
+py -m pip install requests
+py -m pip install html5lib
+py -m pip install bs4
+
+import requests
+from bs4 import BeautifulSoup
+
+print("S116 - Srushti Vedak \n")
+
+# Step 1: Get the webpage
+url = "https://www.facebook.com/"
+response = requests.get(url)
+
+# Step 2: Parse the HTML
+soup = BeautifulSoup(response.text, "html.parser")
+
+# Step 3: Extract information
+# Title of the page
+if soup.title:
+    print("Page Title:", soup.title.string)
+
+# All headings 
+for heading in soup.find_all("h1"):
+    print("Heading:", heading.get_text(strip=True))
+
+# First 5 links
+for link in soup.find_all("a", href=True)[:5]:
+    print("Link Text:", link.get_text(strip=True), "| URL:", link["href"])
+
+# Question: Write a Python program using BeautifulSoup to scrape data from the Wikipedia homepage (https://www.wikipedia.org/).
+# Your program should:
+# Extract all <p> (paragraph) tags and print the first 3 paragraphs.
+# Find all <img> (image) tags and print their src URLs.
+# Count and display the total number of links (<a>) on the page.
+# Print all headings (<h1>, <h2>, <h3>) in the order they appear.
+# Extract and display all the language names listed on the homepage.
+from bs4 import BeautifulSoup
+
+print("S116 - Srushti Vedak \n")
+# Offline HTML data
+html = """
+<html>
+<head>
+    <title>Wikipedia</title>
+</head>
+<body>
+
+<h1>Wikipedia</h1>
+
+<p>Wikipedia is a free online encyclopedia.</p>
+<p>Wikipedia is written and maintained by volunteers.</p>
+<p>It is available in many languages around the world.</p>
+<p>This is an extra paragraph.</p>
+
+<img src="wiki-logo.png">
+<img src="earth.png">
+
+<h2>Languages</h2>
+<h3>English</h3>
+<h3>Spanish</h3>
+<h3>German</h3>
+
+<a href="https://en.wikipedia.org/">English</a>
+<a href="https://es.wikipedia.org/">Español</a>
+<a href="https://de.wikipedia.org/">Deutsch</a>
+
+</body>
+</html>
+"""
+
+# Parse the HTML
+soup = BeautifulSoup(html, "html.parser")
+
+print("First 3 Paragraphs:")
+paragraphs = soup.find_all("p")
+
+for paragraph in paragraphs[:3]:
+    print(paragraph.get_text(strip=True))
+
+print("\nImage URLs:")
+images = soup.find_all("img")
+
+for image in images:
+    print(image.get("src"))
+
+# Count links
+links = soup.find_all("a", href=True)
+print("\nTotal number of links:", len(links))
+
+print("\nHeadings:")
+headings = soup.find_all(["h1", "h2", "h3"])
+
+for heading in headings:
+    print(heading.get_text(strip=True))
+
+print("\nLanguage Names:")
+
+for link in links:
+    print(link.get_text(strip=True))
