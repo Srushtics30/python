@@ -1,0 +1,77 @@
+# Aim: Readers-Writers Problem – Synchronization in Shared Access
+# • Implement reader and writer prioritization.
+# • Use semaphores to allow multiple readers or exclusive writer access.
+# • Extend to fairness in access and deadlock prevention.
+import threading
+import time
+import random
+
+print("S116 - Srushti Vedak \n")
+#semaphores
+mutex = threading.Semaphore(1)
+rw_mutex = threading.Semaphore(1)
+queue = threading.Semaphore(1)
+
+#shared variables
+read_count = 0
+shared_data = 0
+
+def reader(reader_id):
+    global read_count
+
+    time.sleep(random.uniform(0.1, 1))
+
+    #entry section
+    queue.acquire()
+    mutex.acquire()
+    global read_count
+    read_count += 1
+    if read_count == 1:
+        rw_mutex.acquire()
+    mutex.release()
+    queue.release()
+
+    # Critical section
+    print(f"Reader {reader_id} is reading. Shared Data = {shared_data}")
+    time.sleep(random.uniform(0.1, 0.5))
+
+    #exit section
+    mutex.acquire()
+    read_count -= 1
+    if read_count == 0:
+        rw_mutex.release()
+    mutex.release()
+
+
+def writer(writer_id):
+    global shared_data
+
+    time.sleep(random.uniform(0.1, 1))
+
+    #entry section
+    queue.acquire()
+    rw_mutex.acquire()
+    queue.release()
+
+    #critical section
+    shared_data += 1
+    print(f"Writer {writer_id} is writing. New Shared Data = {shared_data}")
+    time.sleep(random.uniform(0.1, 0.5))
+
+    #exit section
+    rw_mutex.release()
+
+
+#create reader and writer threads
+reader_threads = [threading.Thread(target=reader, args=(i,)) for i in range(3)]
+writer_threads = [threading.Thread(target=writer, args=(i,)) for i in range(2)]
+
+#start threads
+for t in reader_threads + writer_threads:
+    t.start()
+
+#wait for all threads to complete
+for t in reader_threads + writer_threads:
+    t.join()
+
+print("All readers and writers have finished.")
