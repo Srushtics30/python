@@ -2,12 +2,16 @@
 # Simulate FIFO and LRU page replacement using page reference strings. 
 # Measure hit/miss ratios under different reference patterns. 
 # Extend to include frames and memory constraints.
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
 # FIFO Page Replacement
-print("S116 - Srushti Vedak \n")
 def fifo(pages, frames):
     memory = []
     hits = 0
     misses = 0
+
+    print("\n--- FIFO Page Replacement ---")
 
     for page in pages:
         if page in memory:
@@ -22,18 +26,24 @@ def fifo(pages, frames):
 
         print(page, "->", memory)
 
-    print("\nFIFO")
+    hit_ratio = hits / len(pages)
+    miss_ratio = misses / len(pages)
+
+    print("\nFIFO Results")
     print("Hits:", hits)
     print("Misses:", misses)
-    print("Hit Ratio:", hits / len(pages))
-    print("Miss Ratio:", misses / len(pages))
+    print("Hit Ratio:", round(hit_ratio, 2))
+    print("Miss Ratio:", round(miss_ratio, 2))
 
+    return hits, misses
 
 # LRU Page Replacement
 def lru(pages, frames):
     memory = []
     hits = 0
     misses = 0
+
+    print("\n--- LRU Page Replacement ---")
 
     for page in pages:
         if page in memory:
@@ -49,15 +59,33 @@ def lru(pages, frames):
 
         print(page, "->", memory)
 
-    print("\nLRU")
+    hit_ratio = hits / len(pages)
+    miss_ratio = misses / len(pages)
+
+    print("\nLRU Results")
     print("Hits:", hits)
     print("Misses:", misses)
-    print("Hit Ratio:", hits / len(pages))
-    print("Miss Ratio:", misses / len(pages))
+    print("Hit Ratio:", round(hit_ratio, 2))
+    print("Miss Ratio:", round(miss_ratio, 2))
 
+    return hits, misses
 
 pages = list(map(int, input("Enter page reference string: ").split()))
 frames = int(input("Enter number of frames: "))
 
-fifo(pages, frames)
-lru(pages, frames)
+# Run FIFO and LRU
+fifo_hits, fifo_misses = fifo(pages, frames)
+lru_hits, lru_misses = lru(pages, frames)
+
+# Comparison
+print("\n--- Comparison ---")
+print("Algorithm    Hits    Misses")
+print("FIFO         ", fifo_hits, "     ", fifo_misses)
+print("LRU          ", lru_hits, "     ", lru_misses)
+
+if fifo_misses < lru_misses:
+    print("\nFIFO has fewer page misses.")
+elif lru_misses < fifo_misses:
+    print("\nLRU has fewer page misses.")
+else:
+    print("\nBoth have the same number of page misses.")
