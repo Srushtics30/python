@@ -1,0 +1,63 @@
+# Aim: Memory Management Techniques 
+# Simulate FIFO and LRU page replacement using page reference strings. 
+# Measure hit/miss ratios under different reference patterns. 
+# Extend to include frames and memory constraints.
+# FIFO Page Replacement
+print("S116 - Srushti Vedak \n")
+def fifo(pages, frames):
+    memory = []
+    hits = 0
+    misses = 0
+
+    for page in pages:
+        if page in memory:
+            hits += 1
+        else:
+            misses += 1
+
+            if len(memory) == frames:
+                memory.pop(0)
+
+            memory.append(page)
+
+        print(page, "->", memory)
+
+    print("\nFIFO")
+    print("Hits:", hits)
+    print("Misses:", misses)
+    print("Hit Ratio:", hits / len(pages))
+    print("Miss Ratio:", misses / len(pages))
+
+
+# LRU Page Replacement
+def lru(pages, frames):
+    memory = []
+    hits = 0
+    misses = 0
+
+    for page in pages:
+        if page in memory:
+            hits += 1
+            memory.remove(page)
+        else:
+            misses += 1
+
+            if len(memory) == frames:
+                memory.pop(0)
+
+        memory.append(page)
+
+        print(page, "->", memory)
+
+    print("\nLRU")
+    print("Hits:", hits)
+    print("Misses:", misses)
+    print("Hit Ratio:", hits / len(pages))
+    print("Miss Ratio:", misses / len(pages))
+
+
+pages = list(map(int, input("Enter page reference string: ").split()))
+frames = int(input("Enter number of frames: "))
+
+fifo(pages, frames)
+lru(pages, frames)
