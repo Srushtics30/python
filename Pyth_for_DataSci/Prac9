@@ -1,0 +1,321 @@
+# Aim :  1. Create and Explore a Dataset Using Pandas
+import pandas as pd
+
+# Create Sales dataset
+data = {
+    "Order_ID": ["O101", "O102", "O103", "O104", "O105",
+                 "O106", "O107", "O108", "O109", "O110",
+                 "O111", "O112", "O113", "O114", "O115"],
+
+    "Product": ["Laptop", "Mouse", "Keyboard", "Monitor", "Laptop",
+                "Printer", "Mouse", "Keyboard", "Monitor", "Laptop",
+                "Printer", "Mouse", "Keyboard", "Monitor", "Laptop"],
+
+    "Category": ["Electronics", "Accessories", "Accessories", "Electronics",
+                 "Electronics", "Electronics", "Accessories", "Accessories",
+                 "Electronics", "Electronics", "Electronics", "Accessories",
+                 "Accessories", "Electronics", "Electronics"],
+
+    "Quantity": [2, 10, 8, 4, 3, 2, 15, 10, 5, 1, 3, 20, 12, 6, 2],
+
+    "Price": [55000, 800, 1500, 12000, 55000,
+              18000, 800, 1500, 12000, 55000,
+              18000, 800, 1500, 12000, 55000],
+
+    "Sales": [110000, 8000, 12000, 48000, 165000,
+              36000, 12000, 15000, 60000, 55000,
+              54000, 16000, 18000, 72000, 110000],
+
+    "Region": ["West", "North", "South", "West", "North",
+               "East", "West", "North", "South", "East",
+               "West", "South", "East", "North", "South"]
+}
+
+df = pd.DataFrame(data)
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# 1. Display complete dataset
+print("Complete Dataset:")
+print(df)
+
+# 2. First 5 records
+print("\nFirst 5 Records:")
+print(df.head())
+
+# 3. Last 5 records
+print("\nLast 5 Records:")
+print(df.tail())
+
+# 4. Number of rows and columns
+print("\nShape:")
+print(df.shape)
+
+# 5. Column names
+print("\nColumn Names:")
+print(df.columns)
+
+# 6. Dataset information
+print("\nDataset Information:")
+df.info()
+
+# 7. Statistical information
+print("\nStatistical Information:")
+print(df.describe())
+
+
+# 2: Read and Explore a CSV Dataset
+import pandas as pd
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# Read CSV file
+df = pd.read_csv("sales.csv")
+
+print("Sales Dataset:")
+print(df)
+
+# First 10 records
+print("\nFirst 10 Records:")
+print(df.head(10))
+
+# Number of orders
+print("\nNumber of Orders:")
+print(len(df))
+
+# Column names
+print("\nColumn Names:")
+print(df.columns)
+
+# Average sales
+print("\nAverage Sales:")
+print(df["Sales"].mean())
+
+# Average quantity
+print("\nAverage Quantity:")
+print(df["Quantity"].mean())
+
+
+# 3: Selecting and Filtering Data
+import pandas as pd
+
+df = pd.read_csv("sales.csv")
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# 1. Display only Product and Sales
+print("Product and Sales:")
+print(df[["Product", "Sales"]])
+
+# 2. Display orders with sales more than 50000
+print("\nOrders with Sales greater than 50000:")
+print(df[df["Sales"] > 50000])
+
+# 3. Display orders with quantity more than 10
+print("\nOrders with Quantity greater than 10:")
+print(df[df["Quantity"] > 10])
+
+# 4. Display Electronics products
+print("\nElectronics Products:")
+print(df[df["Category"] == "Electronics"])
+
+# 5. Display West region orders
+print("\nWest Region Orders:")
+print(df[df["Region"] == "West"])
+
+# 6. Sales greater than 50000 and Quantity above 3
+print("\nOrders satisfying both conditions:")
+print(df[(df["Sales"] > 50000) & (df["Quantity"] > 3)])
+
+
+# 4: Sorting and Ranking Dataset
+import pandas as pd
+
+df = pd.read_csv("sales.csv")
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# Ascending order by Sales
+print("Sales in Ascending Order:")
+print(df.sort_values("Sales"))
+
+# Descending order by Sales
+print("\nSales in Descending Order:")
+print(df.sort_values("Sales", ascending=False))
+
+# Quantity in descending order
+print("\nQuantity in Descending Order:")
+print(df.sort_values("Quantity", ascending=False))
+
+# Top 5 orders based on Sales
+print("\nTop 5 Orders:")
+print(df.sort_values("Sales", ascending=False).head(5))
+
+# Bottom 3 orders based on Sales
+print("\nBottom 3 Orders:")
+print(df.sort_values("Sales").head(3))
+
+
+# 5: Handling Missing Values6: Data Cleaning and Adding New Columns
+import pandas as pd
+
+data = {
+    "Order_ID": ["O101", "O102", "O103", "O104", "O105", "O106"],
+    "Product": ["Laptop", "Mouse", "Keyboard", "Monitor", "Laptop", "Printer"],
+    "Sales": [110000, 8000, None, 48000, 165000, None],
+    "Quantity": [2, None, 8, 4, None, 2]
+}
+
+df = pd.DataFrame(data)
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+print("Original Dataset:")
+print(df)
+
+# 1. Check missing values
+print("\nMissing Values:")
+print(df.isnull())
+
+# 2. Count missing values
+print("\nCount of Missing Values:")
+print(df.isnull().sum())
+
+# 3. Replace missing Sales with mean
+df["Sales"] = df["Sales"].fillna(df["Sales"].mean())
+
+# 4. Replace missing Quantity with mean
+df["Quantity"] = df["Quantity"].fillna(df["Quantity"].mean())
+
+print("\nCleaned Dataset:")
+print(df)
+
+
+# 6: Data Cleaning and Adding New Columns
+import pandas as pd
+
+df = pd.read_csv("sales.csv")
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# Create Sales_Level column
+df["Sales_Level"] = df["Sales"].apply(
+    lambda x: "High" if x >= 100000
+    else ("Medium" if x >= 50000 else "Low")
+)
+
+# Function to classify category
+def category_type(category):
+
+    if category == "Electronics":
+        return "Electronic Item"
+    else:
+        return "Accessory Item"
+
+# Create Category_Type column
+df["Category_Type"] = df["Category"].apply(category_type)
+
+print(df)
+
+
+# 7: Statistical Analysis of Dataset
+import pandas as pd
+
+df = pd.read_csv("sales.csv")
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+print("Average Sales:", df["Sales"].mean())
+
+print("Maximum Sales:", df["Sales"].max())
+
+print("Minimum Sales:", df["Sales"].min())
+
+print("Median Sales:", df["Sales"].median())
+
+print("Standard Deviation:", df["Sales"].std())
+
+print("Average Quantity:", df["Quantity"].mean())
+
+print("Number of Orders:", df["Order_ID"].count())
+
+print("Orders with Sales above 50000:",
+      (df["Sales"] > 50000).sum())
+
+
+# 8: Grouping and Aggregation
+import pandas as pd
+
+df = pd.read_csv("sales.csv")
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# Number of orders in each region
+print("Number of Orders in Each Region:")
+print(df.groupby("Region")["Order_ID"].count())
+
+# Average sales by region
+print("\nAverage Sales by Region:")
+print(df.groupby("Region")["Sales"].mean())
+
+# Maximum sales by region
+print("\nMaximum Sales by Region:")
+print(df.groupby("Region")["Sales"].max())
+
+# Average quantity by region
+print("\nAverage Quantity by Region:")
+print(df.groupby("Region")["Quantity"].mean())
+
+
+# 9: Data Visualization Using Matplotlib
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("sales.csv")
+
+print("~" * 20)
+print("S116 - Srushti Vedak")
+print("~" * 20, "\n")
+# 1. Bar Chart
+plt.figure(figsize=(10, 5))
+plt.bar(df["Product"], df["Sales"])
+plt.xlabel("Product")
+plt.ylabel("Sales")
+plt.title("Product Sales")
+plt.xticks(rotation=45)
+plt.show()
+
+# 2. Line Chart
+plt.figure(figsize=(10, 5))
+plt.plot(df["Order_ID"], df["Sales"], marker="o")
+plt.xlabel("Order ID")
+plt.ylabel("Sales")
+plt.title("Sales by Order")
+plt.xticks(rotation=45)
+plt.show()
+
+# 3. Histogram
+plt.figure(figsize=(8, 5))
+plt.hist(df["Sales"], bins=5)
+plt.xlabel("Sales")
+plt.ylabel("Number of Orders")
+plt.title("Distribution of Sales")
+plt.show()
+
+# 4. Pie Chart
+region_count = df["Region"].value_counts()
+
+plt.figure(figsize=(7, 7))
+plt.pie(region_count,
+        labels=region_count.index,
+        autopct="%1.1f%%")
+plt.title("Orders by Region")
+plt.show()
