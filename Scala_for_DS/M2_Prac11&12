@@ -1,0 +1,88 @@
+# 11. Perform a group-by operation in Spark DataFrames to compute the average of each group.
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import avg
+
+# Create Spark session
+spark = SparkSession.builder \
+   .appName("GroupByAverage") \
+   .master("local[*]") \
+   .getOrCreate()
+
+# Read the CSV file
+df = spark.read.csv(
+   "student.csv",
+   header=True,
+   inferSchema=True )
+
+print("Original Data:")
+df.show()
+
+# Group by Department and calculate average marks
+result = df.groupBy("Department").agg(
+   avg("Marks").alias("Average_Marks") )
+
+# Display the result
+print("Average Marks by Department:")
+result.show()
+
+# Stop Spark
+spark.stop()
+
+
+# 12. Join two CSV files in Spark DataFrames based on a common column and write the output to a file.
+from pyspark.sql import SparkSession
+
+# 1. Create SparkSession
+spark = SparkSession.builder \
+   .appName("Join Two CSV Files") \
+   .master("local[*]") \
+   .getOrCreate()
+
+# 2. Read products.csv
+products_df = spark.read \
+   .option("header", "true") \
+   .option("inferSchema", "true") \
+   .csv("products.csv")
+
+# 3. Read sales.csv
+sales_df = spark.read \
+   .option("header", "true") \
+   .option("inferSchema", "true") \
+   .csv("sales.csv")
+
+# 4. Display the first CSV
+print("Products Data:")
+products_df.show()
+
+# 5. Display the second CSV
+print("Sales Data:")
+sales_df.show()
+
+# 6. Join both DataFrames using product_id
+joined_df = products_df.join(
+   sales_df,
+   products_df["product_id"] == sales_df["product_id"],
+   "inner"
+)
+
+# 7. Select the required columns
+result_df = joined_df.select(
+   products_df["product_id"],
+   products_df["product_name"],
+   products_df["category"],
+   products_df["price"],
+   sales_df["quantity"]
+)
+
+# 8. Display the joined result
+print("Joined Data:")
+result_df.show()
+
+# 9. Write the result to a CSV file/folder
+result_df.write \
+   .mode("overwrite") \
+   .option("header", "true") \
+   .csv("joined_output")
+
+# 10. Stop Spark
+spark.stop()
