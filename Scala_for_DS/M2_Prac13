@@ -1,0 +1,123 @@
+# Aim : 13. Create a simple Spark MLlib pipeline to classify data. Use logistic regression or decision trees. 
+from pyspark.sql import SparkSession
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import LogisticRegression
+
+# Create Spark session
+spark = SparkSession.builder \
+   .appName("SalesClassification") \
+   .master("local[*]") \
+   .getOrCreate()
+
+# Read the CSV file
+df = spark.read.csv(
+   "data.csv",
+   header=True,
+   inferSchema=True
+)
+
+# Display the original data
+print("Original Data:")
+df.show()
+
+# Create feature vector
+assembler = VectorAssembler(
+   inputCols=["Sales", "Promotion"],
+   outputCol="features"
+)
+
+# Create Logistic Regression model
+lr = LogisticRegression(
+   featuresCol="features",
+   labelCol="label"
+)
+
+# Create MLlib pipeline
+pipeline = Pipeline(stages=[assembler, lr])
+
+# Split data into training and testing data
+train, test = df.randomSplit([0.8, 0.2], seed=42)
+
+# Train the model
+model = pipeline.fit(train)
+
+# Make predictions
+predictions = model.transform(test)
+
+# Display classification results
+print("Classification Results:")
+predictions.select(
+   "Date",
+   "Sales",
+   "Promotion",
+   "label",
+   "prediction"
+).show()
+
+# Stop Spark
+spark.stop()
+
+# decision_tree.py
+from pyspark.sql import SparkSession
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import DecisionTreeClassifier
+
+# Create Spark session
+spark = SparkSession.builder \
+   .appName("DecisionTree") \
+   .master("local[*]") \
+   .getOrCreate()
+
+# Read the CSV file
+df = spark.read.csv(
+   "data.csv",
+   header=True,
+   inferSchema=True
+)
+
+# Display the original data
+print("Original Data:")
+df.show()
+
+# Create features
+assembler = VectorAssembler(
+   inputCols=["Sales", "Promotion"],
+   outputCol="features"
+)
+
+# Create Decision Tree
+dt = DecisionTreeClassifier(
+   featuresCol="features",
+   labelCol="label"
+)
+
+# Create pipeline
+pipeline = Pipeline(stages=[assembler, dt])
+
+# Split data
+train, test = df.randomSplit([0.8, 0.2], seed=42)
+
+# Train the model
+model = pipeline.fit(train)
+
+# Make predictions
+predictions = model.transform(test)
+
+# Display results
+print("Classification Results:")
+predictions.select(
+   "Date",
+   "Sales",
+   "Promotion",
+   "label",
+   "prediction"
+).show()
+
+# Stop Spark
+spark.stop()
+
+
+
+
