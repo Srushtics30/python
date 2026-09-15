@@ -1,0 +1,181 @@
+# A.Write a JSP that accepts a User Name from a HTML form and stores it as a cookie. Write another JSP that returns the value of this cookie and displays it.
+# index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cookie Example</title>
+</head>
+<body>
+
+<h2>Enter User Name</h2>
+
+<form action="storeCookie.jsp" method="post">
+    User Name:
+    <input type="text" name="username" value="Rahul" required>
+    <input type="submit" value="Store Cookie">
+</form>
+
+</body>
+</html>
+
+
+# storeCookie.jsp
+<%@ page import="javax.servlet.http.Cookie" %>
+
+<%
+    String username = request.getParameter("username");
+
+    Cookie cookie = new Cookie("username", username);
+    cookie.setMaxAge(60 * 60 * 24);
+
+    response.addCookie(cookie);
+%>
+
+<html>
+<body>
+
+<h2>Cookie Stored Successfully</h2>
+
+<a href="readCookie.jsp">Read Cookie</a>
+
+</body>
+</html>
+
+
+# readCookie.jsp
+<html>
+<body>
+
+<h2>Cookie Value</h2>
+
+<%
+    Cookie[] cookies = request.getCookies();
+    String username = null;
+
+    if (cookies != null) {
+        for (Cookie c : cookies) {
+            if (c.getName().equals("username")) {
+                username = c.getValue();
+                break;
+            }
+        }
+    }
+
+    if (username != null) {
+%>
+
+        User Name: <%= username %>
+
+<%
+    } else {
+%>
+
+        Cookie not found.
+
+<%
+    }
+%>
+
+</body>
+</html>
+
+
+# B. Write a JSP that displays the names and values of the cookie stored on the client.
+# displayCookies.jsp
+<%@ page import="javax.servlet.http.Cookie" %>
+
+<html>
+<body>
+
+<h2>Cookies Stored on Client</h2>
+
+<%
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies != null) {
+
+        for (Cookie c : cookies) {
+%>
+
+            Cookie Name: <%= c.getName() %><br>
+            Cookie Value: <%= c.getValue() %><br>
+            <hr>
+
+<%
+        }
+
+    } else {
+%>
+
+        No cookies found.
+
+<%
+    }
+%>
+
+</body>
+</html>
+
+
+# C. Write a JSP that accepts a User Name from a HTML form and stores it as a session variable. Write another JSP that returns the value of this session variable and displays it. 
+# session.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Example</title>
+</head>
+<body>
+
+<h2>Enter User Name</h2>
+
+<form action="storeSession.jsp" method="post">
+    User Name:
+    <input type="text" name="username" required>
+    <input type="submit" value="Store Session">
+</form>
+
+</body>
+</html>
+storeSession.jsp
+<%
+    String username = request.getParameter("username");
+
+    session.setAttribute("username", username);
+%>
+
+<html>
+<body>
+
+<h2>Session Variable Stored Successfully</h2>
+
+<a href="readSession.jsp">Read Session</a>
+
+</body>
+</html>
+
+# readSession.jsp
+<html>
+<body>
+
+<h2>Session Value</h2>
+
+<%
+    String username = (String) session.getAttribute("username");
+
+    if (username != null) {
+%>
+
+        User Name: <%= username %>
+
+<%
+    } else {
+%>
+
+        Session variable not found.
+
+<%
+    }
+%>
+
+</body>
+</html>
