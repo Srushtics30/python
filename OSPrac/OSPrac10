@@ -1,0 +1,235 @@
+# Aim: Disk Scheduling and Simple File System Design 
+# Simulate FCFS, SSTF, C-SCAN, C-LOOK, RSS for disk head movement. 
+# Design a basic file system structure with block allocation, directory management, and file operations (create, read, delete).
+print("~" *  30)
+print("S116 - Srushti Vedak")
+print("~" *  30)
+
+#  1 : DISK SCHEDULING
+def fcfs(requests, head):
+    movement = 0
+
+    for r in requests:
+        movement += abs(head - r)
+        head = r
+
+    return movement
+
+def sstf(requests, head):
+    requests = requests.copy()
+    movement = 0
+
+    while requests:
+        nearest = min(requests, key=lambda x: abs(head - x))
+        movement += abs(head - nearest)
+        head = nearest
+        requests.remove(nearest)
+
+    return movement
+
+def cscan(requests, head, size):
+    requests = sorted(requests)
+
+    right = [r for r in requests if r >= head]
+    left = [r for r in requests if r < head]
+
+    movement = 0
+
+    for r in right:
+        movement += abs(head - r)
+        head = r
+
+    if left:
+        movement += abs(head - (size - 1))
+        movement += size - 1
+        head = 0
+
+        for r in left:
+            movement += abs(head - r)
+            head = r
+
+    return movement
+
+def clook(requests, head):
+    requests = sorted(requests)
+
+    right = [r for r in requests if r >= head]
+    left = [r for r in requests if r < head]
+
+    movement = 0
+
+    for r in right:
+        movement += abs(head - r)
+        head = r
+
+    if left:
+        movement += abs(head - left[0])
+        head = left[0]
+
+        for r in left:
+            movement += abs(head - r)
+            head = r
+
+    return movement
+
+def rss(requests, head):
+    movement = 0
+
+    for r in requests:
+        movement += abs(head - r)
+        head = r
+
+    return movement
+
+def disk_scheduling():
+
+    print("~" *  30)
+    print("       DISK SCHEDULING")
+    print("~" *  30)
+
+    requests = list(map(int, input("Enter disk requests: ").split()))
+    head = int(input("Enter initial head position: "))
+
+    print("\nChoose Algorithm")
+    print("1. FCFS")
+    print("2. SSTF")
+    print("3. C-SCAN")
+    print("4. C-LOOK")
+    print("5. RSS")
+    print("6. Show All")
+
+    choice = int(input("\nEnter choice: "))
+
+    if choice == 1:
+        print("\nFCFS Head Movement =", fcfs(requests, head))
+
+    elif choice == 2:
+        print("\nSSTF Head Movement =", sstf(requests, head))
+
+    elif choice == 3:
+        size = int(input("Enter disk size: "))
+        print("\nC-SCAN Head Movement =", cscan(requests, head, size))
+
+    elif choice == 4:
+        print("\nC-LOOK Head Movement =", clook(requests, head))
+
+    elif choice == 5:
+        print("\nRSS Head Movement =", rss(requests, head))
+
+    elif choice == 6:
+        size = int(input("Enter disk size: "))
+
+        print("\n----- RESULTS -----")
+        print("FCFS   :", fcfs(requests, head))
+        print("SSTF   :", sstf(requests, head))
+        print("C-SCAN :", cscan(requests, head, size))
+        print("C-LOOK :", clook(requests, head))
+        print("RSS    :", rss(requests, head))
+
+    else:
+        print("Invalid choice")
+
+#  2 : SIMPLE FILE SYSTEM
+files = {}
+
+def create_file():
+
+    name = input("Enter file name: ")
+    data = input("Enter file data: ")
+
+    if name in files:
+        print("File already exists!")
+
+    else:
+        files[name] = data
+        print("File created successfully!")
+
+
+def read_file():
+
+    name = input("Enter file name: ")
+
+    if name in files:
+        print("\nFile Data:", files[name])
+
+    else:
+        print("File not found!")
+
+def delete_file():
+
+    name = input("Enter file name: ")
+
+    if name in files:
+        del files[name]
+        print("File deleted successfully!")
+
+    else:
+        print("File not found!")
+
+def show_directory():
+
+    print("\n----- DIRECTORY -----")
+
+    if len(files) == 0:
+        print("Directory is empty!")
+
+    else:
+        for name in files:
+            print( name)
+
+def file_system():
+    while True:
+        print("~" *  30)
+        print("       SIMPLE FILE SYSTEM")
+        print("~" *  30)
+
+        print("1. Create File")
+        print("2. Read File")
+        print("3. Delete File")
+        print("4. Show Directory")
+        print("5. Back to Main Menu")
+
+        choice = int(input("\nEnter choice: "))
+
+        if choice == 1:
+            create_file()
+
+        elif choice == 2:
+            read_file()
+
+        elif choice == 3:
+            delete_file()
+
+        elif choice == 4:
+            show_directory()
+
+        elif choice == 5:
+            break
+
+        else:
+            print("Invalid choice!")
+
+# MAIN MENU
+while True:
+    print("~" *  30)
+    print("       OPERATING SYSTEM")
+    print("~" *  30)
+
+    print("\n1. Disk Scheduling")
+    print("2. Simple File System")
+    print("3. Exit")
+
+    choice = int(input("\nEnter choice: "))
+
+    if choice == 1:
+        disk_scheduling()
+
+    elif choice == 2:
+        file_system()
+
+    elif choice == 3:
+        print("\nThank you! Program ended.")
+        break
+
+    else:
+        print("Invalid choice!")
