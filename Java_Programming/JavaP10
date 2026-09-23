@@ -1,0 +1,261 @@
+# a.Write a JSP code that accepts username and password from HTML file and validates the user from the database.
+# SQL Code -
+CREATE DATABASE userdb;
+USE userdb;
+CREATE TABLE users ( id INT PRIMARY KEY AUTO_INCREMENT,  username VARCHAR(50), password VARCHAR(50), email VARCHAR(100));
+INSERT INTO users(username, password, email) VALUES ('rahul', '1234', 'rahul@gmail.com');
+
+# index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Login</title>
+</head>
+<body>
+
+<h2>User Login</h2>
+
+<form action="login.jsp" method="post">
+
+    Username:
+    <input type="text" name="username">
+    <br><br>
+
+    Password:
+    <input type="password" name="password">
+    <br><br>
+
+    <input type="submit" value="Login">
+
+</form>
+
+<br>
+
+<a href="register.jsp">Register New User</a>
+<br><br>
+
+<a href="display.jsp">Display All Users</a>
+
+</body>
+</html>
+
+login.jsp
+<%@ page import="java.sql.*" %>
+
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<h2>User Login</h2>
+
+<%
+    String username = request.getParameter("username");
+    String password = request.getParameter("password");
+
+    try
+    {
+        Class.forName("com.mysql.jdbc.Driver");
+
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/userdb",
+            "root",
+            "root"
+        );
+
+        String sql = "SELECT * FROM users WHERE username=? AND password=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ps.setString(1, username);
+        ps.setString(2, password);
+
+        ResultSet rs = ps.executeQuery();
+
+        if(rs.next())
+        {
+%>
+
+<h2>Login Successful!</h2>
+<h3>Welcome <%= username %></h3>
+
+<%
+        }
+        else
+        {
+%>
+
+<h2>Invalid Username or Password</h2>
+
+<%
+        }
+
+        rs.close();
+        ps.close();
+        con.close();
+    }
+    catch(Exception e)
+    {
+%>
+
+<h3>Error: <%= e.getMessage() %></h3>
+
+<%
+    }
+%>
+
+</body>
+</html>
+
+
+# b. Write a registration JSP that accept the data for a given table and stores it in the database.
+# register.jsp
+<%@ page import="java.sql.*" %>
+
+<html>
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+
+<h2>User Registration</h2>
+
+<form method="post">
+
+    Username:
+    <input type="text" name="username">
+    <br><br>
+
+    Password:
+    <input type="password" name="password">
+    <br><br>
+
+    Email:
+    <input type="text" name="email">
+    <br><br>
+
+    <input type="submit" value="Register">
+
+</form>
+
+<%
+    if(request.getMethod().equals("POST"))
+    {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String email = request.getParameter("email");
+
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/userdb",
+                "root",
+                "root"
+            );
+
+            String sql = "INSERT INTO users(username,password,email) VALUES(?,?,?)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, email);
+
+            ps.executeUpdate();
+
+%>
+
+<h3>Registration Successful!</h3>
+
+<%
+            ps.close();
+            con.close();
+        }
+        catch(Exception e)
+        {
+%>
+
+<h3>Error: <%= e.getMessage() %></h3>
+
+<%
+        }
+    }
+%>
+
+</body>
+</html>
+
+
+# c. Write a JSP that displays all the records of a table .
+# display.jsp
+<%@ page import="java.sql.*" %>
+
+<html>
+<head>
+    <title>Display Users</title>
+</head>
+<body>
+
+<h2>All User Records</h2>
+
+<table border="1">
+
+<tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Password</th>
+    <th>Email</th>
+</tr>
+
+<%
+    try
+    {
+        Class.forName("com.mysql.jdbc.Driver");
+
+        Connection con = DriverManager.getConnection(
+            "jdbc:mysql://localhost:3306/userdb",
+            "root",
+            "root"
+        );
+
+        Statement st = con.createStatement();
+
+        ResultSet rs = st.executeQuery("SELECT * FROM users");
+
+        while(rs.next())
+        {
+%>
+
+<tr>
+    <td><%= rs.getInt("id") %></td>
+    <td><%= rs.getString("username") %></td>
+    <td><%= rs.getString("password") %></td>
+    <td><%= rs.getString("email") %></td>
+</tr>
+
+<%
+        }
+
+        rs.close();
+        st.close();
+        con.close();
+    }
+    catch(Exception e)
+    {
+%>
+
+<tr>
+    <td colspan="4">Error: <%= e.getMessage() %></td>
+</tr>
+
+<%
+    }
+%>
+
+</table>
+
+</body>
+</html>
