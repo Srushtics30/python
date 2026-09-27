@@ -1,0 +1,1066 @@
+# Mini Data Science Project - Dataset Analysis and Dashboard
+# Submitted By:  Srushti Atul Vedak
+# Class:  SYCS 
+# Roll No.:  S116
+# Academic Year:  2026–27
+
+# Aim : To develop a complete Data Science project and interactive data analysis dashboard using NumPy, Pandas, Matplotlib, Seaborn, and Beautiful Soup.
+# 1. IMPORT LIBRARIES
+import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import tkinter as tk
+
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+# Set Seaborn style
+sns.set_theme(style="whitegrid")
+
+
+# PART A: DATASET COLLECTION
+# Dataset file:  students.csv
+
+# PART B: DATA LOADING AND EXPLORATION
+print("=" * 70)
+print("PART B: DATA LOADING AND EXPLORATION")
+print("=" * 70)
+
+
+# Find students.csv in the same folder as this Python file
+folder = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
+file_path = os.path.join(
+    folder,
+    "students.csv"
+)
+
+
+# Check whether CSV exists
+if not os.path.exists(file_path):
+
+    print("\nERROR: students.csv was not found.")
+
+    print("\nPlease keep students.csv in the same folder as:")
+    print(os.path.basename(__file__))
+
+    input("\nPress Enter to exit...")
+
+    exit()
+
+
+# Load CSV file
+df = pd.read_csv(file_path)
+
+
+# Display first 5 records
+print("\nFirst 5 Records:")
+print(df.head())
+
+
+# Display last 5 records
+print("\nLast 5 Records:")
+print(df.tail())
+
+
+# Display shape
+print("\nDataset Shape:")
+print(df.shape)
+
+
+# Display column names
+print("\nColumn Names:")
+print(df.columns.tolist())
+
+
+# Display data types
+print("\nData Types:")
+print(df.dtypes)
+
+
+# Display statistical information
+print("\nStatistical Information:")
+print(df.describe())
+
+
+# Check missing values
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+
+# Check duplicate records
+print("\nDuplicate Records:")
+print(df.duplicated().sum())
+
+
+# PART C: DATA CLEANING
+print("\n" + "=" * 70)
+print("PART C: DATA CLEANING")
+print("=" * 70)
+
+
+# Remove duplicate records
+df = df.drop_duplicates()
+
+
+# Remove extra spaces from column names
+df.columns = df.columns.str.strip()
+
+
+# Make sure Marks is numeric
+df["Marks"] = pd.to_numeric(
+    df["Marks"],
+    errors="coerce"
+)
+
+
+# Fill missing Marks with average Marks
+df["Marks"] = df["Marks"].fillna(
+    df["Marks"].mean()
+)
+
+
+# Display cleaning results
+print("\nData cleaning completed.")
+
+print("\nMissing Values After Cleaning:")
+print(df.isnull().sum())
+
+print("\nDuplicate Records After Cleaning:")
+print(df.duplicated().sum())
+
+print("\nFinal Dataset Shape:")
+print(df.shape)
+
+
+# PART D: DATA ANALYSIS USING NUMPY AND PANDAS
+print("\n" + "=" * 70)
+print("PART D: DATA ANALYSIS USING NUMPY AND PANDAS")
+print("=" * 70)
+
+
+# Create Grade column
+def calculate_grade(marks):
+
+    if marks >= 90:
+        return "A+"
+
+    elif marks >= 80:
+        return "A"
+
+    elif marks >= 70:
+        return "B"
+
+    elif marks >= 60:
+        return "C"
+
+    elif marks >= 50:
+        return "D"
+
+    else:
+        return "F"
+
+
+df["Grade"] = df["Marks"].apply(
+    calculate_grade
+)
+
+
+# Create Result column
+def calculate_result(marks):
+
+    if marks >= 40:
+        return "Pass"
+
+    else:
+        return "Fail"
+
+
+df["Result"] = df["Marks"].apply(
+    calculate_result
+)
+
+
+# 1. Total Records
+total_records = len(df)
+
+
+# 2. Total Categories
+total_categories = df["Course"].nunique()
+
+
+# 3. Average Marks
+average_marks = np.mean(
+    df["Marks"]
+)
+
+
+# 4. Median Marks
+median_marks = np.median(
+    df["Marks"]
+)
+
+
+# 5. Highest Marks
+highest_marks = np.max(
+    df["Marks"]
+)
+
+
+# 6. Lowest Marks
+lowest_marks = np.min(
+    df["Marks"]
+)
+
+
+# 7. Standard Deviation
+std_marks = np.std(
+    df["Marks"]
+)
+
+
+# 8. Average Marks by Course
+course_average = df.groupby(
+    "Course"
+)["Marks"].mean()
+
+course_average = course_average.sort_values(
+    ascending=False
+)
+
+
+# 9. Average Marks by Gender
+gender_average = df.groupby(
+    "Gender"
+)["Marks"].mean()
+
+
+
+# 10. Number of Students by Course
+course_count = df[
+    "Course"
+].value_counts()
+
+
+# 11. Number of Students by Gender
+gender_count = df[
+    "Gender"
+].value_counts()
+
+
+# 12. Average Marks by Age
+age_trend = df.groupby(
+    "Age"
+)["Marks"].mean()
+
+age_trend = age_trend.sort_index()
+
+
+
+# 13. Grade Distribution
+grade_count = df[
+    "Grade"
+].value_counts()
+
+
+# 14. Highest Scoring Student
+top_student = df.loc[
+    df["Marks"].idxmax()
+]
+
+
+
+# 15. Lowest Scoring Student
+lowest_student = df.loc[
+    df["Marks"].idxmin()
+]
+
+
+# 16. Students Scoring Above 80
+above_80 = (
+    df["Marks"] > 80
+).sum()
+
+
+# 17. Number of Passed Students
+pass_count = (
+    df["Result"] == "Pass"
+).sum()
+
+
+# Display Analysis
+print("\nTotal Records:")
+print(total_records)
+
+print("\nTotal Courses:")
+print(total_categories)
+
+print("\nAverage Marks:")
+print(round(average_marks, 2))
+
+print("\nMedian Marks:")
+print(median_marks)
+
+print("\nHighest Marks:")
+print(
+    highest_marks,
+    "by",
+    top_student["Name"]
+)
+
+print("\nLowest Marks:")
+print(
+    lowest_marks,
+    "by",
+    lowest_student["Name"]
+)
+
+print("\nStandard Deviation:")
+print(round(std_marks, 2))
+
+print("\nStudents Passed:")
+print(
+    pass_count,
+    "out of",
+    total_records
+)
+
+print("\nStudents Scoring Above 80:")
+print(above_80)
+
+
+# Course Analysis
+print("\nAverage Marks by Course:")
+print(
+    course_average.round(2)
+)
+
+
+print("\nStudents per Course:")
+print(course_count)
+
+
+# Gender Analysis
+print("\nAverage Marks by Gender:")
+print(
+    gender_average.round(2)
+)
+
+
+print("\nStudents per Gender:")
+print(gender_count)
+
+
+# Age Analysis
+print("\nAverage Marks by Age:")
+print(
+    age_trend.round(2)
+)
+
+
+
+# Grade Analysis
+print("\nGrade Distribution:")
+print(grade_count)
+
+
+# Top 10 Students
+print("\nTop 10 Students:")
+
+top_students = df.sort_values(
+    "Marks",
+    ascending=False
+)
+
+print(
+    top_students[
+        ["Name", "Course", "Marks", "Grade"]
+    ].head(10)
+)
+
+
+# PART E: DATA VISUALIZATION
+# The dashboard contains:
+# 1. Bar Chart
+# 2. Line Chart
+# 3. Pie Chart
+# 4. Histogram
+# 5. Box Plot
+# 6. Bonus Bar Chart
+
+
+# PART F: BEAUTIFUL SOUP
+# The main dataset is already available as CSV.
+# Therefore Beautiful Soup is not needed to collect the main data.
+def beautiful_soup_demo():
+
+    import requests
+    from bs4 import BeautifulSoup
+
+    url = "https://books.toscrape.com/"
+
+    try:
+
+        response = requests.get(
+            url,
+            timeout=5
+        )
+
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
+        )
+
+        print("\nBeautiful Soup Demo")
+        print("Website Title:")
+
+        print(
+            soup.title.text.strip()
+        )
+
+        books = soup.find_all(
+            "article",
+            class_="product_pod"
+        )
+
+        data = []
+
+        for book in books:
+
+            title = book.h3.a["title"]
+
+            price = book.find(
+                "p",
+                class_="price_color"
+            ).text
+
+            data.append(
+                [title, price]
+            )
+
+        scraped_df = pd.DataFrame(
+            data,
+            columns=["Title", "Price"]
+        )
+
+        print("\nScraped Data:")
+        print(
+            scraped_df.head()
+        )
+
+    except Exception as error:
+
+        print(
+            "\nBeautiful Soup demo could not run."
+        )
+
+        print(
+            "This does not affect the main project."
+        )
+
+# beautiful_soup_demo()
+
+
+# PART G: FINAL GUI DASHBOARD
+print("\n" + "=" * 70)
+print("PART G: CREATING DASHBOARD")
+print("=" * 70)
+
+
+# DASHBOARD COLORS
+red = "#8B0000"
+
+brown = "#6B4226"
+
+light_red = "#B22222"
+
+gold = "#C99700"
+
+cream = "#FFF4E6"
+
+white = "#FFFFFF"
+
+
+# CREATE GUI WINDOW
+root = tk.Tk()
+
+root.title(
+    "Student Performance Analysis Dashboard"
+)
+
+root.geometry(
+    "1500x1000"
+)
+
+root.configure(
+    bg=cream
+)
+
+
+# SCROLLABLE DASHBOARD
+# Main canvas
+main_canvas = tk.Canvas(
+    root,
+    bg=cream,
+    highlightthickness=0
+)
+
+# Vertical scrollbar
+scrollbar = tk.Scrollbar(
+    root,
+    orient="vertical",
+    command=main_canvas.yview
+)
+
+main_canvas.configure(
+    yscrollcommand=scrollbar.set
+)
+
+scrollbar.pack(
+    side="right",
+    fill="y"
+)
+
+main_canvas.pack(
+    side="left",
+    fill="both",
+    expand=True
+)
+
+
+# Frame inside canvas
+dashboard_frame = tk.Frame(
+    main_canvas,
+    bg=cream
+)
+
+canvas_window = main_canvas.create_window(
+    (0, 0),
+    window=dashboard_frame,
+    anchor="nw"
+)
+
+
+# Update scroll area automatically
+def update_scroll_region(event):
+
+    main_canvas.configure(
+        scrollregion=main_canvas.bbox("all")
+    )
+
+
+dashboard_frame.bind(
+    "<Configure>",
+    update_scroll_region
+)
+
+
+# Make dashboard frame same width as window
+def resize_dashboard(event):
+
+    main_canvas.itemconfig(
+        canvas_window,
+        width=event.width
+    )
+
+
+main_canvas.bind(
+    "<Configure>",
+    resize_dashboard
+)
+
+
+# Mouse wheel scrolling
+def mouse_scroll(event):
+
+    main_canvas.yview_scroll(
+        int(-1 * (event.delta / 120)),
+        "units"
+    )
+
+
+main_canvas.bind_all(
+    "<MouseWheel>",
+    mouse_scroll
+)
+
+
+# PROJECT TITLE
+title_frame = tk.Frame(
+    dashboard_frame,
+    bg=cream
+)
+
+title_frame.pack(
+    fill="x",
+    pady=8
+)
+
+
+tk.Label(
+    title_frame,
+    text="STUDENT PERFORMANCE ANALYSIS DASHBOARD",
+    font=("Arial", 24, "bold"),
+    bg=cream,
+    fg=red
+).pack()
+
+
+tk.Label(
+    title_frame,
+    text="Data Science Mini Project",
+    font=("Arial", 11, "italic"),
+    bg=cream,
+    fg=brown
+).pack()
+
+
+
+# DATASET SUMMARY CARDS
+card_frame = tk.Frame(
+    dashboard_frame,
+    bg=cream
+)
+
+card_frame.pack(
+    fill="x",
+    pady=8
+)
+
+
+# Function to create summary card
+def create_card(
+    title_text,
+    value,
+    color
+):
+
+    card = tk.Frame(
+        card_frame,
+        bg=color,
+        width=220,
+        height=75
+    )
+
+    card.pack(
+        side="left",
+        padx=8,
+        expand=True
+    )
+
+    card.pack_propagate(
+        False
+    )
+
+    tk.Label(
+        card,
+        text=title_text,
+        font=("Arial", 9, "bold"),
+        bg=color,
+        fg=white
+    ).pack(
+        pady=4
+    )
+
+    tk.Label(
+        card,
+        text=value,
+        font=("Arial", 17, "bold"),
+        bg=color,
+        fg=white
+    ).pack()
+
+
+
+# Required Dashboard Summary
+create_card(
+    "TOTAL RECORDS",
+    total_records,
+    red
+)
+
+
+create_card(
+    "TOTAL CATEGORIES",
+    total_categories,
+    brown
+)
+
+
+create_card(
+    "AVERAGE MARKS",
+    f"{average_marks:.1f}",
+    light_red
+)
+
+
+create_card(
+    "MAXIMUM MARKS",
+    highest_marks,
+    gold
+)
+
+
+create_card(
+    "MINIMUM MARKS",
+    lowest_marks,
+    red
+)
+
+
+# CHART FRAME
+chart_frame = tk.Frame(
+    dashboard_frame,
+    bg=cream,
+    height=500
+)
+
+chart_frame.pack(
+    fill="x",
+    padx=15,
+    pady=5
+)
+
+chart_frame.pack_propagate(
+    False
+)
+
+
+# CREATE ONE FIGURE FOR ALL CHARTS
+fig = plt.figure(
+    figsize=(13.5, 6.2),
+    facecolor=cream
+)
+
+
+# CHART 1: BAR CHART
+# Average Marks by Course
+ax1 = fig.add_subplot(
+    2,
+    3,
+    1
+)
+
+course_average.plot(
+    kind="bar",
+    ax=ax1,
+    color=red
+)
+
+ax1.set_title(
+    "Average Marks by Course",
+    color=red,
+    fontweight="bold"
+)
+
+ax1.set_xlabel(
+    "Course"
+)
+
+ax1.set_ylabel(
+    "Average Marks"
+)
+
+ax1.tick_params(
+    axis="x",
+    rotation=15
+)
+
+
+
+# CHART 2: LINE CHART
+# Average Marks by Age
+ax2 = fig.add_subplot(
+    2,
+    3,
+    2
+)
+
+ax2.plot(
+    age_trend.index,
+    age_trend.values,
+    marker="o",
+    color=brown
+)
+
+ax2.set_title(
+    "Average Marks Trend by Age",
+    color=brown,
+    fontweight="bold"
+)
+
+ax2.set_xlabel(
+    "Age"
+)
+
+ax2.set_ylabel(
+    "Average Marks"
+)
+
+
+
+# CHART 3: PIE CHART
+# Gender-wise Share
+ax3 = fig.add_subplot(
+    2,
+    3,
+    3
+)
+
+ax3.pie(
+    gender_count,
+    labels=gender_count.index,
+    autopct="%1.1f%%",
+    startangle=90
+)
+
+ax3.set_title(
+    "Gender-wise Share of Students",
+    color=red,
+    fontweight="bold"
+)
+
+
+# CHART 4: HISTOGRAM
+# Marks Distribution
+
+ax4 = fig.add_subplot(
+    2,
+    3,
+    4
+)
+
+ax4.hist(
+    df["Marks"],
+    bins=10,
+    color=light_red,
+    edgecolor="black"
+)
+
+ax4.set_title(
+    "Marks Distribution",
+    color=red,
+    fontweight="bold"
+)
+
+ax4.set_xlabel(
+    "Marks"
+)
+
+ax4.set_ylabel(
+    "Number of Students"
+)
+
+
+# CHART 5: BOX PLOT
+# Marks Spread
+ax5 = fig.add_subplot(
+    2,
+    3,
+    5
+)
+
+sns.boxplot(
+    x=df["Marks"],
+    ax=ax5,
+    color=gold
+)
+
+ax5.set_title(
+    "Marks Box Plot",
+    color=brown,
+    fontweight="bold"
+)
+
+ax5.set_xlabel(
+    "Marks"
+)
+
+
+# CHART 6: BONUS BAR CHART
+# Students by Course
+
+
+ax6 = fig.add_subplot(
+    2,
+    3,
+    6
+)
+
+course_count.plot(
+    kind="bar",
+    ax=ax6,
+    color=light_red
+)
+
+ax6.set_title(
+    "Students by Course",
+    color=red,
+    fontweight="bold"
+)
+
+ax6.set_xlabel(
+    "Course"
+)
+
+ax6.set_ylabel(
+    "Number of Students"
+)
+
+ax6.tick_params(
+    axis="x",
+    rotation=15
+)
+
+
+# Adjust chart spacing
+
+plt.tight_layout()
+
+
+
+# DISPLAY CHARTS INSIDE GUI
+canvas = FigureCanvasTkAgg(
+    fig,
+    master=chart_frame
+)
+
+canvas.draw()
+
+
+canvas.get_tk_widget().pack(
+    fill="both",
+    expand=True
+)
+
+
+# KEY FINDINGS
+best_course = course_average.idxmax()
+
+best_course_marks = course_average.max()
+
+best_gender = gender_average.idxmax()
+
+best_gender_marks = gender_average.max()
+
+best_age = age_trend.idxmax()
+
+best_age_marks = age_trend.max()
+
+most_common_course = course_count.idxmax()
+
+most_common_course_count = course_count.max()
+
+highest_name = top_student["Name"]
+
+
+# 6 KEY FINDINGS
+findings = [
+
+    f"1. {best_course} has the highest average marks ({best_course_marks:.1f}).",
+
+    f"2. {best_gender} students have the higher average marks ({best_gender_marks:.1f}).",
+
+    f"3. {highest_name} achieved the highest marks ({highest_marks}).",
+
+    f"4. {above_80} out of {total_records} students scored above 80 marks.",
+
+    f"5. Students aged {best_age} have the highest average performance ({best_age_marks:.1f}).",
+
+    f"6. {most_common_course} is the most popular course with {most_common_course_count} students."
+]
+
+
+
+# KEY FINDINGS FRAME
+finding_frame = tk.Frame(
+    dashboard_frame,
+    bg=white,
+    bd=2,
+    relief="groove"
+)
+
+finding_frame.pack(
+    fill="x",
+    padx=25,
+    pady=15
+)
+
+
+# Key Findings Heading
+tk.Label(
+    finding_frame,
+    text="KEY FINDINGS",
+    font=("Arial", 15, "bold"),
+    bg=white,
+    fg=red
+).pack(
+    pady=8
+)
+
+
+# Display all findings
+for finding in findings:
+
+    tk.Label(
+        finding_frame,
+        text=finding,
+        font=("Arial", 10),
+        bg=white,
+        fg=brown,
+        anchor="w"
+    ).pack(
+        fill="x",
+        padx=20,
+        pady=3
+    )
+
+
+# SAVE DASHBOARD AS PNG
+dashboard_path = os.path.join(
+    folder,
+    "dashboard.png"
+)
+
+
+fig.savefig(
+    dashboard_path,
+    dpi=300,
+    bbox_inches="tight"
+)
+
+
+print(
+    "\nDashboard saved successfully:"
+)
+
+print(
+    dashboard_path
+)
+
+
+# EXIT BUTTON
+tk.Button(
+    dashboard_frame,
+    text="EXIT DASHBOARD",
+    command=root.destroy,
+    font=("Arial", 10, "bold"),
+    bg=red,
+    fg=white,
+    padx=20,
+    pady=5
+).pack(
+    pady=10
+)
+
+
+# START GUI
+root.mainloop()
+
+# PROJECT COMPLETED
+print("\n" + "=" * 70)
+print("PROJECT COMPLETED SUCCESSFULLY")
+print("=" * 70)
