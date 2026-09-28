@@ -1,0 +1,70 @@
+# 15. Plot a line graph for a dataset showing a trend over time.
+import breeze.linalg._
+import breeze.plot._
+import com.github.tototoshi.csv._
+import java.io.File
+
+object prac15 {
+
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("medical.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+   val parsedData = data.flatMap { row =>
+     try {
+       val age = row("Age").toDouble
+       val premium = row("PremiumPrice").trim.toDouble
+       Some((age, premium))
+     }
+     catch {
+       case _: Throwable => None
+     }
+   }.sortBy(_._1)
+
+
+   //  X (Age) and Y (PremiumPrice)
+   val x = DenseVector(
+     parsedData.map(_._1).toArray
+   )
+
+   val y = DenseVector(
+     parsedData.map(_._2).toArray
+   )
+
+   // Create line plot
+   val fig = Figure("Insurance Premium Trend")
+
+   val plt = fig.subplot(0)
+
+   plt += plot(
+     x,
+     y,
+     name = "Premium Price",
+     colorcode = "blue"
+   )
+
+   plt.xlabel = "Age"
+   plt.ylabel = "Premium Price"
+   plt.title = "Premium Price Trend by Age"
+
+   // Key / Legend
+   plt.legend = true
+
+   fig.refresh()
+ }
+}
+
+Built SBT Code -
+name := "ScatterPlot"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
+
+libraryDependencies ++= Seq(
+ "org.scalanlp" %% "breeze" % "2.1.0",
+ "org.scalanlp" %% "breeze-viz" % "2.1.0",
+ "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+)
