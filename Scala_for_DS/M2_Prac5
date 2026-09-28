@@ -1,0 +1,75 @@
+# 5. Implement linear regression using Breeze. Fit a model to a small dataset and predict a value.
+import breeze.linalg._
+import scala.io.Source
+
+object prac5 {
+
+ def main(args: Array[String]): Unit = {
+
+   // Read CSV file
+   val data =
+     Source.fromFile("study.csv").getLines()
+       .drop(1)
+       .map(_.split(",").map(_.toDouble))
+       .toArray
+
+   val samples = data.length
+
+   // Read x and y from CSV
+   val x = DenseVector(data.map(row => row(0)))
+   val y = DenseVector(data.map(row => row(1)))
+
+   println("Linear Regression using Breeze")
+
+   // Calculate means
+   val xMean = x.toArray.sum / samples
+   val yMean = y.toArray.sum / samples
+
+   var numerator = 0.0
+   var denominator = 0.0
+
+   // Calculate slope
+   for (i <- 0 until samples) {
+     numerator +=
+       (x(i) - xMean) * (y(i) - yMean)
+
+     denominator +=
+       (x(i) - xMean) * (x(i) - xMean)
+   }
+
+   val slope = numerator / denominator
+
+   // Calculate intercept
+   val intercept =
+     yMean - slope * xMean
+
+   println("\nModel Results")
+   println(f"Slope:     $slope%.4f")
+   println(f"Intercept: $intercept%.4f")
+
+   println("\nRegression Equation")
+   println(f"Y = $intercept%.4f + $slope%.4f * X")
+
+   // Prediction
+   val newX = 6.0
+
+   val predictedY =
+     intercept + slope * newX
+
+   println("\nPrediction")
+   println(f"X value:       $newX%.2f")
+   println(f"Predicted Y:   $predictedY%.2f")
+ }
+}
+
+# Built SBT Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "BreezeLinearRegression",
+   version := "1.0",
+   libraryDependencies +=
+     "org.scalanlp" %% "breeze" % "2.1.0"
+ )
+
