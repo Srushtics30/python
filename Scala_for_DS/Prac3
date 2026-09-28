@@ -1,0 +1,18 @@
+# 3.Generate a random dataset of 10 numbers and calculate its variance and standard deviation.
+object Prac3 {
+
+ def main(args: Array[String]): Unit = {
+
+   val data = List.fill(10)(scala.util.Random.nextInt(100))
+
+   val mean = data.sum.toDouble / data.size
+
+   val variance =
+     data.map(x => math.pow(x - mean, 2)).sum / data.size
+
+   val sd = math.sqrt(variance)
+
+   println(data)
+   println(s"Mean=$mean \n Variance=$variance\n SD=$sd")
+ }
+}
