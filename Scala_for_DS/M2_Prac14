@@ -1,0 +1,41 @@
+# Aim : 14. Perform basic time series analysis in Scala. Generate synthetic time series data (e.g., daily sales over a month).
+import scala.util.Random
+
+object prac14 {
+ def main(args: Array[String]): Unit = {
+
+   // Generate sales for 30 days
+   val sales = (1 to 30).map(day => (day, Random.nextInt(100) + 50))
+
+   println("Daily Sales:")
+
+   // Display the data
+   for ((day, value) <- sales) {
+     println("Day " + day + ": " + value)
+   }
+
+   // Get only sales values
+   val values = sales.map(_._2)
+
+   // Basic analysis
+   val average = values.sum.toDouble / values.length
+   val maximum = values.max
+   val minimum = values.min
+
+   println()
+   println("Average Sales = " + average)
+   println("Maximum Sales = " + maximum)
+   println("Minimum Sales = " + minimum)
+ }
+}
+
+# SBT Code -
+ThisBuild / version := "0.1.0-SNAPSHOT"
+
+ThisBuild / scalaVersion := "3.3.8"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "module2"
+ )
+
