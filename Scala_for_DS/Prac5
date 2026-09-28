@@ -1,0 +1,44 @@
+# 5.Generate a random matrix using Breeze and compute its transpose and determinant. 
+import breeze.linalg._
+import scala.util.Random
+
+object MatrixTranspose {
+ def main(args: Array[String]): Unit = {
+
+   // Matrix size
+   val rows = 3
+   val cols = 3
+
+   // Generate a 3x3 matrix with random integers (1 to 10)
+   val randData = Array.fill(rows * cols)(Random.nextInt(10) + 1)
+
+   val randMatrix = new DenseMatrix(rows, cols, randData)
+
+   println("Random Integer Matrix:")
+   println(randMatrix)
+
+   // Transpose
+   val transposed = randMatrix.t
+
+   println("\nTransposed Matrix:")
+   println(transposed)
+
+   // Convert to Double for determinant calculation
+   val doubleMatrix = randMatrix.map(_.toDouble)
+
+   val determinant = det(doubleMatrix)
+
+   println(f"\nDeterminant: $determinant%.2f")
+ }
+}
+
+# SBT code -
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "matrix-transpose",
+   libraryDependencies ++= Seq(
+     "org.scalanlp" %% "breeze" % "2.1.0"
+   )
+ )
