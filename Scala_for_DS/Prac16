@@ -1,0 +1,73 @@
+# 16. Combine two plots (e.g., scatter and line plot) in a single visualization using Breeze-viz. 
+import breeze.linalg._
+import breeze.plot._
+import com.github.tototoshi.csv._
+import java.io.File
+
+object prac16 {
+
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("emp.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+
+   // Extract Salary values
+   val salary = DenseVector(
+     data
+       .filter(_("Salary").trim.nonEmpty)
+       .map(_("Salary").trim.toDouble)
+       .toArray
+   )
+
+   val xSalary = DenseVector(
+     (0 until salary.length).map(_.toDouble).toArray
+   )
+
+
+   // Create plot
+   val fig = Figure("Employee Salary Line + Scatter Plot")
+
+   val plt = fig.subplot(0)
+
+   // Salary line
+   plt += plot(
+     xSalary,
+     salary,
+     name = "Salary Line",
+     colorcode = "blue"
+   )
+
+   // Salary scatter
+   plt += plot(
+     xSalary,
+     salary,
+     '.',
+     name = "Salary Points",
+     colorcode = "red"
+   )
+
+   plt.xlabel = "Employee Index"
+   plt.ylabel = "Salary"
+   plt.title = "Employee Salary Line + Scatter Plot"
+
+   plt.legend = true
+
+   fig.refresh()
+ }
+}
+
+Built SBT Code -
+name := "scatter&lineplot"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
+
+libraryDependencies ++= Seq(
+ "org.scalanlp" %% "breeze" % "2.1.0",
+ "org.scalanlp" %% "breeze-viz" % "2.1.0",
+ "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+)
+
