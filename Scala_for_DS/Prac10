@@ -1,0 +1,96 @@
+# 10. Filter rows in a dataset where a specific column value exceeds a threshold. 
+import com.github.tototoshi.csv._
+import java.io.File
+
+object FilterRowThreshold {
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("google_playstore_2026.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+   val threshold = 3.0
+
+   // Rating > 3.0
+   val greaterRows = data.filter { row =>
+     row.get("Rating").exists(value => value.toDoubleOption.exists(_ > threshold))
+   }
+
+   // Rating < 3.0
+   val smallerRows = data.filter { row =>
+     row.get("Rating").exists(value => value.toDoubleOption.exists(_ < threshold))
+   }
+
+   // Rating == 3.0
+   val equalRows = data.filter { row =>
+     row.get("Rating").exists(value => value.toDoubleOption.exists(_ == threshold))
+   }
+
+   println(s"Rating > $threshold : ${greaterRows.length}")
+   println(s"Rating < $threshold : ${smallerRows.length}")
+   println(s"Rating == $threshold : ${equalRows.length}")
+ }
+} 
+# With Filtered Rows : 
+import com.github.tototoshi.csv._
+import java.io.File
+
+object FilterRowThreshold {
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("google_playstore_2026.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+   // See available columns
+   println(data.head.keys.mkString(", "))
+
+   val threshold = 3.0
+
+   // 1. Filter rows where Rating > threshold
+   val greaterRows = data.filter { row =>
+     row.get("Rating")
+       .exists(value => value.toDoubleOption.exists(_ > threshold))
+   }
+
+   println(s"\nTotal Rows with Rating > $threshold: ${greaterRows.length}\n")
+
+   greaterRows.foreach { row =>
+     println(row.values.mkString(", "))
+   }
+
+   // 2. Filter rows where Rating < threshold
+   val smallerRows = data.filter { row =>
+     row.get("Rating")
+       .exists(value => value.toDoubleOption.exists(_ < threshold))
+   }
+
+   println(s"\nTotal Rows with Rating < $threshold: ${smallerRows.length}\n")
+
+   smallerRows.foreach { row =>
+     println(row.values.mkString(", "))
+   }
+
+   // 3. Filter rows where Rating == threshold
+   val equalRows = data.filter { row =>
+     row.get("Rating")
+       .exists(value => value.toDoubleOption.exists(_ == threshold))
+   }
+
+   println(s"\nTotal Rows with Rating == $threshold: ${equalRows.length}\n")
+
+   equalRows.foreach { row =>
+     println(row.values.mkString(", "))
+   }
+ }
+}
+# SBT Code -
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "FileCSVCodes",
+   version := "0.1.0",
+
+   libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+ )
