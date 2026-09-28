@@ -1,0 +1,73 @@
+# 2. Calculate the moving average of a time series data using Scala collections.
+# Use dataset
+# Perform required Feature Engg.
+# find :simple moving average (SMA), weighted moving average (WMA), and exponential moving average (EMA).
+# Use data Visualization
+# Write inference / explain your result.
+# Justify which type of MA is best for your Dataset
+
+Code -
+import scala.io.Source
+
+object timeseries {
+ def main(args: Array[String]): Unit = {
+
+   val file = Source.fromFile("emp.csv")
+
+   val data = file.getLines().drop(1).flatMap { line =>
+     val cols = line.split(",")
+     cols(1).trim.toDoubleOption
+   }.toList
+
+   file.close()
+
+   if (data.isEmpty) {
+     println("No valid data found")
+     return
+   }
+
+   val window = 3
+
+   // SMA
+   val sma = data.sliding(window).map { x =>
+     x.sum / window
+   }.toList
+
+   // WMA
+   val weights = List(1, 2, 3)
+
+   val wma = data.sliding(window).map { x =>
+     (x.zip(weights).map {
+       case (value, weight) =>
+         value * weight
+     }.sum) / weights.sum
+   }.toList
+
+   // EMA
+   val alpha = 2.0 / (window + 1)
+
+   var ema = List(data.head)
+
+   for (i <- 1 until data.length) {
+     ema = ema :+ (alpha * data(i) + (1 - alpha) * ema.last)
+   }
+
+   println("Dataset Size: " + data.size)
+
+   println("\nSMA (Simple Moving Average):")
+   sma.foreach(x => println(f"$x%.2f"))
+
+   println("\nWMA (Weighted Moving Average):")
+   wma.foreach(x => println(f"$x%.2f"))
+
+   println("\nEMA (Exponential Moving Average):")
+   ema.foreach(x => println(f"$x%.2f"))
+ }
+}
+
+Built SBT Code -
+name := "PearsonCorrelation"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
