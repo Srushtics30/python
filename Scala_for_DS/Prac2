@@ -1,0 +1,31 @@
+# 2.Practical Calculate mean, median, and mode of a list of numbers. Implement basic statistical calculations using Scala collections.
+object Practical2 {
+
+ def main(args: Array[String]): Unit = {
+
+   val data = List(
+     50,60,60,70,80,55,65,60,75,85,
+     90,95,100,60,70,80,85,60,55,65,
+     70,75,80,85,90,95,100,60,60,70,
+     65,75,85,95,100,60,55,65,75,85,
+     90,60,70,80,90,100,60,65,75,85,
+     95,60,70,80,90,100,60,60,70,80
+   )
+
+   val mean = data.sum.toDouble / data.size
+
+   val sorted = data.sorted
+   val median =
+     if (data.size % 2 == 0)
+       (sorted(data.size/2 - 1) + sorted(data.size/2)) / 2.0
+     else
+       sorted(data.size/2)
+
+   val mode = data.groupBy(identity)
+     .mapValues(_.size)
+     .maxBy(_._2)
+     ._1
+
+   println(s"Mean=$mean \n Median=$median \n Mode=$mode")
+ }
+}
