@@ -1,0 +1,31 @@
+# 3. Write a program to compute frequency distribution and cumulative frequency of a dataset.
+import scala.io.Source
+
+object Prac3 {
+
+ def main(args: Array[String]): Unit = {
+
+   val lines = Source.fromFile("study.csv").getLines().drop(1)
+
+   val marks = lines.map(_.split(",")(2).toInt).toList
+
+   val freq = marks.groupBy(identity).view.mapValues(_.size).toSeq.sortBy(_._1)
+
+   println("Marks\tFrequency\tCumulative")
+
+   var cumulative = 0
+
+   freq.foreach {
+     case (mark, count) =>
+       cumulative += count
+       println(s"$mark\t$count\t\t$cumulative")
+   }
+ }
+}
+
+# Built SBT Code -
+name := "PearsonCorrelation"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
