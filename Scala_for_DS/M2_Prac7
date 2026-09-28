@@ -1,0 +1,89 @@
+# 7. Compute the Euclidean distance between two Breeze vectors. Use it for nearest neighbor classification.
+import breeze.linalg.{DenseVector, euclideanDistance}
+import scala.io.Source
+
+object prac7 {
+
+ case class Food(
+                  id: Int,
+                  features: DenseVector[Double]
+                )
+
+ def main(args: Array[String]): Unit = {
+
+   val filePath = "food.csv"
+
+   val source = Source.fromFile(filePath)
+   val lines = source.getLines().toSeq
+   source.close()
+
+   // Skip header
+   val data = lines.tail.map { line =>
+
+     val values = line.split(",").map(_.trim)
+
+     val id = values(0).toInt
+
+     val features = DenseVector(
+       values(1).toDouble,
+       values(2).toDouble,
+       values(3).toDouble,
+       values(4).toDouble
+     )
+
+     Food(id, features)
+   }
+
+   println("Food Dataset:")
+
+   data.foreach { food =>
+     println(
+       s"ID: ${food.id}, Features: ${food.features}"
+     )
+   }
+
+   val newPoint = DenseVector(
+     300.0,
+     10.0,
+     25.0,
+     5.0
+   )
+
+   println(s"\nNew data point: $newPoint")
+
+   // Find nearest neighbor
+   var minDistance = Double.MaxValue
+   var nearestFood: Food = null
+
+   for (food <- data) {
+
+     val distance =
+       euclideanDistance(newPoint, food.features)
+
+     println(
+       f"Distance to ID ${food.id}: $distance%.4f"
+     )
+
+     if (distance < minDistance) {
+       minDistance = distance
+       nearestFood = food
+     }
+   }
+
+   println("\nNearest Neighbor:")
+   println(s"ID: ${nearestFood.id}")
+   println(s"Features: ${nearestFood.features}")
+   println(f"Euclidean Distance: $minDistance%.4f")
+ }
+}
+
+Built SBT Code -
+ThisBuild / scalaVersion := "2.13.12"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "BreezeKNN",
+   version := "1.0",
+   libraryDependencies +=
+     "org.scalanlp" %% "breeze" % "2.1.0"
+ )
