@@ -1,0 +1,41 @@
+# 8. Read a CSV file and calculate basic statistics for each numeric column. Use the scala-csv library or similar tools.
+import com.github.tototoshi.csv._
+import java.io.File
+import scala.util.Try
+import scala.math._
+object Prac8 {
+ def main(args: Array[String]): Unit = {
+   val reader = CSVReader.open(new File("google_playstore_2026.csv"))
+   val allRows = reader.allWithHeaders()
+   reader.close()
+   val numericCols = allRows.head.keys.filter { col =>
+     Try(allRows.head(col).toDouble).isSuccess
+   }.toList
+   println(f"Numeric Columns: ${numericCols.mkString(", ")}\n")
+   for (col <- numericCols) {
+     val values = allRows.flatMap(row =>
+       Try(row(col).toDouble).toOption)
+     val count = values.size
+     val mean = values.sum / count
+     val minVal = values.min
+     val maxVal = values.max
+     val stdDev = sqrt(values.map(x => pow(x - mean, 2)).sum / count)
+     println(s"Column: $col")
+     println(f" Count : $count")
+     println(f" Mean : $mean%.2f")
+     println(f" Min : $minVal%.2f")
+     println(f" Max : $maxVal%.2f")
+     println(f" Std Dev : $stdDev%.2f\n")
+   }
+ }
+}
+# SBT Code - 
+ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = (project in file("."))
+ .settings(
+   name := "FileCSVCodes",
+   version := "0.1.0",
+
+   libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+ )
