@@ -1,0 +1,61 @@
+# 14. Generate a histogram of a dataset using Breeze-viz. Experiment with different bin sizes.
+import breeze.linalg._
+import breeze.plot._
+import com.github.tototoshi.csv._
+import java.io.File
+
+object prac14 {
+
+ def main(args: Array[String]): Unit = {
+
+   val reader = CSVReader.open(new File("medical.csv"))
+   val data = reader.allWithHeaders()
+   reader.close()
+
+   // Extract PremiumPrice values and remove empty rows
+   val prices = DenseVector(
+     data
+       .filter(row => row("PremiumPrice").trim.nonEmpty)
+       .map(row => row("PremiumPrice").trim.toDouble)
+       .toArray
+   )
+
+   // Create histogram
+   val fig = Figure("Histogram of Premium Price")
+
+   val binSizes = List(5, 10, 20)
+
+   for ((bins, idx) <- binSizes.zipWithIndex) {
+
+     val plt = fig.subplot(1, binSizes.length, idx)
+
+     plt += hist(
+       prices,
+       bins,
+       name = s"$bins Bins"
+     )
+
+     plt.title = s"Premium Price Histogram ($bins bins)"
+     plt.xlabel = "Premium Price"
+     plt.ylabel = "Frequency"
+
+     // Key / Legend
+     plt.legend = true
+   }
+
+   fig.refresh()
+ }
+}
+
+Built SBT Code -
+name := "ScatterPlot"
+
+version := "0.1"
+
+scalaVersion := "2.13.12"
+
+libraryDependencies ++= Seq(
+ "org.scalanlp" %% "breeze" % "2.1.0",
+ "org.scalanlp" %% "breeze-viz" % "2.1.0",
+ "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+)
