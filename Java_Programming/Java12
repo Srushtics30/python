@@ -1,0 +1,257 @@
+# A. Write a registration Servlet that accepts the data for a given table and stores it in the database.
+# SQl Code 
+CREATE DATABASE practical12;
+
+USE practical12;
+
+CREATE TABLE student (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50), email VARCHAR(100), course VARCHAR(50));
+
+# Registration.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration</title>
+</head>
+<body>
+
+<h2>Student Registration</h2>
+
+<form action="register" method="post">
+
+    Name:
+    <input type="text" name="name" required>
+    <br><br>
+
+    Email:
+    <input type="email" name="email" required>
+    <br><br>
+
+    Course:
+    <input type="text" name="course" required>
+    <br><br>
+
+    <input type="submit" value="Register">
+
+</form>
+
+</body>
+</html>
+
+# RegistrationServlet.java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/register")
+public class RegistrationServlet extends HttpServlet {
+
+    protected void doPost(HttpServletRequest request,
+                           HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String course = request.getParameter("course");
+
+        try {
+
+            // Load MySQL Connector/J driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Connect to MySQL
+            Connection con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/practical12",
+                    "root",
+                    "1234"
+            );
+
+            String sql =
+                    "INSERT INTO student(name, email, course) VALUES (?, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, course);
+
+            int result = ps.executeUpdate();
+
+            if (result > 0) {
+
+                HttpSession session = request.getSession();
+                session.setAttribute("username", name);
+
+                out.println("<html>");
+                out.println("<body>");
+
+                out.println("<h2>Registration Successful!</h2>");
+                out.println("<p>Name: " + name + "</p>");
+                out.println("<p>Email: " + email + "</p>");
+                out.println("<p>Course: " + course + "</p>");
+
+                out.println("<br>");
+                out.println("<a href='display'>Display All Students</a>");
+
+                out.println("<br><br>");
+                out.println("<a href='session.jsp'>Display Session Value</a>");
+
+                out.println("</body>");
+                out.println("</html>");
+            }
+
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+
+            out.println("<h2>Error!</h2>");
+            out.println("<p>" + e + "</p>");
+        }
+    }
+}
+
+
+# B. Write a Servlet that displays all the records of a table. variable. Write another JSP that returns the value of this session variable and displays it. 
+DisplayServlet.java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/displayStudents")
+public class DisplayServlet extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html");
+
+        PrintWriter out = response.getWriter();
+
+        String url = "jdbc:mysql://localhost:3306/practical12";
+        String dbUser = "root";
+        String dbPassword = "1234";
+
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection con = DriverManager.getConnection(
+                    url, dbUser, dbPassword);
+
+            String sql = "SELECT * FROM student";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            out.println("<html>");
+            out.println("<body>");
+
+            out.println("<h2>Student Records</h2>");
+
+            out.println("<table border='1'>");
+
+            out.println("<tr>");
+            out.println("<th>ID</th>");
+            out.println("<th>Name</th>");
+            out.println("<th>Email</th>");
+            out.println("<th>Course</th>");
+            out.println("</tr>");
+
+            while (rs.next()) {
+
+                out.println("<tr>");
+
+                out.println("<td>" + rs.getInt("id") + "</td>");
+                out.println("<td>" + rs.getString("name") + "</td>");
+                out.println("<td>" + rs.getString("email") + "</td>");
+                out.println("<td>" + rs.getString("course") + "</td>");
+
+                out.println("</tr>");
+            }
+
+            out.println("</table>");
+
+            out.println("</body>");
+            out.println("</html>");
+
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+
+            out.println("<h2>Error: " + e.getMessage() + "</h2>");
+
+        }
+    }
+}
+
+
+# c. Session.jsp
+<%@ page language="java" %>
+
+<html>
+<head>
+    <title>Display Session Value</title>
+</head>
+<body>
+
+<h2>Session Value</h2>
+
+<%
+    String username = (String) session.getAttribute("username");
+%>
+
+<p>Username: <%= username %></p>
+
+</body>
+</html>
+
+# c. Setsession.jsp
+<%@ page language="java" %>
+
+<html>
+<head>
+    <title>Set Session</title>
+</head>
+<body>
+
+<h2>Set Session Variable</h2>
+
+<%
+    session.setAttribute("username", "Rahul");
+%>
+
+<p>Session variable has been set.</p>
+
+<a href="session.jsp">Display Session Value</a>
+
+</body>
+</html>
+
+
+
+
+
+
+
